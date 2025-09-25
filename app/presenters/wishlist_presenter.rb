@@ -6,7 +6,7 @@ class WishlistPresenter
 
   attr_reader :wishlist, :page
 
-  PER_PAGE = 10
+  PER_PAGE = 20
   private_constant :PER_PAGE
 
   def initialize(wishlist:, page: nil)
