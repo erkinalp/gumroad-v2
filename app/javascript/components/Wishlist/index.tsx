@@ -86,10 +86,12 @@ const WishlistItemCard = ({
   wishlistId,
   item,
   onDelete,
+  canEdit,
 }: {
   wishlistId: string;
   item: WishlistItem;
   onDelete: () => void;
+  canEdit: boolean;
 }) => {
   const [isDeleting, setIsDeleting] = React.useState(false);
 
@@ -114,11 +116,13 @@ const WishlistItemCard = ({
       product={{ ...item.product, name: formatName(item) }}
       footerAction={
         <>
-          <WithTooltip position="top" tip="Remove this product">
-            <button disabled={isDeleting} onClick={() => void destroy()}>
-              <Icon name="trash2" />
-            </button>
-          </WithTooltip>
+          {canEdit ? (
+            <WithTooltip position="top" tip="Remove this product">
+              <button disabled={isDeleting} onClick={() => void destroy()}>
+                <Icon name="trash2" />
+              </button>
+            </WithTooltip>
+          ) : null}
           {item.purchasable && item.giftable ? (
             <div style={{ padding: 0, display: "grid" }}>
               <WithTooltip position="top" tip="Gift this product">
@@ -260,6 +264,7 @@ export const Wishlist = ({
               key={item.id}
               wishlistId={id}
               item={item}
+              canEdit={can_edit}
               onDelete={() => {
                 setItems((prev) => prev.filter((i) => i.id !== item.id));
                 // Go back to first page to avoid empty last page
