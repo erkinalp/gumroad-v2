@@ -117,11 +117,17 @@ const WishlistItemCard = ({
       footerAction={
         <>
           {canEdit ? (
-            <WithTooltip position="top" tip="Remove this product">
-              <button disabled={isDeleting} onClick={() => void destroy()}>
-                <Icon name="trash2" />
-              </button>
-            </WithTooltip>
+            <div style={{ padding: 0, display: "grid" }}>
+              <WithTooltip position="top" tip="Remove this product">
+                <button
+                  disabled={isDeleting}
+                  onClick={() => void destroy()}
+                  style={{ padding: "var(--spacer-4)", display: "grid" }}
+                >
+                  <Icon name="trash2" />
+                </button>
+              </WithTooltip>
+            </div>
           ) : null}
           {item.purchasable && item.giftable ? (
             <div style={{ padding: 0, display: "grid" }}>
