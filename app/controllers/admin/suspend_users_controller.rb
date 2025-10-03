@@ -6,9 +6,8 @@ class Admin::SuspendUsersController < Admin::BaseController
 
   layout "admin_inertia", only: :show
 
-  head_title "Mass-suspend users", only: :show
-
   def show
+    @title = "Mass-suspend users"
     render inertia: "Admin/SuspendUsers/Show",
            props: inertia_props(
               suspend_reasons: [

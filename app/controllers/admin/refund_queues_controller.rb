@@ -5,9 +5,9 @@ class Admin::RefundQueuesController < Admin::BaseController
 
   layout "admin_inertia"
 
-  head_title "Refund queue"
-
   def show
+    @title = "Refund queue"
+
     pagination, users = pagy_countless(
       User.refund_queue
           .includes(

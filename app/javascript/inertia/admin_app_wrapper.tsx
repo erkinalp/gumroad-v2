@@ -1,4 +1,5 @@
 import React from "react";
+import { classNames } from "$app/utils/classNames";
 
 import { CurrentSellerProvider, parseCurrentSeller } from "$app/components/CurrentSeller";
 import { DesignContextProvider, DesignSettings } from "$app/components/DesignSettings";
@@ -81,7 +82,7 @@ const AdminAppWrapper = ({ children, global }: { children: React.ReactNode; glob
                         </div>
                       </header>
                       {isRouteLoading ? <LoadingSkeleton /> : null}
-                      <div className={isRouteLoading ? "hidden" : "p-4 md:p-8"}>{children}</div>
+                      <div className={classNames("p-4 md:p-8", { hidden: isRouteLoading })}>{children}</div>
                     </main>
                   </div>
                 </FeatureFlagsProvider>

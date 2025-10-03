@@ -47,10 +47,24 @@ const AdminUsersProductsHeader = ({
     <div className="button-group">
       <a href={Routes.edit_link_path(product.unique_permalink)} className="button small" target="_blank">Edit</a>
       {product.admins_can_generate_url_redirects && (
-        <a href={Routes.generate_url_redirect_admin_link_path(product.id)} className="button small" target="_blank">View download page</a>
+        <a
+          href={Routes.generate_url_redirect_admin_link_path(product.id)}
+          className="button small"
+          target="_blank"
+          rel="noreferrer noopener"
+        >
+          View download page
+        </a>
       )}
       {product.alive_product_files.map((file) => (
-        <a href={Routes.admin_access_product_file_admin_product_path(product.id, file.external_id)} className="button small" target="_blank">{file.s3_filename}</a>
+        <a
+          href={Routes.admin_access_product_file_admin_product_path(product.id, file.external_id)}
+          className="button small"
+          target="_blank"
+          rel="noreferrer noopener"
+        >
+          {file.s3_filename}
+        </a>
       ))}
     </div>
   </div>

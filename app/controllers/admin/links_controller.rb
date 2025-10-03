@@ -1,14 +1,22 @@
 # frozen_string_literal: true
 
 class Admin::LinksController < Admin::BaseController
-  before_action :fetch_product_by_general_permalink, except: %i[views_count
-                                                                sales_stats
-                                                                join_discord
-                                                                join_discord_redirect]
-  before_action :fetch_product, only: %i[views_count
-                                         sales_stats
-                                         join_discord
-                                         join_discord_redirect]
+  include Admin::FetchProduct
+
+  before_action :fetch_product_by_general_permalink,
+                only: %i[
+                  access_product_file
+                  generate_url_redirect
+                  is_adult
+                  publish
+                  unpublish
+                ]
+
+  before_action :fetch_product,
+                only: %i[
+                  join_discord
+                  join_discord_redirect
+                ]
 
   def generate_url_redirect
     url_redirect = UrlRedirect.create!(link: @product)
@@ -100,28 +108,9 @@ class Admin::LinksController < Admin::BaseController
   end
 
   private
-    def fetch_product_by_general_permalink
-      @product = Link.find_by(id: params[:id])
-      return redirect_to admin_product_path(@product.unique_permalink) if @product
 
-      @product_matches = Link.by_general_permalink(params["id"])
-
-      if @product_matches.size > 1
-        @title = "Multiple products matched"
-        render "multiple_matches"
-        return
-      else
-        @product = @product_matches.first || e404
-      end
-
-      if @product && @product.unique_permalink != params["id"]
-        redirect_to admin_product_path(@product.unique_permalink)
-      end
-    end
-
-    def fetch_product
-      @product = Link.where(id: params[:id]).or(Link.where(unique_permalink: params[:id])).first
-      @product || e404
+    def product_param
+      params[:id]
     end
 
     def fetch_discord_redirect_uri(product)
