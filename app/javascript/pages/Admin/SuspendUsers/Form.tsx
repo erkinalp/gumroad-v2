@@ -9,7 +9,7 @@ type Props = {
 };
 
 const Form = ({ authenticity_token, suspend_reasons: suspendReasons }: Props) => {
-  const { data, setData, put, reset } = useForm({
+  const form = useForm({
     authenticity_token,
     suspend_users: {
       identifiers: "",
@@ -19,24 +19,24 @@ const Form = ({ authenticity_token, suspend_reasons: suspendReasons }: Props) =>
   });
 
   const setIdentifiers = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setData("suspend_users.identifiers", event.target.value);
+    form.setData("suspend_users.identifiers", event.target.value);
   };
 
   const setReason = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    setData("suspend_users.reason", event.target.value);
+    form.setData("suspend_users.reason", event.target.value);
   };
 
   const setAdditionalNotes = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setData("suspend_users.additional_notes", event.target.value);
+    form.setData("suspend_users.additional_notes", event.target.value);
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    put(Routes.admin_suspend_users_path(), {
+    form.put(Routes.admin_suspend_users_path(), {
       onSuccess: () => {
         showAlert("User suspension in progress!", "success");
-        reset();
+        form.reset();
       },
     });
   };
@@ -44,7 +44,7 @@ const Form = ({ authenticity_token, suspend_reasons: suspendReasons }: Props) =>
   return (
     <form onSubmit={handleSubmit}>
       <section>
-        <input type="hidden" name="authenticity_token" value={data.authenticity_token} />
+        <input type="hidden" name="authenticity_token" value={form.data.authenticity_token} />
         <header>
           To suspend users for terms of service violations, please enter IDs of those users separated by comma or
           newline.
@@ -71,7 +71,7 @@ const Form = ({ authenticity_token, suspend_reasons: suspendReasons }: Props) =>
           name="suspend_users[identifiers]"
           placeholder="Enter user IDs here"
           rows={10}
-          value={data.suspend_users.identifiers}
+          value={form.data.suspend_users.identifiers}
           onChange={setIdentifiers}
         />
 
@@ -80,7 +80,7 @@ const Form = ({ authenticity_token, suspend_reasons: suspendReasons }: Props) =>
           id="reason"
           name="suspend_users[reason]"
           required
-          value={data.suspend_users.reason}
+          value={form.data.suspend_users.reason}
           onChange={setReason}
         >
           <option value="">Select a reason</option>
@@ -97,7 +97,7 @@ const Form = ({ authenticity_token, suspend_reasons: suspendReasons }: Props) =>
           name="suspend_users[additional_notes]"
           placeholder="Additional info for support team"
           rows={3}
-          value={data.suspend_users.additional_notes}
+          value={form.data.suspend_users.additional_notes}
           onChange={setAdditionalNotes}
         />
 

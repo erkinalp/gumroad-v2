@@ -12,7 +12,7 @@ export type Props = {
 };
 
 const Form = ({ action, authenticity_token, header, button_label, notice_message }: Props) => {
-  const { data, setData, put, reset } = useForm({
+  const form = useForm({
     authenticity_token,
     email_domains: {
       identifiers: "",
@@ -22,22 +22,22 @@ const Form = ({ action, authenticity_token, header, button_label, notice_message
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    put(action, {
+    form.put(action, {
       onSuccess: () => {
         showAlert(notice_message, "success");
-        reset();
+        form.reset();
       },
     });
   };
 
   const setIdentifiers = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setData("email_domains.identifiers", event.target.value);
+    form.setData("email_domains.identifiers", event.target.value);
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <section>
-        <input type="hidden" name="authenticity_token" value={data.authenticity_token} />
+        <input type="hidden" name="authenticity_token" value={form.data.authenticity_token} />
 
         <header>{header}</header>
 
@@ -67,7 +67,7 @@ const Form = ({ action, authenticity_token, header, button_label, notice_message
           name="email_domains[identifiers]"
           placeholder="Enter email domains here"
           rows={10}
-          value={data.email_domains.identifiers}
+          value={form.data.email_domains.identifiers}
           onChange={setIdentifiers}
           autoComplete="off"
         />
