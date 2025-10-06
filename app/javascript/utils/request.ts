@@ -51,7 +51,10 @@ export const request = async (settings: RequestSettings): Promise<Response> => {
 
   const headers = new Headers(defaults.headers);
   const csrfTokenElement: HTMLMetaElement | null = document.querySelector('meta[name="csrf-token"]');
-  const authenticityToken = csrfTokenElement!.getAttribute("content")!;
+  const authenticityToken = csrfTokenElement?.getAttribute("content");
+  if (!authenticityToken) {
+    throw new Error("CSRF token not found");
+  }
   headers.set("X-CSRF-Token", authenticityToken);
   headers.set("Accept", acceptType);
   if (data && !(data instanceof FormData)) headers.set("Content-Type", "application/json");
