@@ -13,7 +13,7 @@ type Props = {
 };
 
 const AdminUsersShow = ({ is_affiliate_user = false }: Props) => {
-  const { user } = usePage().props as unknown as PageProps;
+  const { user } = usePage<PageProps>().props;
 
   return (
     <div className="paragraphs">

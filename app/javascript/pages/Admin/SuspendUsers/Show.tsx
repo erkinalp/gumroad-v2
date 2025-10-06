@@ -10,7 +10,7 @@ type Props = {
 };
 
 const AdminSuspendUsers = () => {
-  const { suspend_reasons, authenticity_token, title } = usePage().props as unknown as Props;
+  const { suspend_reasons, authenticity_token, title } = usePage<Props>().props;
 
   return (
     <>

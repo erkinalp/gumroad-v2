@@ -21,7 +21,7 @@ type PageProps = {
 };
 
 const Admin = ({ children }: { children: React.ReactNode }) => {
-  const { title, current_user, card_types } = usePage().props as unknown as PageProps;
+  const { title, current_user, card_types } = usePage<PageProps>().props;
   const isRouteLoading = useRouteLoading();
   return (
     <div id="inertia-shell" className="flex h-screen flex-col lg:flex-row">

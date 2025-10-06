@@ -12,7 +12,7 @@ type Props = {
 };
 
 const AdminActionCallDashboardShow = () => {
-  const { admin_action_call_infos, pagination } = usePage().props as unknown as Props;
+  const { admin_action_call_infos, pagination } = usePage<Props>().props;
 
   return (
     <div>

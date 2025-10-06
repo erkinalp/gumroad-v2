@@ -8,7 +8,7 @@ type Props = {
 };
 
 const AdminPayoutsShow = () => {
-  const { payout } = usePage().props as unknown as Props;
+  const { payout } = usePage<Props>().props;
 
   return (
     <div className="paragraphs">

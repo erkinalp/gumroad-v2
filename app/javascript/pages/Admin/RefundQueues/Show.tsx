@@ -13,7 +13,7 @@ type Props = {
 };
 
 const AdminRefundQueue = () => {
-  const { users, pagination } = usePage().props as unknown as Props;
+  const { users, pagination } = usePage<Props>().props;
 
   const RenderNextUsersWhenVisible = () => {
     const usersLengthFromCurrentPage = users.length / pagination.page;

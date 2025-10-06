@@ -21,7 +21,7 @@ type JobHistoryItem = {
 };
 
 const AdminSalesReports = () => {
-  const { countries, job_history, form_action, authenticity_token } = usePage().props as unknown as Props;
+  const { countries, job_history, form_action, authenticity_token } = usePage<Props>().props;
 
   return (
     <AdminSalesReportsPage

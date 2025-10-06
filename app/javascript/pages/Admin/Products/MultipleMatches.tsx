@@ -45,7 +45,7 @@ const ProductMatch = ({ product }: { product: ProductMatchProps }) => {
 };
 
 const AdminProductsMultipleMatches = () => {
-  const { product_matches } = usePage().props as unknown as Props;
+  const { product_matches } = usePage<Props>().props;
 
   return (
     <table>

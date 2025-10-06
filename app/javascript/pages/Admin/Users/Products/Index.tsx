@@ -47,7 +47,7 @@ type AdminUsersProductsProps = {
 };
 
 const AdminUsersProducts = ({ is_affiliate_user = false }: Props) => {
-  const { user, products, pagination } = usePage().props as unknown as AdminUsersProductsProps;
+  const { user, products, pagination } = usePage<AdminUsersProductsProps>().props;
 
   const productsLengthFromCurrentPage = products.length / pagination.page;
 

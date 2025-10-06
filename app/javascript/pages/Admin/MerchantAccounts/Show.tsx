@@ -7,10 +7,10 @@ import AdminMerchantAccount, {
 } from "$app/components/Admin/MerchantAccounts/MerchantAccount";
 
 const AdminMerchantAccountsShow = () => {
-  const { merchant_account, live_attributes } = usePage().props as unknown as {
+  const { merchant_account, live_attributes } = usePage<{
     merchant_account: AdminMerchantAccountProps;
     live_attributes: LiveAttributesProps;
-  };
+  }>().props;
 
   return (
     <div>

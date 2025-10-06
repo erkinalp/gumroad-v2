@@ -17,7 +17,7 @@ type Props = {
 };
 
 const AdminUsers = ({ is_affiliate_user = false }: Props) => {
-  const { pagination, users } = usePage().props as unknown as PageProps;
+  const { pagination, users } = usePage<PageProps>().props;
 
   const RenderNextUsersWhenVisible = () => {
     const usersLengthFromCurrentPage = users.length / pagination.page;

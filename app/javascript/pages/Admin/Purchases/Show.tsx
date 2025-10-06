@@ -12,7 +12,7 @@ type AdminPurchasesShowProps = {
 };
 
 const AdminPurchasesShow = () => {
-  const { purchase, product, user } = usePage().props as unknown as AdminPurchasesShowProps;
+  const { purchase, product, user } = usePage<AdminPurchasesShowProps>().props;
 
   return (
     <div className="paragraphs">

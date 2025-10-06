@@ -8,7 +8,7 @@ type Props = {
 };
 
 const AdminBlockEmailDomains = () => {
-  const { authenticity_token } = usePage().props as unknown as Props;
+  const { authenticity_token } = usePage<Props>().props;
 
   return (
     <Form
