@@ -1,4 +1,5 @@
 import React from "react";
+
 import { classNames } from "$app/utils/classNames";
 
 type TabProps = {
@@ -8,7 +9,7 @@ type TabProps = {
   ariaControls?: string;
   className?: string;
   nodeName?: string;
-}
+};
 
 const Tab = ({
   children,
@@ -25,14 +26,14 @@ const Tab = ({
       role="tab"
       className={classNames(
         "opacity-70",
-        "dark:text-white/70 dark:font-bold",
-        "border border-border rounded",
+        "dark:font-bold dark:text-white/70",
+        "rounded border border-border",
         "hover:-translate-x-1 hover:-translate-y-1 hover:shadow-[0.25rem_0.25rem_0_currentColor]",
-        "transition-[opacity,transform] ease-out duration-200",
+        "transition-[opacity,transform] duration-200 ease-out",
         {
-          "opacity-100 font-bold bg-white dark:bg-transparent dark:text-white": isSelected
+          "bg-white font-bold opacity-100 dark:bg-transparent dark:text-white": isSelected,
         },
-        className
+        className,
       )}
       aria-selected={isSelected}
       aria-controls={ariaControls}

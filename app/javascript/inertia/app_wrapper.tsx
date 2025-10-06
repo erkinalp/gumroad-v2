@@ -1,17 +1,17 @@
 import React from "react";
 
-import { Nav } from "$app/components/Nav";
+import { DomainSettings } from "$app/types/domain_settings";
+import { LoggedInUser, Seller } from "$app/types/user";
+
 import { CurrentSellerProvider, parseCurrentSeller } from "$app/components/CurrentSeller";
 import { DesignContextProvider, DesignSettings } from "$app/components/DesignSettings";
 import { DomainSettingsProvider } from "$app/components/DomainSettings";
 import LoadingSkeleton from "$app/components/LoadingSkeleton";
 import { LoggedInUserProvider, parseLoggedInUser } from "$app/components/LoggedInUser";
+import { Nav } from "$app/components/Nav";
 import { SSRLocationProvider } from "$app/components/useOriginalLocation";
 import { UserAgentProvider } from "$app/components/UserAgent";
 import useRouteLoading from "$app/components/useRouteLoading";
-
-import { LoggedInUser, Seller } from "$app/types/user";
-import { DomainSettings } from "$app/types/domain_settings";
 
 type GlobalProps = {
   design_settings: DesignSettings;

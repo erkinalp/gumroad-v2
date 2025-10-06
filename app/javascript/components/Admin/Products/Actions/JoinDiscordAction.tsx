@@ -7,17 +7,21 @@ type JoinDiscordActionProps = {
 };
 
 const JoinDiscordAction = ({ product }: JoinDiscordActionProps) => {
-  const hasDiscordIntegration = product.active_integrations.some((integration: ActiveIntegration) => integration.type === "DiscordIntegration");
+  const hasDiscordIntegration = product.active_integrations.some(
+    (integration: ActiveIntegration) => integration.type === "DiscordIntegration",
+  );
 
-  return hasDiscordIntegration && (
-    <a
-      href={Routes.join_discord_redirect_admin_link_path(product.id)}
-      className="button small"
-      target="_blank"
-      rel="noreferrer noopener"
-    >
-      Join Discord
-    </a>
+  return (
+    hasDiscordIntegration && (
+      <a
+        href={Routes.join_discord_redirect_admin_link_path(product.id)}
+        className="button small"
+        target="_blank"
+        rel="noreferrer noopener"
+      >
+        Join Discord
+      </a>
+    )
   );
 };
 

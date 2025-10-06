@@ -1,7 +1,8 @@
-import React from "react";
 import { usePage } from "@inertiajs/react";
-import PurchaseDetails, { type Purchase as PurchaseType } from "$app/components/Admin/Purchases/PurchaseDetails";
+import React from "react";
+
 import Product, { type Product as ProductType } from "$app/components/Admin/Products/Product";
+import PurchaseDetails, { type Purchase as PurchaseType } from "$app/components/Admin/Purchases/PurchaseDetails";
 import User, { type User as UserType } from "$app/components/Admin/Users/User";
 
 type AdminPurchasesShowProps = {

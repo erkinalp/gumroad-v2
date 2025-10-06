@@ -1,14 +1,13 @@
 import React from "react";
 
-import type { User } from "$app/components/Admin/Users/User";
-
 import AdminUserPermissionRiskActions from "$app/components/Admin/Users/PermissionRisk/Actions";
+import Bio from "$app/components/Admin/Users/PermissionRisk/Bio";
 import CompliantStatus from "$app/components/Admin/Users/PermissionRisk/CompliantStatus";
 import FlagForFraud from "$app/components/Admin/Users/PermissionRisk/FlagForFraud";
-import SuspendForFraud from "$app/components/Admin/Users/PermissionRisk/SuspendForFraud";
 import UserGuids from "$app/components/Admin/Users/PermissionRisk/Guids";
-import Bio from "$app/components/Admin/Users/PermissionRisk/Bio";
 import LatestPosts from "$app/components/Admin/Users/PermissionRisk/LatestPosts";
+import SuspendForFraud from "$app/components/Admin/Users/PermissionRisk/SuspendForFraud";
+import type { User } from "$app/components/Admin/Users/User";
 
 type AdminUserPermissionRiskProps = {
   user: User;
@@ -30,6 +29,5 @@ const AdminUserPermissionRisk = ({ user }: AdminUserPermissionRiskProps) => (
     <LatestPosts user={user} />
   </>
 );
-
 
 export default AdminUserPermissionRisk;

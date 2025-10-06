@@ -23,12 +23,17 @@ const AdminCommentableComments = ({
     hasMore && onLoadMore();
   };
 
-  if (count === 0 && !isLoading) return <div className="info" role="status">No comments created.</div>
+  if (count === 0 && !isLoading)
+    return (
+      <div className="info" role="status">
+        No comments created.
+      </div>
+    );
 
   return (
     <div>
-      <h4 className="font-bold mb-2">
-        {comments.length} of {count === 1 ? '1 comment' : `${count} comments`}
+      <h4 className="mb-2 font-bold">
+        {comments.length} of {count === 1 ? "1 comment" : `${count} comments`}
       </h4>
 
       {hasMore ? (
@@ -37,7 +42,7 @@ const AdminCommentableComments = ({
         </button>
       ) : null}
 
-      {isLoading && <Loading />}
+      {isLoading ? <Loading /> : null}
 
       <div className="rows" role="list">
         {comments.map((comment) => (
@@ -45,7 +50,7 @@ const AdminCommentableComments = ({
         ))}
       </div>
     </div>
-  )
+  );
 };
 
 export default AdminCommentableComments;

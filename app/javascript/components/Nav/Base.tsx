@@ -1,8 +1,8 @@
-import { classNames } from "$app/utils/classNames";
 import * as React from "react";
 import { cast } from "ts-safe-cast";
 
 import { escapeRegExp } from "$app/utils";
+import { classNames } from "$app/utils/classNames";
 import { asyncVoid } from "$app/utils/promise";
 import { assertResponseError, request, ResponseError } from "$app/utils/request";
 
@@ -28,7 +28,7 @@ interface BaseNavLinkProps {
   additionalPatterns?: string[];
   component?: string | React.ComponentType;
   onClick?: (ev: React.MouseEvent<HTMLAnchorElement>) => void;
-};
+}
 
 const BaseNavLink = ({
   text,
@@ -51,13 +51,7 @@ const BaseNavLink = ({
   const Component = component === "a" ? "a" : (component as React.ComponentType<any>);
 
   return (
-    <Component
-      aria-current={ariaCurrent}
-      href={href}
-      title={text}
-      className="flex items-center"
-      {...props}
-    >
+    <Component aria-current={ariaCurrent} href={href} title={text} className="flex items-center" {...props}>
       {icon ? <Icon name={icon} /> : null}
       {text}
       {badge ? (
@@ -72,7 +66,7 @@ const BaseNavLink = ({
 
 interface NavLinkProps extends BaseNavLinkProps {
   onClick?: (ev: React.MouseEvent<HTMLAnchorElement>) => void;
-};
+}
 
 export const NavLink = ({ onClick, ...props }: NavLinkProps) => (
   <BaseNavLink {...props} {...(onClick && { onClick })} />
@@ -80,7 +74,7 @@ export const NavLink = ({ onClick, ...props }: NavLinkProps) => (
 
 interface InertiaNavLinkProps extends BaseNavLinkProps {
   prefetch?: boolean;
-};
+}
 
 export const InertiaNavLink = ({ prefetch = false, ...props }: InertiaNavLinkProps) => (
   <BaseNavLink {...props} {...(prefetch && { prefetch })} />

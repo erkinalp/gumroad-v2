@@ -8,9 +8,9 @@ import { cast } from "ts-safe-cast";
 
 import { assertResponseError, request, ResponseError } from "$app/utils/request";
 
+import { showAlert } from "$app/components/Alert";
 import { Button } from "$app/components/Button";
 import { ButtonColor } from "$app/components/design";
-import { showAlert } from "$app/components/Alert";
 
 type AdminActionButtonProps = {
   url: string;

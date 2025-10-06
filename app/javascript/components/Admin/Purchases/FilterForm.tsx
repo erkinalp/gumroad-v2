@@ -1,5 +1,5 @@
-import React from "react";
 import { useForm, Link } from "@inertiajs/react";
+import React from "react";
 
 type Props = {
   query: string;
@@ -8,12 +8,7 @@ type Props = {
   endpoint: (params?: Record<string, string>) => string;
 };
 
-const AdminPurchasesFilterForm = ({
-  query,
-  product_title_query,
-  purchase_status,
-  endpoint,
-}: Props) => {
+const AdminPurchasesFilterForm = ({ query, product_title_query, purchase_status, endpoint }: Props) => {
   const { data, setData, get } = useForm({
     ...Object.fromEntries(new URLSearchParams(window.location.search)),
     query: query || "",
@@ -50,11 +45,7 @@ const AdminPurchasesFilterForm = ({
         />
       </div>
 
-      <select
-        name="purchase_status"
-        onChange={onPurchaseStatusChange}
-        defaultValue={data.purchase_status}
-      >
+      <select name="purchase_status" onChange={onPurchaseStatusChange} defaultValue={data.purchase_status}>
         <option value="">Any status</option>
         <option value="chargeback">Chargeback</option>
         <option value="refunded">Refunded</option>
@@ -65,17 +56,15 @@ const AdminPurchasesFilterForm = ({
         <span className="icon icon-solid-search"></span>
       </button>
 
-      {
-        (data.product_title_query || data.purchase_status) && (
-          <Link
-            href={Routes.admin_search_purchases_path({ query: data.query })}
-            className="button secondary"
-            preserveScroll
-          >
-            Clear
-          </Link>
-        )
-      }
+      {data.product_title_query || data.purchase_status ? (
+        <Link
+          href={Routes.admin_search_purchases_path({ query: data.query })}
+          className="button secondary"
+          preserveScroll
+        >
+          Clear
+        </Link>
+      ) : null}
     </form>
   );
 };

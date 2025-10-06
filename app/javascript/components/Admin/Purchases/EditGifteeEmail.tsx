@@ -1,6 +1,7 @@
-import React from "react";
-import { type Purchase } from "$app/components/Admin/Purchases/PurchaseDetails";
 import { useForm, usePage } from "@inertiajs/react";
+import React from "react";
+
+import { type Purchase } from "$app/components/Admin/Purchases/PurchaseDetails";
 import { showAlert } from "$app/components/server-components/Alert";
 
 type Props = {
@@ -45,7 +46,9 @@ const AdminPurchasesEditGifteeEmail = ({ purchase }: Props) => {
           value={data.update_giftee_email.giftee_email}
           onChange={setGifteeEmail}
         />
-        <button type="submit" className="button">Update</button>
+        <button type="submit" className="button">
+          Update
+        </button>
       </form>
     </details>
   );

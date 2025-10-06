@@ -1,6 +1,7 @@
 import React from "react";
-import { type User } from "$app/components/Admin/Users/User";
+
 import AdminAction from "$app/components/Admin/ActionButton";
+import { type User } from "$app/components/Admin/Users/User";
 
 type InvalidateActiveSessionsProps = {
   user: User;

@@ -1,17 +1,13 @@
 import React from "react";
-import { WithTooltip } from "$app/components/WithTooltip";
+
 import { type User } from "$app/components/Admin/Users/User";
+import { WithTooltip } from "$app/components/WithTooltip";
 
 type ImpersonateActionProps = {
   user: User;
 };
 
-const ImpersonateAction = ({
-  user: {
-    impersonatable,
-    id: user_identifier
-  }
-}: ImpersonateActionProps) => (
+const ImpersonateAction = ({ user: { impersonatable, id: user_identifier } }: ImpersonateActionProps) =>
   impersonatable ? (
     <a href={Routes.admin_impersonate_url({ user_identifier })} className="button small">
       Become
@@ -22,7 +18,6 @@ const ImpersonateAction = ({
         Become
       </a>
     </WithTooltip>
-  )
-)
+  );
 
 export default ImpersonateAction;

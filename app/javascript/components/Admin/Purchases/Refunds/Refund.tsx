@@ -1,15 +1,16 @@
-import React from "react";
 import { Link } from "@inertiajs/react";
 import { capitalize } from "lodash";
-import { type Refund } from "$app/components/Admin/Purchases/PurchaseDetails";
+import React from "react";
+
 import DateTimeWithRelativeTooltip from "$app/components/Admin/DateTimeWithRelativeTooltip";
+import { type Refund } from "$app/components/Admin/Purchases/PurchaseDetails";
 
 type Props = {
   refund: Refund;
 };
 
 const AdminPurchasesRefund = ({ refund }: Props) => {
-  const userName = refund.user?.name && refund.user.name.length > 0 ? refund.user.name : `User ${refund.user?.id}`;
+  const userName = refund.user.name && refund.user.name.length > 0 ? refund.user.name : `User ${refund.user.id}`;
 
   return (
     <>

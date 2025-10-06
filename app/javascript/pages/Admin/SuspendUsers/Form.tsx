@@ -1,5 +1,6 @@
+import { useForm } from "@inertiajs/react";
 import React from "react";
-import { useForm } from '@inertiajs/react';
+
 import { showAlert } from "$app/components/server-components/Alert";
 
 type Props = {
@@ -45,20 +46,17 @@ const Form = ({ authenticity_token, suspend_reasons: suspendReasons }: Props) =>
       <section>
         <input type="hidden" name="authenticity_token" value={data.authenticity_token} />
         <header>
-          To suspend users for terms of service violations, please enter IDs of those users separated by comma or newline.
+          To suspend users for terms of service violations, please enter IDs of those users separated by comma or
+          newline.
         </header>
 
         <figure className="code">
-          <figcaption>
-            Example with comma-separated items
-          </figcaption>
+          <figcaption>Example with comma-separated items</figcaption>
           <pre>3322133, 3738461, 4724778</pre>
         </figure>
 
         <figure className="code">
-          <figcaption>
-            Example with items separated by newline
-          </figcaption>
+          <figcaption>Example with items separated by newline</figcaption>
           <pre>
             3322133
             <br />
@@ -68,20 +66,44 @@ const Form = ({ authenticity_token, suspend_reasons: suspendReasons }: Props) =>
           </pre>
         </figure>
 
-        <textarea id="identifiers" name="suspend_users[identifiers]" placeholder="Enter user IDs here" rows={10} value={data.suspend_users.identifiers} onChange={setIdentifiers} />
+        <textarea
+          id="identifiers"
+          name="suspend_users[identifiers]"
+          placeholder="Enter user IDs here"
+          rows={10}
+          value={data.suspend_users.identifiers}
+          onChange={setIdentifiers}
+        />
 
         <label htmlFor="reason">Reason</label>
-        <select id="reason" name="suspend_users[reason]" required value={data.suspend_users.reason} onChange={setReason}>
+        <select
+          id="reason"
+          name="suspend_users[reason]"
+          required
+          value={data.suspend_users.reason}
+          onChange={setReason}
+        >
           <option value="">Select a reason</option>
           {suspendReasons.map((reason) => (
-            <option key={reason} value={reason}>{reason}</option>
+            <option key={reason} value={reason}>
+              {reason}
+            </option>
           ))}
         </select>
 
         <label htmlFor="additionalNotes">Notes</label>
-        <textarea id="additionalNotes" name="suspend_users[additional_notes]" placeholder="Additional info for support team" rows={3} value={data.suspend_users.additional_notes} onChange={setAdditionalNotes} />
+        <textarea
+          id="additionalNotes"
+          name="suspend_users[additional_notes]"
+          placeholder="Additional info for support team"
+          rows={3}
+          value={data.suspend_users.additional_notes}
+          onChange={setAdditionalNotes}
+        />
 
-        <button type="submit" className="button primary">Suspend users</button>
+        <button type="submit" className="button primary">
+          Suspend users
+        </button>
       </section>
     </form>
   );

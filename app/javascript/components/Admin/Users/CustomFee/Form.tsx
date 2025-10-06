@@ -1,4 +1,3 @@
-
 import * as React from "react";
 
 import { Form } from "$app/components/Admin/Form";
@@ -9,10 +8,7 @@ type AdminSetCustomFeeFormProps = {
   custom_fee_percent: number | null;
 };
 
-const AdminSetCustomFeeForm = ({
-  user_id,
-  custom_fee_percent,
-}: AdminSetCustomFeeFormProps) => (
+const AdminSetCustomFeeForm = ({ user_id, custom_fee_percent }: AdminSetCustomFeeFormProps) => (
   <Form
     url={Routes.set_custom_fee_admin_user_path(user_id)}
     method="POST"

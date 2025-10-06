@@ -1,12 +1,11 @@
-import * as React from "react";
 import { Link } from "@inertiajs/react";
-
-import { useAppDomain } from "$app/components/DomainSettings";
-
-import { Nav as NavFramework, NavLink, InertiaNavLink } from "$app/components/Nav/Base";
+import * as React from "react";
 
 import { CurrentUser } from "$app/types/user";
+
 import AdminNavFooter from "$app/components/Admin/Nav/Footer";
+import { useAppDomain } from "$app/components/DomainSettings";
+import { Nav as NavFramework, NavLink, InertiaNavLink } from "$app/components/Nav/Base";
 
 type Props = { title: string; current_user: CurrentUser };
 
@@ -14,10 +13,7 @@ const Nav = ({ title, current_user }: Props) => {
   const routeParams = { host: useAppDomain() };
 
   return (
-    <NavFramework
-      title={title}
-      footer={<AdminNavFooter current_user={current_user} />}
-    >
+    <NavFramework title={title} footer={<AdminNavFooter current_user={current_user} />}>
       <section>
         <InertiaNavLink
           text="Suspend users"
@@ -37,16 +33,8 @@ const Nav = ({ title, current_user }: Props) => {
           href={Routes.admin_unblock_email_domains_url(routeParams)}
           component={Link}
         />
-        <NavLink
-          text="Sidekiq"
-          icon="lighting-fill"
-          href={Routes.admin_sidekiq_web_url(routeParams)}
-        />
-        <NavLink
-          text="Features"
-          icon="solid-flag"
-          href={Routes.admin_flipper_ui_url(routeParams)}
-        />
+        <NavLink text="Sidekiq" icon="lighting-fill" href={Routes.admin_sidekiq_web_url(routeParams)} />
+        <NavLink text="Features" icon="solid-flag" href={Routes.admin_flipper_ui_url(routeParams)} />
         <InertiaNavLink
           text="Refund queue"
           icon="solid-currency-dollar"

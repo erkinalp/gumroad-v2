@@ -1,8 +1,9 @@
-
 import React from "react";
-import { Popover } from "$app/components/Popover";
+
 import { CurrentUser } from "$app/types/user";
+
 import { useLoggedInUser } from "$app/components/LoggedInUser";
+import { Popover } from "$app/components/Popover";
 
 export type Props = {
   current_user: CurrentUser;
@@ -18,10 +19,10 @@ const AdminNavFooter = ({ current_user }: Props) => {
       const response = await fetch(Routes.admin_unimpersonate_path(), {
         method: "DELETE",
         headers: {
-          "Accept": "application/json",
+          Accept: "application/json",
           "Content-Type": "application/json",
-          "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]')?.getAttribute("content") || ""
-        }
+          "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]')?.getAttribute("content") || "",
+        },
       });
 
       if (response.ok) {

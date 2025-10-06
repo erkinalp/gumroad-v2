@@ -1,29 +1,23 @@
-import React from "react";
 import { usePage } from "@inertiajs/react";
-import User, { type User as UserType } from "$app/components/Admin/Users/User";
+import React from "react";
+
 import Product, { type Product as ProductType } from "$app/components/Admin/Products/Product";
+import User, { type User as UserType } from "$app/components/Admin/Users/User";
 
 type AdminProductProps = {
   user: UserType;
-  product: ProductType
-}
+  product: ProductType;
+};
 
 const AdminProductsShow = () => {
-  const {
-    user,
-    product
-  } = usePage().props as unknown as AdminProductProps;
+  const { user, product } = usePage().props as unknown as AdminProductProps;
 
   return (
     <div className="paragraphs">
-      <Product
-        key={product.id}
-        product={product}
-        is_affiliate_user={false}
-      />
+      <Product key={product.id} product={product} is_affiliate_user={false} />
       <User user={user} is_affiliate_user={false} />
     </div>
-  )
+  );
 };
 
 export default AdminProductsShow;

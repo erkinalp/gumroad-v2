@@ -1,8 +1,7 @@
 import React from "react";
 
-import type { User } from "$app/components/Admin/Users/User";
-
 import AdminMassTransferPurchasesForm from "$app/components/Admin/Users/MassTransferPurchases/Form";
+import type { User } from "$app/components/Admin/Users/User";
 
 type AdminUserMassTransferPurchasesProps = {
   user: User;

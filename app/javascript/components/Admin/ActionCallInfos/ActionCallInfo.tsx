@@ -5,7 +5,7 @@ export type AdminActionCallInfoProps = {
   controller_name: string;
   action_name: string;
   call_count: number;
-}
+};
 
 const AdminActionCallInfosActionCallInfo = ({
   index,

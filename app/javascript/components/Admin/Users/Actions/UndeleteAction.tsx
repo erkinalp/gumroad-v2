@@ -1,12 +1,13 @@
 import React from "react";
-import { type User } from "$app/components/Admin/Users/User";
+
 import AdminAction from "$app/components/Admin/ActionButton";
+import { type User } from "$app/components/Admin/Users/User";
 
 type UndeleteActionProps = {
   user: User;
 };
 
-const UndeleteAction = ({ user: { id, deleted } }: UndeleteActionProps) => (
+const UndeleteAction = ({ user: { id, deleted } }: UndeleteActionProps) =>
   deleted && (
     <AdminAction
       label="Undelete"
@@ -15,7 +16,6 @@ const UndeleteAction = ({ user: { id, deleted } }: UndeleteActionProps) => (
       done="Undeleted."
       success_message="Undeleted"
     />
-  )
-);
+  );
 
 export default UndeleteAction;

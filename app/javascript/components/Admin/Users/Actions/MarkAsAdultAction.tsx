@@ -1,12 +1,13 @@
 import React from "react";
-import { type User } from "$app/components/Admin/Users/User";
+
 import AdminAction from "$app/components/Admin/ActionButton";
+import { type User } from "$app/components/Admin/Users/User";
 
 type MarkAsAdultActionProps = {
   user: User;
 };
 
-const MarkAsAdultAction = ({ user: { id, all_adult_products } }: MarkAsAdultActionProps) => (
+const MarkAsAdultAction = ({ user: { id, all_adult_products } }: MarkAsAdultActionProps) =>
   all_adult_products ? (
     <AdminAction
       label="Unmark as adult"
@@ -23,7 +24,6 @@ const MarkAsAdultAction = ({ user: { id, all_adult_products } }: MarkAsAdultActi
       done="Unmark as adult"
       success_message="Marked as adult."
     />
-  )
-);
+  );
 
 export default MarkAsAdultAction;

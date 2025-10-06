@@ -1,9 +1,11 @@
+import { usePage, WhenVisible } from "@inertiajs/react";
 import React from "react";
-import { usePage, WhenVisible } from '@inertiajs/react';
-import RefundableUser, { type User } from "$app/components/Admin/Users/User";
-import EmptyState from "$app/components/Admin/EmptyState";
+
 import { type Pagination } from "$app/hooks/useLazyFetch";
+
+import EmptyState from "$app/components/Admin/EmptyState";
 import Loading from "$app/components/Admin/Loading";
+import RefundableUser, { type User } from "$app/components/Admin/Users/User";
 
 type Props = {
   users: User[];
@@ -20,8 +22,8 @@ const AdminRefundQueue = () => {
       const params = {
         data: { page: pagination.page + 1 },
         only: ["users", "pagination"],
-        preserveScroll: true
-      }
+        preserveScroll: true,
+      };
 
       return <WhenVisible fallback={<Loading />} params={params} children />;
     }
@@ -32,9 +34,7 @@ const AdminRefundQueue = () => {
       {users.map((user) => (
         <RefundableUser key={user.id} user={user} is_affiliate_user={false} />
       ))}
-      {pagination.page === 1 && users.length === 0 && (
-        <EmptyState message="No users found." />
-      )}
+      {pagination.page === 1 && users.length === 0 && <EmptyState message="No users found." />}
       <RenderNextUsersWhenVisible />
     </section>
   );

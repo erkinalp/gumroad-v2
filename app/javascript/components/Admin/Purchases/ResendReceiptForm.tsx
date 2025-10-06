@@ -1,16 +1,10 @@
 import * as React from "react";
 
 import { Form } from "$app/components/Admin/Form";
+import { type Purchase } from "$app/components/Admin/Purchases/PurchaseDetails";
 import { showAlert } from "$app/components/server-components/Alert";
 
-import { type Purchase } from "$app/components/Admin/Purchases/PurchaseDetails";
-
-export const AdminResendReceiptForm = ({
-  purchase: {
-    id,
-    email,
-  }
-}: { purchase: Purchase }) => (
+export const AdminResendReceiptForm = ({ purchase: { id, email } }: { purchase: Purchase }) => (
   <Form
     url={Routes.resend_receipt_admin_purchase_path(id)}
     method="POST"

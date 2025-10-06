@@ -1,12 +1,13 @@
-
-import React from "react";
 import { router } from "@inertiajs/react";
+import React from "react";
+
+import { type Pagination as PaginationProps } from "$app/hooks/useLazyFetch";
+
+import AdminEmptyState from "$app/components/Admin/EmptyState";
 import AdminPurchasesFilterForm from "$app/components/Admin/Purchases/FilterForm";
 import AdminPurchasesPurchase from "$app/components/Admin/Purchases/Purchase";
 import { type Purchase } from "$app/components/Admin/Purchases/PurchaseDetails";
-import { type Pagination as PaginationProps } from "$app/hooks/useLazyFetch";
 import { Pagination } from "$app/components/Pagination";
-import AdminEmptyState from "$app/components/Admin/EmptyState";
 
 export interface PageProps {
   purchases: Purchase[];
@@ -14,11 +15,11 @@ export interface PageProps {
   product_title_query: string;
   purchase_status: string;
   pagination: PaginationProps;
-};
+}
 
 interface Props extends PageProps {
   endpoint: (params?: Record<string, string>) => string;
-};
+}
 
 const AdminPurchases = ({
   purchases,
@@ -51,34 +52,29 @@ const AdminPurchases = ({
         endpoint={endpoint}
       />
 
-      {
-        purchases.length === 0 && pagination.page === 1 ? (
-          <AdminEmptyState message="No purchases found." />
-        ) : (
-          <>
-            <table>
-              <thead>
-                <tr>
-                  <th>Purchase</th>
-                  <th>By</th>
-                </tr>
-              </thead>
-              <tbody>
-                {purchases.map((purchase) => (
-                  <AdminPurchasesPurchase key={purchase.id} purchase={purchase} />
-                ))}
-              </tbody>
-            </table>
+      {purchases.length === 0 && pagination.page === 1 ? (
+        <AdminEmptyState message="No purchases found." />
+      ) : (
+        <>
+          <table>
+            <thead>
+              <tr>
+                <th>Purchase</th>
+                <th>By</th>
+              </tr>
+            </thead>
+            <tbody>
+              {purchases.map((purchase) => (
+                <AdminPurchasesPurchase key={purchase.id} purchase={purchase} />
+              ))}
+            </tbody>
+          </table>
 
-            {paginationProps.pages > 1 && (
-              <Pagination pagination={paginationProps} onChangePage={onChangePage} />
-            )}
-          </>
-        )
-      }
+          {paginationProps.pages > 1 && <Pagination pagination={paginationProps} onChangePage={onChangePage} />}
+        </>
+      )}
     </div>
   );
 };
 
 export default AdminPurchases;
-

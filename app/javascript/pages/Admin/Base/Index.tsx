@@ -1,18 +1,18 @@
+import { Link } from "@inertiajs/react";
 import React from "react";
-import { Link } from  "@inertiajs/react";
 
 const AdminDashboard = () => {
   const [userIdentifier, setUserIdentifier] = React.useState("");
 
   return (
     <section>
-      <div className="flex flex-col gap-4 max-w-2xl">
+      <div className="flex max-w-2xl flex-col gap-4">
         <div className="flex flex-col gap-4">
           <input
             type="text"
             name="user_identifier"
             value={userIdentifier}
-            onChange={e => setUserIdentifier(e.target.value)}
+            onChange={(e) => setUserIdentifier(e.target.value)}
             placeholder="Enter user email, username, or Stripe account ID"
             className="w-full rounded-md"
             autoFocus
@@ -26,7 +26,7 @@ const AdminDashboard = () => {
               Impersonate user
             </Link>
             <Link
-            className="button w-auto flex-1"
+              className="button w-auto flex-1"
               href={Routes.admin_redirect_to_stripe_dashboard_path({ user_identifier: userIdentifier })}
             >
               View Stripe account
@@ -36,6 +36,6 @@ const AdminDashboard = () => {
       </div>
     </section>
   );
-}
+};
 
 export default AdminDashboard;

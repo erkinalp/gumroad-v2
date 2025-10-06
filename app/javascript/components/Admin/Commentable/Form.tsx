@@ -1,9 +1,11 @@
-import * as React from "react";
 import { useForm } from "@inertiajs/react";
-import { request } from "$app/utils/request";
-import { showAlert } from "$app/components/server-components/Alert";
+import * as React from "react";
 import { cast } from "ts-safe-cast";
+
+import { request } from "$app/utils/request";
+
 import type { CommentProps } from "$app/components/Admin/Commentable/Comment";
+import { showAlert } from "$app/components/server-components/Alert";
 
 type AdminCommentableFormProps = {
   endpoint: string;
@@ -11,14 +13,11 @@ type AdminCommentableFormProps = {
   commentableType: string;
 };
 
-const AdminCommentableForm = ({
-  endpoint,
-  onCommentAdded,
-  commentableType,
-}: AdminCommentableFormProps) => {
-
+const AdminCommentableForm = ({ endpoint, onCommentAdded, commentableType }: AdminCommentableFormProps) => {
   const {
-    data: { comment: { content } },
+    data: {
+      comment: { content },
+    },
     setData,
     processing,
     reset,
@@ -28,7 +27,7 @@ const AdminCommentableForm = ({
     setData("comment.content", event.target.value);
   };
 
-  const onSubmit = async(event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (confirm("Are you sure you want to post this comment?")) {
@@ -39,9 +38,9 @@ const AdminCommentableForm = ({
         url: endpoint,
         data: formData,
         accept: "json",
-      })
+      });
       if (response.ok) {
-        const { comment} = cast<{ comment: CommentProps }>(await response.json());
+        const { comment } = cast<{ comment: CommentProps }>(await response.json());
         showAlert("Successfully added comment.", "success");
         reset();
         onCommentAdded(comment);
@@ -55,7 +54,14 @@ const AdminCommentableForm = ({
     <form onSubmit={onSubmit}>
       <fieldset>
         <div className="input-with-button">
-          <textarea name="comment[content]" rows={1} placeholder={`Comment on this ${commentableType}`} required value={content} onChange={onContentChange} />
+          <textarea
+            name="comment[content]"
+            rows={1}
+            placeholder={`Comment on this ${commentableType}`}
+            required
+            value={content}
+            onChange={onContentChange}
+          />
           <button type="submit" className="button" disabled={processing}>
             {processing ? "Saving..." : "Add comment"}
           </button>

@@ -1,20 +1,18 @@
-import React from "react";
 import { capitalize } from "lodash";
+import React from "react";
+
 import { formatDate } from "$app/utils/date";
 
 import { type EmailInfo } from "$app/components/Admin/Purchases/PurchaseDetails";
 
 type Props = {
-  email_infos: EmailInfo[],
-  email_name: string,
-}
+  email_infos: EmailInfo[];
+  email_name: string;
+};
 
-const AdminPurchaseInfoEmailInfo = ({
-  email_infos,
-  email_name,
-}: Props) => {
+const AdminPurchaseInfoEmailInfo = ({ email_infos, email_name }: Props) => {
   const emailInfo = email_infos
-    .filter(email_info => email_info.email_name === email_name)
+    .filter((email_info) => email_info.email_name === email_name)
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0];
 
   return emailInfo ? (

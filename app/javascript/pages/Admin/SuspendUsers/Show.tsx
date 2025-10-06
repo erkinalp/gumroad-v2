@@ -1,5 +1,5 @@
+import { usePage, Head } from "@inertiajs/react";
 import React from "react";
-import { usePage, Head } from '@inertiajs/react';
 
 import Form from "./Form";
 

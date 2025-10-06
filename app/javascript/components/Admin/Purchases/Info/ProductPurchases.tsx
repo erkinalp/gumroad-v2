@@ -1,15 +1,14 @@
 import React from "react";
-import { type ProductPurchase } from "$app/components/Admin/Purchases/PurchaseDetails";
-import AdminPurchaseInfoUrlRedirect from "$app/components/Admin/Purchases/Info/UrlRedirect";
 
-const AdminPurchaseInfoProductPurchases = ({
-  product_purchases
-}: { product_purchases: ProductPurchase[] }) => {
-  return (
-    <div className="paragraphs">
-      <h3>Product Purchases</h3>
-      <dl>
-        {product_purchases.map((product_purchase) => (
+import AdminPurchaseInfoUrlRedirect from "$app/components/Admin/Purchases/Info/UrlRedirect";
+import { type ProductPurchase } from "$app/components/Admin/Purchases/PurchaseDetails";
+
+const AdminPurchaseInfoProductPurchases = ({ product_purchases }: { product_purchases: ProductPurchase[] }) => (
+  <div className="paragraphs">
+    <h3>Product Purchases</h3>
+    <dl>
+      {product_purchases.map(
+        (product_purchase) =>
           product_purchase.url_redirect && (
             <React.Fragment key={product_purchase.id}>
               <dt>{product_purchase.link.name}</dt>
@@ -17,11 +16,10 @@ const AdminPurchaseInfoProductPurchases = ({
                 <AdminPurchaseInfoUrlRedirect url_redirect={product_purchase.url_redirect} />
               </dd>
             </React.Fragment>
-          )
-        ))}
-      </dl>
-    </div>
-  );
-};
+          ),
+      )}
+    </dl>
+  </div>
+);
 
 export default AdminPurchaseInfoProductPurchases;

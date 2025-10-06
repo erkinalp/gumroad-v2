@@ -3,19 +3,16 @@ import { cast } from "ts-safe-cast";
 
 import { useLazyPaginatedFetch } from "$app/hooks/useLazyFetch";
 
+import type { CommentProps } from "$app/components/Admin/Commentable/Comment";
 import AdminCommentableContent from "$app/components/Admin/Commentable/Content";
 import AdminCommentableForm from "$app/components/Admin/Commentable/Form";
-import type { CommentProps } from "$app/components/Admin/Commentable/Comment";
 
 type AdminCommentableProps = {
   endpoint: string;
   commentableType: string;
 };
 
-const AdminCommentableComments = ({
-  endpoint,
-  commentableType,
-}: AdminCommentableProps) => {
+const AdminCommentableComments = ({ endpoint, commentableType }: AdminCommentableProps) => {
   const [open, setOpen] = React.useState(false);
 
   const {
@@ -27,14 +24,11 @@ const AdminCommentableComments = ({
     pagination,
     setHasMore,
     setHasLoaded,
-  } = useLazyPaginatedFetch<CommentProps[]>(
-    [] as CommentProps[],
-    {
-      url: endpoint,
-      responseParser: (data) => cast<CommentProps[]>(data.comments),
-      mode: "append",
-    }
-  );
+  } = useLazyPaginatedFetch<CommentProps[]>([] as CommentProps[], {
+    url: endpoint,
+    responseParser: (data) => cast<CommentProps[]>(data.comments),
+    mode: "append",
+  });
 
   const [count, setCount] = React.useState(pagination.count);
 
@@ -47,7 +41,7 @@ const AdminCommentableComments = ({
     setCount(pagination.count);
     setHasLoaded(false);
     setHasMore(true);
-  }
+  };
 
   const onToggle = (e: React.MouseEvent<HTMLDetailsElement>) => {
     setOpen(e.currentTarget.open);
@@ -56,18 +50,18 @@ const AdminCommentableComments = ({
     } else {
       resetComments();
     }
-  }
+  };
 
   const appendComment = (comment: CommentProps) => {
     setComments([comment, ...comments]);
     setCount(count + 1);
-  }
+  };
 
   const fetchNextPage = () => {
-    if (pagination?.next) {
+    if (pagination.next) {
       fetchComments({ page: pagination.next });
     }
-  }
+  };
 
   return (
     <>
@@ -76,11 +70,7 @@ const AdminCommentableComments = ({
         <summary>
           <h3>Comments</h3>
         </summary>
-        <AdminCommentableForm
-          endpoint={endpoint}
-          onCommentAdded={appendComment}
-          commentableType={commentableType}
-        />
+        <AdminCommentableForm endpoint={endpoint} onCommentAdded={appendComment} commentableType={commentableType} />
         <AdminCommentableContent
           count={count}
           comments={comments}
@@ -90,7 +80,7 @@ const AdminCommentableComments = ({
         />
       </details>
     </>
-  )
+  );
 };
 
 export default AdminCommentableComments;

@@ -1,16 +1,18 @@
-import React from "react";
 import { usePage, router } from "@inertiajs/react";
+import React from "react";
+
+import { type Pagination as PaginationProps } from "$app/hooks/useLazyFetch";
+
+import AdminEmptyState from "$app/components/Admin/EmptyState";
 import AdminPayouts from "$app/components/Admin/Payouts";
 import { type Payout } from "$app/components/Admin/Payouts/Payout";
-import { type Pagination as PaginationProps } from "$app/hooks/useLazyFetch";
 import { Pagination } from "$app/components/Pagination";
-import AdminEmptyState from "$app/components/Admin/EmptyState";
 
 type PageProps = {
   user: { id: number };
   payouts: Payout[];
   pagination: PaginationProps;
-}
+};
 
 const Index = () => {
   const { user, payouts, pagination } = usePage<PageProps>().props;
@@ -35,9 +37,7 @@ const Index = () => {
   return (
     <div className="paragraphs">
       <AdminPayouts payouts={payouts} />
-      {paginationProps.pages > 1 && (
-        <Pagination pagination={paginationProps} onChangePage={onChangePage} />
-      )}
+      {paginationProps.pages > 1 && <Pagination pagination={paginationProps} onChangePage={onChangePage} />}
     </div>
   );
 };

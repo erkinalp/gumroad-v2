@@ -1,8 +1,8 @@
-import React from "react";
-import { WithTooltip } from "$app/components/WithTooltip";
 import classNames from "classnames";
+import React from "react";
 
 import type { User } from "$app/components/Admin/Users/User";
+import { WithTooltip } from "$app/components/WithTooltip";
 
 type CompliantStatusProps = {
   user: User;

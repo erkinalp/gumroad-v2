@@ -1,5 +1,6 @@
-import React from "react";
 import { usePage } from "@inertiajs/react";
+import React from "react";
+
 import AdminPayout, { type Payout } from "$app/components/Admin/Payouts/Payout";
 
 type Props = {

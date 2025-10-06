@@ -1,6 +1,6 @@
 import React from "react";
-import DateTimeWithRelativeTooltip from "$app/components/Admin/DateTimeWithRelativeTooltip";
 
+import DateTimeWithRelativeTooltip from "$app/components/Admin/DateTimeWithRelativeTooltip";
 import Loading from "$app/components/Admin/Loading";
 
 export type EmailChangesProps = {
@@ -11,7 +11,7 @@ export type EmailChangesProps = {
   };
 }[];
 
-export type FieldsProps = ['email', 'payment_address'];
+export type FieldsProps = ["email", "payment_address"];
 
 type EmailChangesComponentProps = {
   fields: FieldsProps;
@@ -38,7 +38,7 @@ const EmailChanges = ({ fields, emailChanges, isLoading }: EmailChangesComponent
         {fields.map((field) => (
           <React.Fragment key={field}>
             {Object.values(emailChanges).map(({ created_at, changes }) => {
-              const fieldChanges = changes[field] as (string | null)[] | undefined;
+              const fieldChanges = changes[field];
               if (!fieldChanges) return null;
 
               const [oldValue, newValue] = fieldChanges;
@@ -46,8 +46,8 @@ const EmailChanges = ({ fields, emailChanges, isLoading }: EmailChangesComponent
               return (
                 <tr key={created_at}>
                   <td data-label="Field">{field}</td>
-                  <td data-label="Old">{oldValue || '(Not set)'}</td>
-                  <td data-label="New">{newValue || '(Not set)'}</td>
+                  <td data-label="Old">{oldValue || "(Not set)"}</td>
+                  <td data-label="New">{newValue || "(Not set)"}</td>
                   <td data-label="Changed">
                     <DateTimeWithRelativeTooltip date={created_at} />
                   </td>

@@ -1,13 +1,12 @@
 import * as React from "react";
 import { cast } from "ts-safe-cast";
 
+import { useLazyFetch } from "$app/hooks/useLazyFetch";
 import { assertResponseError } from "$app/utils/request";
 
-import { showAlert } from "$app/components/server-components/Alert";
-import { useLazyFetch } from "$app/hooks/useLazyFetch";
-
-import AdminProductStatsViewCount from "$app/components/Admin/Products/Stats/ViewCount";
 import AdminProductStatsSales, { type AdminProductStatsSalesProps } from "$app/components/Admin/Products/Stats/Sales";
+import AdminProductStatsViewCount from "$app/components/Admin/Products/Stats/ViewCount";
+import { showAlert } from "$app/components/server-components/Alert";
 
 const AdminProductStats = ({ product_id }: { product_id: number }) => {
   const {
@@ -19,7 +18,7 @@ const AdminProductStats = ({ product_id }: { product_id: number }) => {
     {
       url: Routes.admin_product_views_count_path(product_id),
       responseParser: (data) => cast<{ views_count: number }>(data),
-    }
+    },
   );
 
   const {
@@ -32,13 +31,13 @@ const AdminProductStats = ({ product_id }: { product_id: number }) => {
         preorder_state: false,
         count: 0,
         stripe_failed_count: 0,
-        balance_formatted: '',
-      }
+        balance_formatted: "",
+      },
     },
     {
       url: Routes.admin_product_sales_stats_path(product_id),
       responseParser: (data) => cast<{ sales_stats: AdminProductStatsSalesProps }>(data),
-    }
+    },
   );
 
   React.useEffect(() => {
@@ -53,14 +52,8 @@ const AdminProductStats = ({ product_id }: { product_id: number }) => {
 
   return (
     <>
-      <AdminProductStatsViewCount
-        viewsCount={viewsCount}
-        isLoading={isViewsCountLoading}
-      />
-      <AdminProductStatsSales
-        salesStats={salesStats}
-        isLoading={isSalesStatsLoading}
-      />
+      <AdminProductStatsViewCount viewsCount={viewsCount} isLoading={isViewsCountLoading} />
+      <AdminProductStatsSales salesStats={salesStats} isLoading={isSalesStatsLoading} />
     </>
   );
 };

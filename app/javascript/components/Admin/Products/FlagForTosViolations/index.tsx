@@ -1,13 +1,13 @@
 import React from "react";
-
 import { cast } from "ts-safe-cast";
+
 import { useLazyFetch } from "$app/hooks/useLazyFetch";
 
-import type { User } from "$app/components/Admin/Users/User";
+import AdminFlagForTosViolationsContent, {
+  type TosViolationFlags,
+} from "$app/components/Admin/Products/FlagForTosViolations/Content";
 import type { Product } from "$app/components/Admin/Products/Product";
-
-import AdminFlagForTosViolationsContent, { type TosViolationFlags } from "$app/components/Admin/Products/FlagForTosViolations/Content";
-
+import type { User } from "$app/components/Admin/Users/User";
 
 export type Compliance = {
   reasons: Record<string, string>;
@@ -24,13 +24,14 @@ const FlagForTosViolations = ({ user, product, compliance }: FlagForTosViolation
   const [open, setOpen] = React.useState(false);
   const [flaggedForTosViolation, setFlaggedForTosViolation] = React.useState(user.flagged_for_tos_violation);
 
-  const { data: tos_violation_flags, isLoading, fetchData: fetchTosViolationFlags } = useLazyFetch<TosViolationFlags[]>(
-    [],
-    {
-      url: Routes.admin_user_product_tos_violation_flags_path(user.id, product.id, { format: "json" }),
-      responseParser: (data) => cast<TosViolationFlags[]>(data.tos_violation_flags),
-    }
-  );
+  const {
+    data: tos_violation_flags,
+    isLoading,
+    fetchData: fetchTosViolationFlags,
+  } = useLazyFetch<TosViolationFlags[]>([], {
+    url: Routes.admin_user_product_tos_violation_flags_path(user.id, product.id, { format: "json" }),
+    responseParser: (data) => cast<TosViolationFlags[]>(data.tos_violation_flags),
+  });
 
   const fetchIfFlagged = () => flaggedForTosViolation && fetchTosViolationFlags();
 
@@ -65,7 +66,7 @@ const FlagForTosViolations = ({ user, product, compliance }: FlagForTosViolation
         />
       </details>
     </>
-  )
+  );
 };
 
 export default FlagForTosViolations;

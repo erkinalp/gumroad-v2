@@ -5,7 +5,7 @@ import { createRoot } from "react-dom/client";
 import AdminAppWrapper from "../inertia/admin_app_wrapper";
 import Layout from "../layouts/Admin";
 
-const AdminLayout = ((page: React.ReactNode) => React.createElement(Layout, { children: page }));
+const AdminLayout = (page: React.ReactNode) => React.createElement(Layout, { children: page });
 
 const resolvePageComponent = async (name: string) => {
   try {
@@ -21,7 +21,7 @@ const resolvePageComponent = async (name: string) => {
       throw new Error(`Admin page component not found: ${name}`);
     }
   }
-}
+};
 
 createInertiaApp({
   progress: false,
@@ -34,5 +34,5 @@ createInertiaApp({
     const root = createRoot(el);
     root.render(createElement(AdminAppWrapper, { global, children: createElement(App, props) }));
   },
-  title: (title: string) => title ? `${title} - Admin` : "Admin",
+  title: (title: string) => (title ? `${title} - Admin` : "Admin"),
 });

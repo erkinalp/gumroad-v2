@@ -1,3 +1,4 @@
+import { useForm } from "@inertiajs/react";
 import * as React from "react";
 
 import { Button } from "$app/components/Button";
@@ -5,7 +6,6 @@ import { Icon } from "$app/components/Icons";
 import { Popover } from "$app/components/Popover";
 import { useOriginalLocation } from "$app/components/useOriginalLocation";
 import { WithTooltip } from "$app/components/WithTooltip";
-import { useForm } from "@inertiajs/react";
 
 type Props = { card_types: { id: string; name: string }[] };
 export const SearchPopover = ({ card_types }: Props) => {
@@ -44,18 +44,18 @@ export const SearchPopover = ({ card_types }: Props) => {
   });
 
   const resetOtherQueryFields = (activeField?: keyof typeof data | null) => {
-    const queryFields = ['user_query', 'purchase_query', 'affiliate_query'] as const;
-    const cardFields = ['card_type', 'transaction_date', 'last_4', 'expiry_date', 'price'] as const;
+    const queryFields = ["user_query", "purchase_query", "affiliate_query"] as const;
+    const cardFields = ["card_type", "transaction_date", "last_4", "expiry_date", "price"] as const;
 
     if (activeField === null) {
-      queryFields.forEach(field => setData(field, ""));
+      queryFields.forEach((field) => setData(field, ""));
       return;
     }
 
     if (queryFields.includes(activeField as any)) {
-      cardFields.forEach(field => setData(field, ""));
-      queryFields.forEach(field => {
-        if (field !== activeField) setData(field, "")
+      cardFields.forEach((field) => setData(field, ""));
+      queryFields.forEach((field) => {
+        if (field !== activeField) setData(field, "");
       });
     }
   };
@@ -63,7 +63,7 @@ export const SearchPopover = ({ card_types }: Props) => {
   const submit = (endpoint: string, queryParam?: keyof typeof data | null) => {
     const queryData = { query: queryParam ? data[queryParam] : "" };
     const url = new URL(endpoint, window.location.origin);
-    Object.keys(queryData).forEach(key => {
+    Object.keys(queryData).forEach((key) => {
       url.searchParams.set(key, queryData[key as keyof typeof queryData]);
     });
 
@@ -138,7 +138,7 @@ export const SearchPopover = ({ card_types }: Props) => {
         </WithTooltip>
       }
     >
-      <div className="grid gap-3 max-w-full w-96">
+      <div className="grid w-96 max-w-full gap-3">
         <form onSubmit={onSearchUsersFormSubmit} className="input-with-button">
           <div className="input">
             <Icon name="person" />

@@ -1,6 +1,7 @@
 import React from "react";
 
 import Loading from "$app/components/Admin/Loading";
+
 import AdminProductPurchase, { ProductPurchase } from "./Purchase";
 
 type AdminProductPurchasesContentProps = {
@@ -21,7 +22,12 @@ const AdminProductPurchasesContent = ({
     hasMore && onLoadMore();
   };
 
-  if (purchases?.length === 0 && !isLoading) return <div className="info" role="status">No purchases have been made.</div>;
+  if (purchases.length === 0 && !isLoading)
+    return (
+      <div className="info" role="status">
+        No purchases have been made.
+      </div>
+    );
 
   return (
     <div className="paragraphs">
@@ -31,7 +37,7 @@ const AdminProductPurchasesContent = ({
         ))}
       </div>
 
-      {isLoading && <Loading />}
+      {isLoading ? <Loading /> : null}
 
       {hasMore ? (
         <button className="button small" onClick={handleClick} disabled={isLoading}>

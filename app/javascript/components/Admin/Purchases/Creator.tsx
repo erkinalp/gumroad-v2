@@ -1,6 +1,7 @@
-import React from "react";
-import { type Purchase } from "$app/components/Admin/Purchases/PurchaseDetails";
 import { Link } from "@inertiajs/react";
+import React from "react";
+
+import { type Purchase } from "$app/components/Admin/Purchases/PurchaseDetails";
 import { CopyToClipboard } from "$app/components/CopyToClipboard";
 import { Icon } from "$app/components/Icons";
 

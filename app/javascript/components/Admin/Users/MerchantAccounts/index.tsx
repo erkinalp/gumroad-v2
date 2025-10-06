@@ -1,13 +1,14 @@
 import React from "react";
-
-import type { User } from "$app/components/Admin/Users/User";
-
-import { useLazyFetch } from "$app/hooks/useLazyFetch";
 import { cast } from "ts-safe-cast";
 
-import MerchantAccount, { type MerchantAccountProps } from "$app/components/Admin/Users/MerchantAccounts/MerchantAccount";
+import { useLazyFetch } from "$app/hooks/useLazyFetch";
+
 import AdminActionButton from "$app/components/Admin/ActionButton";
 import Loading from "$app/components/Admin/Loading";
+import MerchantAccount, {
+  type MerchantAccountProps,
+} from "$app/components/Admin/Users/MerchantAccounts/MerchantAccount";
+import type { User } from "$app/components/Admin/Users/User";
 
 type AdminUserMerchantAccountsProps = {
   user: User;
@@ -29,7 +30,7 @@ const MerchantAccountsContent = ({
   user,
   merchant_accounts,
   has_stripe_account,
-  isLoading
+  isLoading,
 }: MerchantAccountsContentProps) => {
   if (isLoading) {
     return <Loading />;
@@ -37,15 +38,17 @@ const MerchantAccountsContent = ({
 
   return (
     <>
-      {merchant_accounts.length > 0 ?
+      {merchant_accounts.length > 0 ? (
         <ul className="inline">
           {merchant_accounts.map((merchant_account) => (
             <MerchantAccount key={merchant_account.id} {...merchant_account} />
           ))}
         </ul>
-        :
-        <div className="info" role="status">No merchant accounts.</div>
-      }
+      ) : (
+        <div className="info" role="status">
+          No merchant accounts.
+        </div>
+      )}
 
       {!has_stripe_account && (
         <div className="button-group mt-2">
@@ -65,13 +68,13 @@ const AdminUserMerchantAccounts = ({ user }: AdminUserMerchantAccountsProps) => 
   const {
     data: { has_stripe_account, merchant_accounts },
     isLoading,
-    fetchData: fetchMerchantAccounts
+    fetchData: fetchMerchantAccounts,
   } = useLazyFetch<AdminUserMerchantAccountsData>(
     { has_stripe_account: false, merchant_accounts: [] },
     {
       url: Routes.admin_user_merchant_accounts_path(user.id, { format: "json" }),
       responseParser: (data) => cast<AdminUserMerchantAccountsData>(data),
-    }
+    },
   );
 
   const [open, setOpen] = React.useState(false);
@@ -81,7 +84,7 @@ const AdminUserMerchantAccounts = ({ user }: AdminUserMerchantAccountsProps) => 
     if (e.currentTarget.open) {
       fetchMerchantAccounts();
     }
-  }
+  };
 
   return (
     <>

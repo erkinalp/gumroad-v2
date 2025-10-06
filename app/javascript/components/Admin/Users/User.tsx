@@ -1,19 +1,20 @@
-import React from "react";
 import { usePage } from "@inertiajs/react";
-import Header from "$app/components/Admin/Users/Header";
+import React from "react";
+
 import AdminUserActions from "$app/components/Admin/Users/Actions";
-import AdminUserMemberships from "$app/components/Admin/Users/Memberships";
-import AdminUserPermissionRisk from "$app/components/Admin/Users/PermissionRisk";
-import AdminUserComplianceInfo from "$app/components/Admin/Users/ComplianceInfo";
-import AdminUserPayoutInfo from "$app/components/Admin/Users/PayoutInfo";
-import AdminUserMerchantAccounts from "$app/components/Admin/Users/MerchantAccounts";
-import AdminUserEmailChanges from "$app/components/Admin/Users/EmailChanges";
-import AdminUserChangeEmail from "$app/components/Admin/Users/ChangeEmail";
-import AdminUserCustomFee from "$app/components/Admin/Users/CustomFee";
 import AdminUserAddCredit from "$app/components/Admin/Users/AddCredit";
-import AdminUserMassTransferPurchases from "$app/components/Admin/Users/MassTransferPurchases";
+import AdminUserChangeEmail from "$app/components/Admin/Users/ChangeEmail";
 import AdminUserComments from "$app/components/Admin/Users/Comments";
+import AdminUserComplianceInfo from "$app/components/Admin/Users/ComplianceInfo";
+import AdminUserCustomFee from "$app/components/Admin/Users/CustomFee";
+import AdminUserEmailChanges from "$app/components/Admin/Users/EmailChanges";
 import Footer from "$app/components/Admin/Users/Footer";
+import Header from "$app/components/Admin/Users/Header";
+import AdminUserMassTransferPurchases from "$app/components/Admin/Users/MassTransferPurchases";
+import AdminUserMemberships from "$app/components/Admin/Users/Memberships";
+import AdminUserMerchantAccounts from "$app/components/Admin/Users/MerchantAccounts";
+import AdminUserPayoutInfo from "$app/components/Admin/Users/PayoutInfo";
+import AdminUserPermissionRisk from "$app/components/Admin/Users/PermissionRisk";
 
 export type Seller = {
   id: number;
@@ -95,6 +96,6 @@ const User = ({ user, is_affiliate_user = false }: Props) => {
       <Footer user={user} />
     </div>
   );
-}
+};
 
 export default User;

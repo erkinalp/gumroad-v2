@@ -3,26 +3,23 @@ import { cast } from "ts-safe-cast";
 
 import { useLazyPaginatedFetch } from "$app/hooks/useLazyFetch";
 
-import { type ProductPurchase } from "./Purchase";
 import AdminProductPurchasesContent from "./Content";
+import { type ProductPurchase } from "./Purchase";
 
 type AdminProductPurchasesProps = {
   product_id: number;
   is_affiliate_user?: boolean;
   user_id: number | null;
-}
+};
 
-const AdminProductPurchases = ({
-  product_id,
-  is_affiliate_user = false,
-  user_id,
-}: AdminProductPurchasesProps) => {
+const AdminProductPurchases = ({ product_id, is_affiliate_user = false, user_id }: AdminProductPurchasesProps) => {
   const [open, setOpen] = React.useState(false);
 
   const urlParams = { format: "json" };
-  const url = user_id && is_affiliate_user ?
-    Routes.admin_user_product_purchases_path(user_id, product_id, urlParams) :
-    Routes.admin_product_purchases_path(product_id, urlParams);
+  const url =
+    user_id && is_affiliate_user
+      ? Routes.admin_user_product_purchases_path(user_id, product_id, urlParams)
+      : Routes.admin_product_purchases_path(product_id, urlParams);
 
   const {
     data: purchases,
@@ -34,14 +31,11 @@ const AdminProductPurchases = ({
     setHasMore,
     setHasLoaded,
     setIsLoading,
-  } = useLazyPaginatedFetch<ProductPurchase[]>(
-    [],
-    {
-      url,
-      responseParser: (data) => cast<ProductPurchase[]>(data.purchases),
-      mode: "append",
-    }
-  );
+  } = useLazyPaginatedFetch<ProductPurchase[]>([], {
+    url,
+    responseParser: (data) => cast<ProductPurchase[]>(data.purchases),
+    mode: "append",
+  });
 
   const fetchNextPage = () => {
     if (purchases.length >= pagination.limit) {
@@ -54,7 +48,7 @@ const AdminProductPurchases = ({
     setHasLoaded(false);
     setHasMore(true);
     setIsLoading(true);
-  }
+  };
 
   const onToggle = (e: React.MouseEvent<HTMLDetailsElement>) => {
     setOpen(e.currentTarget.open);

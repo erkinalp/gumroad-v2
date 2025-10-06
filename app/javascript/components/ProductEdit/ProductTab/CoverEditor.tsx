@@ -16,10 +16,10 @@ import { Covers } from "$app/components/Product/Covers";
 import { Progress } from "$app/components/Progress";
 import { RemoveButton } from "$app/components/RemoveButton";
 import { showAlert } from "$app/components/server-components/Alert";
+import Tab from "$app/components/Tabs/Tab";
+import TabList from "$app/components/Tabs/TabList";
 import { useIsAboveBreakpoint } from "$app/components/useIsAboveBreakpoint";
 import { WithTooltip } from "$app/components/WithTooltip";
-import TabList from "$app/components/Tabs/TabList";
-import Tab from "$app/components/Tabs/Tab";
 
 const MAX_PREVIEW_COUNT = 8;
 

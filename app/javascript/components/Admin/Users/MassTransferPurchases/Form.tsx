@@ -12,7 +12,7 @@ export const MassTransferPurchasesForm = ({ user_id }: { user_id: number }) => (
   >
     {(isLoading) => (
       <fieldset>
-        <div className="grid gap-3 grid-cols-[1fr_auto]">
+        <div className="grid grid-cols-[1fr_auto] gap-3">
           <input type="email" name="mass_transfer_purchases[new_email]" placeholder="New email" required />
           <button type="submit" className="button" disabled={isLoading}>
             {isLoading ? "Transferring..." : "Transfer"}

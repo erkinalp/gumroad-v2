@@ -12,12 +12,12 @@ import * as React from "react";
 import { escapeRegExp } from "$app/utils";
 import { initTeamMemberReadOnlyAccess } from "$app/utils/team_member_read_only";
 
-import NavbarFooter from "$app/components/Nav/Footer";
 import { useCurrentSeller } from "$app/components/CurrentSeller";
 import { useAppDomain, useDiscoverUrl } from "$app/components/DomainSettings";
 import { Icon } from "$app/components/Icons";
 import { useLoggedInUser } from "$app/components/LoggedInUser";
 import { Nav as NavFramework, NavLink, useNav } from "$app/components/Nav/Base";
+import NavbarFooter from "$app/components/Nav/Footer";
 import { useRunOnce } from "$app/components/useRunOnce";
 
 type Props = {

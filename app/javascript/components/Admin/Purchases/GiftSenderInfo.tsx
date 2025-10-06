@@ -1,18 +1,13 @@
-import React from "react";
 import { Link } from "@inertiajs/react";
+import React from "react";
+
 import { type Gift } from "$app/components/Admin/Purchases/PurchaseDetails";
 
 type Props = {
   gift: Gift;
 };
 
-const AdminPurchasesGiftSenderInfo = ({
-  gift: {
-    giftee_email,
-    gift_note,
-    giftee_purchase_id,
-  },
-}: Props) => (
+const AdminPurchasesGiftSenderInfo = ({ gift: { giftee_email, gift_note, giftee_purchase_id } }: Props) => (
   <details>
     <summary>
       <h3>Gift Sender Info</h3>
@@ -26,12 +21,10 @@ const AdminPurchasesGiftSenderInfo = ({
 
       <dt>Receiver purchase id</dt>
       <dd>
-        <Link href={Routes.admin_purchase_path(giftee_purchase_id)}>
-          {giftee_purchase_id}
-        </Link>
+        <Link href={Routes.admin_purchase_path(giftee_purchase_id)}>{giftee_purchase_id}</Link>
       </dd>
     </dl>
   </details>
-)
+);
 
 export default AdminPurchasesGiftSenderInfo;

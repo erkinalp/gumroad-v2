@@ -1,7 +1,8 @@
+import { usePage } from "@inertiajs/react";
 import React from "react";
-import { usePage } from '@inertiajs/react';
-import User, { type User as UserType } from "$app/components/Admin/Users/User";
+
 import AdminUserAndProductsTabs from "$app/components/Admin/UserAndProductsTabs";
+import User, { type User as UserType } from "$app/components/Admin/Users/User";
 
 type PageProps = {
   user: UserType;

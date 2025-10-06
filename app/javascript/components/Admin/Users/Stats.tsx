@@ -2,9 +2,9 @@ import * as React from "react";
 
 import { request, assertResponseError } from "$app/utils/request";
 
+import Loading from "$app/components/Admin/Loading";
 import { showAlert } from "$app/components/server-components/Alert";
 import { useRunOnce } from "$app/components/useRunOnce";
-import Loading from "$app/components/Admin/Loading";
 
 type UserStatsProps = {
   total: string;

@@ -1,5 +1,6 @@
-import React from "react";
 import { Link } from "@inertiajs/react";
+import React from "react";
+
 import DateTimeWithRelativeTooltip from "$app/components/Admin/DateTimeWithRelativeTooltip";
 
 type AuthorProps = {
@@ -21,14 +22,16 @@ const AdminCommentableComment = ({ comment }: { comment: CommentProps }) => (
   <div role="listitem">
     <div className="content">
       <div>
-        <ul className="inline mb-2">
-          <li><strong>{comment.comment_type}</strong></li>
+        <ul className="mb-2 inline">
           <li>
-            {
-              comment.author ?
-                <Link href={Routes.admin_user_url(comment.author.id)}>{comment.author.name || comment.author.email}</Link> :
-                comment.author_name
-            }
+            <strong>{comment.comment_type}</strong>
+          </li>
+          <li>
+            {comment.author ? (
+              <Link href={Routes.admin_user_url(comment.author.id)}>{comment.author.name || comment.author.email}</Link>
+            ) : (
+              comment.author_name
+            )}
           </li>
           <li>
             <DateTimeWithRelativeTooltip date={comment.updated_at} />

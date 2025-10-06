@@ -1,8 +1,10 @@
-import React from "react";
 import { usePage } from "@inertiajs/react";
+import React from "react";
+
+import { Pagination } from "$app/hooks/useLazyFetch";
+
 import AdminActionCallInfos from "$app/components/Admin/ActionCallInfos";
 import { type AdminActionCallInfoProps } from "$app/components/Admin/ActionCallInfos/ActionCallInfo";
-import { Pagination } from "$app/hooks/useLazyFetch";
 
 type Props = {
   admin_action_call_infos: AdminActionCallInfoProps[];
@@ -14,10 +16,7 @@ const AdminActionCallDashboardShow = () => {
 
   return (
     <div>
-      <AdminActionCallInfos
-        action_call_infos={admin_action_call_infos}
-        pagination={pagination}
-      />
+      <AdminActionCallInfos action_call_infos={admin_action_call_infos} pagination={pagination} />
     </div>
   );
 };

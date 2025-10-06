@@ -1,9 +1,11 @@
-import React from "react";
 import { Link } from "@inertiajs/react";
-import DateTimeWithRelativeTooltip from "$app/components/Admin/DateTimeWithRelativeTooltip";
-import { formatDate } from "$app/utils/date";
+import React from "react";
+
 import { formatPriceCentsWithCurrencySymbol } from "$app/utils/currency";
+import { formatDate } from "$app/utils/date";
+
 import { AdminActionButton } from "$app/components/Admin/ActionButton";
+import DateTimeWithRelativeTooltip from "$app/components/Admin/DateTimeWithRelativeTooltip";
 
 export type Payout = {
   id: number;
@@ -35,146 +37,164 @@ export type Payout = {
   created_at: string;
   unclaimed: boolean;
   non_terminal_state: boolean;
-}
+};
 
 type Props = {
   payout: Payout;
-}
-
-const Payout = ({ payout }: Props) => {
-  return (
-    <div className="card">
-      <div>
-        <h3>
-          <span>{payout.displayed_amount} to&nbsp;</span>
-          <Link href={Routes.admin_user_path(payout.user.id)} title={payout.user.id.toString()}>
-            {payout.user.name}
-          </Link>
-        </h3>
-
-        <DateTimeWithRelativeTooltip date={payout.created_at} />
-      </div>
-
-      <hr />
-
-      <div>
-        <dl>
-          <dt>ID</dt>
-          <dd><Link href={Routes.admin_payout_path(payout.id)} title={payout.id.toString()}>{payout.id}</Link></dd>
-
-          <dt>Processor</dt>
-          <dd>{payout.processor.toUpperCase()}</dd>
-
-          <dt>Payout period end date</dt>
-          <dd>{payout.payout_period_end_date ? formatDate(new Date(payout.payout_period_end_date), { dateStyle: "long" }) : "None"}</dd>
-
-          <dt>Fee</dt>
-          <dd>{formatPriceCentsWithCurrencySymbol("usd", payout.processor_fee_cents, { symbolFormat: "long", noCentsIfWhole: true })}</dd>
-
-          <dt>State</dt>
-          <dd>{payout.state}</dd>
-
-          {payout.is_stripe_processor && (
-            <>
-              <dt>Stripe Transfer ID</dt>
-              <dd><Link href={Routes.admin_payout_path(payout.id)} title={payout.id.toString()}>{payout.stripe_transfer_id}</Link></dd>
-
-              <dt>Stripe Account ID</dt>
-              <dd><Link href={Routes.admin_payout_path(payout.id)} title={payout.id.toString()}>{payout.stripe_connect_account_id}</Link></dd>
-            </>
-          )}
-
-          {payout.failed && (
-            <>
-              <dt>Failure reason</dt>
-              <dd>{payout.humanized_failure_reason}</dd>
-            </>
-          )}
-
-          {payout.bank_account ? (
-            <>
-              <dt>Account holder's name</dt>
-              <dd>{payout.bank_account.credit_card.visual}</dd>
-
-              <dt>Account</dt>
-              <dd>{payout.bank_account.formatted_account}</dd>
-            </>
-          ) : (
-            <>
-              <dt>PayPal email</dt>
-              <dd>{payout.payment_address}</dd>
-
-              <dt>PayPal Transaction ID</dt>
-              <dd>{payout.txn_id}</dd>
-
-              <dt>PayPal Correlation ID</dt>
-              <dd>{payout.correlation_id}</dd>
-
-              {payout.was_created_in_split_mode && (
-                <>
-                  <dt>Split payment info</dt>
-                  <dd>
-                    <pre>{JSON.stringify(payout.split_payments_info, null, 2)}</pre>
-                  </dd>
-                </>
-              )}
-            </>
-          )}
-
-          <hr />
-
-          <div className="override grid grid-cols-[repeat(auto-fit,minmax(var(--dynamic-grid),max-content))] gap-2">
-            {payout.cancelled || payout.failed || payout.returned ? (
-              <AdminActionButton
-                url={Routes.retry_admin_payout_path(payout.id)}
-                label="Retry"
-                confirm_message="Are you sure you want to retry this payment?"
-                loading="Retrying..."
-                done="Retried."
-              />
-            ) : payout.processing && payout.created_at_less_than_2_days_ago ? (
-              <AdminActionButton
-                url={Routes.fail_admin_payout_path(payout.id)}
-                label="Mark failed"
-                confirm_message="Are you sure you want to mark this payment as failed?"
-                loading="Marking failed..."
-                done="Marked failed."
-              />
-            ) : payout.unclaimed ? (
-              <AdminActionButton
-                url={Routes.cancel_admin_payout_path(payout.id)}
-                label="Mark cancelled"
-                confirm_message="Are you sure you want to mark this payment as cancelled?"
-                loading="Cancelling..."
-                done="Cancelled!"
-              />
-            ) : null}
-          </div>
-
-          { payout.is_paypal_processor && payout.non_terminal_state && (
-            <>
-              <AdminActionButton
-                url={Routes.sync_admin_payout_path(payout.id)}
-                label="Sync with PayPal"
-                confirm_message="Are you sure you want to try and sync this payment with PayPal?"
-                loading="Syncing..."
-                done="Synced!"
-              />
-
-              <AdminActionButton
-                url={Routes.sync_all_admin_user_payouts_path(payout.id)}
-                label="Sync ALL stuck PayPal payouts"
-                confirm_message="We will enqueue a job to sync ALL stuck PayPal payouts. Do you want to continue?"
-                loading="Enqueuing..."
-                done="Enqueued!"
-              />
-            </>
-          )}
-
-        </dl>
-      </div>
-    </div>
-  )
 };
+
+const Payout = ({ payout }: Props) => (
+  <div className="card">
+    <div>
+      <h3>
+        <span>{payout.displayed_amount} to&nbsp;</span>
+        <Link href={Routes.admin_user_path(payout.user.id)} title={payout.user.id.toString()}>
+          {payout.user.name}
+        </Link>
+      </h3>
+
+      <DateTimeWithRelativeTooltip date={payout.created_at} />
+    </div>
+
+    <hr />
+
+    <div>
+      <dl>
+        <dt>ID</dt>
+        <dd>
+          <Link href={Routes.admin_payout_path(payout.id)} title={payout.id.toString()}>
+            {payout.id}
+          </Link>
+        </dd>
+
+        <dt>Processor</dt>
+        <dd>{payout.processor.toUpperCase()}</dd>
+
+        <dt>Payout period end date</dt>
+        <dd>
+          {payout.payout_period_end_date
+            ? formatDate(new Date(payout.payout_period_end_date), { dateStyle: "long" })
+            : "None"}
+        </dd>
+
+        <dt>Fee</dt>
+        <dd>
+          {formatPriceCentsWithCurrencySymbol("usd", payout.processor_fee_cents, {
+            symbolFormat: "long",
+            noCentsIfWhole: true,
+          })}
+        </dd>
+
+        <dt>State</dt>
+        <dd>{payout.state}</dd>
+
+        {payout.is_stripe_processor ? (
+          <>
+            <dt>Stripe Transfer ID</dt>
+            <dd>
+              <Link href={Routes.admin_payout_path(payout.id)} title={payout.id.toString()}>
+                {payout.stripe_transfer_id}
+              </Link>
+            </dd>
+
+            <dt>Stripe Account ID</dt>
+            <dd>
+              <Link href={Routes.admin_payout_path(payout.id)} title={payout.id.toString()}>
+                {payout.stripe_connect_account_id}
+              </Link>
+            </dd>
+          </>
+        ) : null}
+
+        {payout.failed ? (
+          <>
+            <dt>Failure reason</dt>
+            <dd>{payout.humanized_failure_reason}</dd>
+          </>
+        ) : null}
+
+        {payout.bank_account ? (
+          <>
+            <dt>Account holder's name</dt>
+            <dd>{payout.bank_account.credit_card.visual}</dd>
+
+            <dt>Account</dt>
+            <dd>{payout.bank_account.formatted_account}</dd>
+          </>
+        ) : (
+          <>
+            <dt>PayPal email</dt>
+            <dd>{payout.payment_address}</dd>
+
+            <dt>PayPal Transaction ID</dt>
+            <dd>{payout.txn_id}</dd>
+
+            <dt>PayPal Correlation ID</dt>
+            <dd>{payout.correlation_id}</dd>
+
+            {payout.was_created_in_split_mode ? (
+              <>
+                <dt>Split payment info</dt>
+                <dd>
+                  <pre>{JSON.stringify(payout.split_payments_info, null, 2)}</pre>
+                </dd>
+              </>
+            ) : null}
+          </>
+        )}
+
+        <hr />
+
+        <div className="override grid grid-cols-[repeat(auto-fit,minmax(var(--dynamic-grid),max-content))] gap-2">
+          {payout.cancelled || payout.failed || payout.returned ? (
+            <AdminActionButton
+              url={Routes.retry_admin_payout_path(payout.id)}
+              label="Retry"
+              confirm_message="Are you sure you want to retry this payment?"
+              loading="Retrying..."
+              done="Retried."
+            />
+          ) : payout.processing && payout.created_at_less_than_2_days_ago ? (
+            <AdminActionButton
+              url={Routes.fail_admin_payout_path(payout.id)}
+              label="Mark failed"
+              confirm_message="Are you sure you want to mark this payment as failed?"
+              loading="Marking failed..."
+              done="Marked failed."
+            />
+          ) : payout.unclaimed ? (
+            <AdminActionButton
+              url={Routes.cancel_admin_payout_path(payout.id)}
+              label="Mark cancelled"
+              confirm_message="Are you sure you want to mark this payment as cancelled?"
+              loading="Cancelling..."
+              done="Cancelled!"
+            />
+          ) : null}
+        </div>
+
+        {payout.is_paypal_processor && payout.non_terminal_state ? (
+          <>
+            <AdminActionButton
+              url={Routes.sync_admin_payout_path(payout.id)}
+              label="Sync with PayPal"
+              confirm_message="Are you sure you want to try and sync this payment with PayPal?"
+              loading="Syncing..."
+              done="Synced!"
+            />
+
+            <AdminActionButton
+              url={Routes.sync_all_admin_user_payouts_path(payout.id)}
+              label="Sync ALL stuck PayPal payouts"
+              confirm_message="We will enqueue a job to sync ALL stuck PayPal payouts. Do you want to continue?"
+              loading="Enqueuing..."
+              done="Enqueued!"
+            />
+          </>
+        ) : null}
+      </dl>
+    </div>
+  </div>
+);
 
 export default Payout;

@@ -1,15 +1,15 @@
 import React from "react";
 
-import AdminPurchasesHeader from "$app/components/Admin/Purchases/Header";
-import AdminPurchasesCreator from "$app/components/Admin/Purchases/Creator";
-import AdminPurchasesInfo from "$app/components/Admin/Purchases/Info";
-import AdminPurchasesGiftSenderInfo from "$app/components/Admin/Purchases/GiftSenderInfo";
-import AdminPurchasesEditGifteeEmail from "$app/components/Admin/Purchases/EditGifteeEmail";
-import AdminPurchasesGiftReceiverInfo from "$app/components/Admin/Purchases/GiftReceiverInfo";
-import AdminPurchasesResendReceiptForm from "$app/components/Admin/Purchases/ResendReceiptForm";
 import AdminPurchasesActions from "$app/components/Admin/Purchases/Actions";
 import AdminPurchasesComments from "$app/components/Admin/Purchases/Comments";
+import AdminPurchasesCreator from "$app/components/Admin/Purchases/Creator";
+import AdminPurchasesEditGifteeEmail from "$app/components/Admin/Purchases/EditGifteeEmail";
 import AdminPurchasesFooter from "$app/components/Admin/Purchases/Footer";
+import AdminPurchasesGiftReceiverInfo from "$app/components/Admin/Purchases/GiftReceiverInfo";
+import AdminPurchasesGiftSenderInfo from "$app/components/Admin/Purchases/GiftSenderInfo";
+import AdminPurchasesHeader from "$app/components/Admin/Purchases/Header";
+import AdminPurchasesInfo from "$app/components/Admin/Purchases/Info";
+import AdminPurchasesResendReceiptForm from "$app/components/Admin/Purchases/ResendReceiptForm";
 
 type MerchantAccount = {
   id: number;
@@ -199,69 +199,59 @@ export interface Purchase {
   created_at: string;
   updated_at: string;
   deleted_at: string;
-};
+}
 
 type Props = {
   purchase: Purchase;
 };
 
-const AdminPurchasesPurchase = ({ purchase }: Props) => {
-  return (
-    <div className="card">
-      <div className="grid gap-2">
-        <h2 className="purchase-title">
-          <AdminPurchasesHeader purchase={purchase} />
-        </h2>
+const AdminPurchasesPurchase = ({ purchase }: Props) => (
+  <div className="card">
+    <div className="grid gap-2">
+      <h2 className="purchase-title">
+        <AdminPurchasesHeader purchase={purchase} />
+      </h2>
 
-        <AdminPurchasesCreator purchase={purchase} />
-      </div>
-
-      <hr />
-
-      <AdminPurchasesInfo purchase={purchase} />
-
-      {
-        purchase.is_gift_sender_purchase && (
-          <>
-            <AdminPurchasesGiftSenderInfo gift={purchase.gift} />
-            <AdminPurchasesEditGifteeEmail purchase={purchase} />
-          </>
-        )
-      }
-
-      {
-        purchase.is_gift_receiver_purchase && (
-          <>
-            <AdminPurchasesGiftReceiverInfo gift={purchase.gift} />
-          </>
-        )
-      }
-
-      {
-        purchase.successful || purchase.preorder_authorization_successful || purchase.is_free_trial_purchase && (
-          <>
-            <hr />
-            <details>
-              <summary>
-                <h3>Resend receipt</h3>
-              </summary>
-              <AdminPurchasesResendReceiptForm purchase={purchase} />
-            </details>
-          </>
-        )
-      }
-
-      <hr />
-      <div className="button-group">
-        <AdminPurchasesActions purchase={purchase} />
-      </div>
-
-      <AdminPurchasesComments purchase={purchase} />
-
-      <hr />
-      <AdminPurchasesFooter purchase={purchase} />
+      <AdminPurchasesCreator purchase={purchase} />
     </div>
-  );
-}
+
+    <hr />
+
+    <AdminPurchasesInfo purchase={purchase} />
+
+    {purchase.is_gift_sender_purchase ? (
+      <>
+        <AdminPurchasesGiftSenderInfo gift={purchase.gift} />
+        <AdminPurchasesEditGifteeEmail purchase={purchase} />
+      </>
+    ) : null}
+
+    {purchase.is_gift_receiver_purchase ? <AdminPurchasesGiftReceiverInfo gift={purchase.gift} /> : null}
+
+    {purchase.successful ||
+      purchase.preorder_authorization_successful ||
+      (purchase.is_free_trial_purchase && (
+        <>
+          <hr />
+          <details>
+            <summary>
+              <h3>Resend receipt</h3>
+            </summary>
+            <AdminPurchasesResendReceiptForm purchase={purchase} />
+          </details>
+        </>
+      ))}
+
+    <hr />
+    <div className="button-group">
+      <AdminPurchasesActions purchase={purchase} />
+    </div>
+
+    <AdminPurchasesComments purchase={purchase} />
+
+    <hr />
+    <AdminPurchasesFooter purchase={purchase} />
+  </div>
+);
 
 export default AdminPurchasesPurchase;

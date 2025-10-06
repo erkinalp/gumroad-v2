@@ -1,11 +1,10 @@
 import React from "react";
 
 import Loading from "$app/components/Admin/Loading";
-import type { User } from "$app/components/Admin/Users/User";
-import type { Product } from "$app/components/Admin/Products/Product";
 import type { Compliance } from "$app/components/Admin/Products/FlagForTosViolations";
-
 import AdminFlagForTosViolationsForm from "$app/components/Admin/Products/FlagForTosViolations/Form";
+import type { Product } from "$app/components/Admin/Products/Product";
+import type { User } from "$app/components/Admin/Users/User";
 
 export type TosViolationFlags = {
   id: number;
@@ -32,8 +31,8 @@ const FlagForTosViolationsContent = ({
   onSuccess = () => {},
 }: FlagForTosViolationsContentProps) => {
   if (!flaggedForTosViolation) {
-    const suspendTosSuccessMessage = `User was flagged for TOS violation and product ${product.is_tiered_membership ? 'unpublished' : 'deleted'}.`;
-    const suspendTosConfirmMessage = `Are you sure you want to flag the user and ${product.is_tiered_membership ? 'unpublish' : 'delete'} the product?`;
+    const suspendTosSuccessMessage = `User was flagged for TOS violation and product ${product.is_tiered_membership ? "unpublished" : "deleted"}.`;
+    const suspendTosConfirmMessage = `Are you sure you want to flag the user and ${product.is_tiered_membership ? "unpublish" : "delete"} the product?`;
 
     return (
       <AdminFlagForTosViolationsForm
@@ -45,7 +44,7 @@ const FlagForTosViolationsContent = ({
         default_reason={compliance.default_reason}
         onSuccess={onSuccess}
       />
-    )
+    );
   }
 
   if (isLoading) {

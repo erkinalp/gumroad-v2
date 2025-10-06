@@ -1,5 +1,6 @@
+import { useForm } from "@inertiajs/react";
 import React from "react";
-import { useForm } from '@inertiajs/react';
+
 import { showAlert } from "$app/components/server-components/Alert";
 
 export type Props = {
@@ -10,13 +11,7 @@ export type Props = {
   notice_message: string;
 };
 
-const Form = ({
-  action,
-  authenticity_token,
-  header,
-  button_label,
-  notice_message
-}: Props) => {
+const Form = ({ action, authenticity_token, header, button_label, notice_message }: Props) => {
   const { data, setData, put, reset } = useForm({
     authenticity_token,
     email_domains: {
@@ -47,20 +42,17 @@ const Form = ({
         <header>{header}</header>
 
         <p>
-          For emails like <code>john@example.com</code>, <code>john@example.net</code>, <code>john@list.example.org</code>, enter what is to the right of the <code>@</code> character.
+          For emails like <code>john@example.com</code>, <code>john@example.net</code>,{" "}
+          <code>john@list.example.org</code>, enter what is to the right of the <code>@</code> character.
         </p>
 
         <figure className="code">
-          <figcaption>
-            Example with comma-separated items
-          </figcaption>
+          <figcaption>Example with comma-separated items</figcaption>
           <pre>example.com, example.net, list.example.org</pre>
         </figure>
 
         <figure className="code">
-          <figcaption>
-            Example with items separated by newline
-          </figcaption>
+          <figcaption>Example with items separated by newline</figcaption>
           <pre>
             example.com
             <br />
@@ -80,7 +72,9 @@ const Form = ({
           autoComplete="off"
         />
 
-        <button type="submit" className="button primary">{button_label}</button>
+        <button type="submit" className="button primary">
+          {button_label}
+        </button>
       </section>
     </form>
   );

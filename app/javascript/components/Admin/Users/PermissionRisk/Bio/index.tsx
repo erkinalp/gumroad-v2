@@ -16,10 +16,12 @@ const Bio = ({ user }: BioProps) => (
       {user.bio ? (
         <div>{user.bio}</div>
       ) : (
-        <div className="info" role="status">No bio provided.</div>
+        <div className="info" role="status">
+          No bio provided.
+        </div>
       )}
     </details>
   </>
-)
+);
 
 export default Bio;

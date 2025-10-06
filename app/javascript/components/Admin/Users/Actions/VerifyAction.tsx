@@ -1,12 +1,13 @@
 import React from "react";
-import { type User } from "$app/components/Admin/Users/User";
+
 import AdminAction from "$app/components/Admin/ActionButton";
+import { type User } from "$app/components/Admin/Users/User";
 
 type VerifyActionProps = {
   user: User;
 };
 
-const VerifyAction = ({ user: { id, verified } }: VerifyActionProps) => (
+const VerifyAction = ({ user: { id, verified } }: VerifyActionProps) =>
   verified ? (
     <AdminAction
       label="Unverify"
@@ -23,7 +24,6 @@ const VerifyAction = ({ user: { id, verified } }: VerifyActionProps) => (
       done="Unverify"
       success_message="Verified."
     />
-  )
-);
+  );
 
 export default VerifyAction;

@@ -1,18 +1,17 @@
 import { usePage } from "@inertiajs/react";
 import React from "react";
 
-import { type User } from "$app/components/Admin/Users/User";
-import { type Compliance } from "$app/components/Admin/Products/FlagForTosViolations";
-
-import AdminProductHeader from "$app/components/Admin/Products/Header";
+import AdminProductActions from "$app/components/Admin/Products/Actions";
+import AdminProductComments from "$app/components/Admin/Products/Comments";
 import AdminProductDescription from "$app/components/Admin/Products/Description";
 import AdminProductDetails from "$app/components/Admin/Products/Details";
-import AdminProductInfo from "$app/components/Admin/Products/Info";
-import AdminProductActions from "$app/components/Admin/Products/Actions";
+import { type Compliance } from "$app/components/Admin/Products/FlagForTosViolations";
 import AdminFlagForTosViolations from "$app/components/Admin/Products/FlagForTosViolations";
-import AdminProductPurchases from "$app/components/Admin/Products/Purchases";
-import AdminProductComments from "$app/components/Admin/Products/Comments";
 import AdminProductFooter from "$app/components/Admin/Products/Footer";
+import AdminProductHeader from "$app/components/Admin/Products/Header";
+import AdminProductInfo from "$app/components/Admin/Products/Info";
+import AdminProductPurchases from "$app/components/Admin/Products/Purchases";
+import { type User } from "$app/components/Admin/Users/User";
 
 type ProductFile = {
   id: number;
@@ -52,7 +51,7 @@ export type Product = {
 type AdminUsersProductsProductProps = {
   product: Product;
   is_affiliate_user?: boolean;
-}
+};
 
 const AdminUsersProductsProduct = ({ product, is_affiliate_user = false }: AdminUsersProductsProductProps) => {
   const { url, props } = usePage();

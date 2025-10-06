@@ -1,8 +1,9 @@
 import React from "react";
-import Header from "$app/components/Admin/Users/PayoutInfo/Header";
-import AdminTogglePayoutsForm from "$app/components/Admin/Users/PayoutInfo/TogglePayoutsForm";
-import AdminManualPayoutForm from "$app/components/Admin/Users/PayoutInfo/ManualPayoutForm";
+
 import Loading from "$app/components/Admin/Loading";
+import Header from "$app/components/Admin/Users/PayoutInfo/Header";
+import AdminManualPayoutForm from "$app/components/Admin/Users/PayoutInfo/ManualPayoutForm";
+import AdminTogglePayoutsForm from "$app/components/Admin/Users/PayoutInfo/TogglePayoutsForm";
 
 export type ActiveBankAccountProps = {
   type: string;
@@ -44,17 +45,27 @@ type PayoutInfoComponentProps = {
 };
 
 const PayoutInfo = ({ user_id, payoutInfo, isLoading }: PayoutInfoComponentProps) => {
-  if (isLoading) return <Loading />
+  if (isLoading) return <Loading />;
   if (!payoutInfo) return <div>No payout info found.</div>;
 
-  const { active_bank_account, payment_address, payouts_paused_by_source, payouts_paused_for_reason, manual_payout_info } = payoutInfo;
+  const {
+    active_bank_account,
+    payment_address,
+    payouts_paused_by_source,
+    payouts_paused_for_reason,
+    manual_payout_info,
+  } = payoutInfo;
 
   return (
     <div className="paragraphs">
       <Header active_bank_account={active_bank_account} payment_address={payment_address} />
       <hr />
-      <AdminTogglePayoutsForm user_id={user_id} payouts_paused_by={payouts_paused_by_source} reason={payouts_paused_for_reason} />
-      { manual_payout_info && <AdminManualPayoutForm user_id={user_id} {...manual_payout_info} />}
+      <AdminTogglePayoutsForm
+        user_id={user_id}
+        payouts_paused_by={payouts_paused_by_source}
+        reason={payouts_paused_for_reason}
+      />
+      {manual_payout_info ? <AdminManualPayoutForm user_id={user_id} {...manual_payout_info} /> : null}
     </div>
   );
 };

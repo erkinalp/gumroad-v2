@@ -1,9 +1,11 @@
-import React from "react";
 import { usePage, WhenVisible } from "@inertiajs/react";
-import User, { type User as UserType } from "$app/components/Admin/Users/User";
-import EmptyState from "$app/components/Admin/EmptyState";
+import React from "react";
+
 import { type Pagination } from "$app/hooks/useLazyFetch";
+
+import EmptyState from "$app/components/Admin/EmptyState";
 import Loading from "$app/components/Admin/Loading";
+import User, { type User as UserType } from "$app/components/Admin/Users/User";
 
 type PageProps = {
   users: UserType[];
@@ -14,9 +16,7 @@ type Props = {
   is_affiliate_user?: boolean;
 };
 
-const AdminUsers = ({
-  is_affiliate_user = false
-}: Props) => {
+const AdminUsers = ({ is_affiliate_user = false }: Props) => {
   const { pagination, users } = usePage().props as unknown as PageProps;
 
   const RenderNextUsersWhenVisible = () => {
@@ -26,8 +26,8 @@ const AdminUsers = ({
       const params = {
         data: { page: pagination.page + 1 },
         only: ["users", "pagination"],
-        preserveScroll: true
-      }
+        preserveScroll: true,
+      };
 
       return <WhenVisible fallback={<Loading />} params={params} children />;
     }
@@ -35,10 +35,10 @@ const AdminUsers = ({
 
   return (
     <div className="paragraphs">
-      {users.map(user => <User key={user.id} user={user} is_affiliate_user={is_affiliate_user} />)}
-      {pagination.page === 1 && users.length === 0 && (
-        <EmptyState message="No users found." />
-      )}
+      {users.map((user) => (
+        <User key={user.id} user={user} is_affiliate_user={is_affiliate_user} />
+      ))}
+      {pagination.page === 1 && users.length === 0 && <EmptyState message="No users found." />}
       <RenderNextUsersWhenVisible />
     </div>
   );

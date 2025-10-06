@@ -1,8 +1,11 @@
-import React from "react";
 import { router } from "@inertiajs/react";
+import React from "react";
 
-import AdminActionCallInfosActionCallInfo, { type AdminActionCallInfoProps } from "$app/components/Admin/ActionCallInfos/ActionCallInfo";
 import { type Pagination as PaginationType } from "$app/hooks/useLazyFetch";
+
+import AdminActionCallInfosActionCallInfo, {
+  type AdminActionCallInfoProps,
+} from "$app/components/Admin/ActionCallInfos/ActionCallInfo";
 import { Pagination } from "$app/components/Pagination";
 
 type AdminActionCallInfosProps = {
@@ -10,10 +13,7 @@ type AdminActionCallInfosProps = {
   pagination: PaginationType;
 };
 
-const AdminActionCallInfos = ({
-  action_call_infos,
-  pagination,
-}: AdminActionCallInfosProps) => {
+const AdminActionCallInfos = ({ action_call_infos, pagination }: AdminActionCallInfosProps) => {
   const paginationProps = {
     pages: Math.ceil(pagination.count / pagination.limit),
     page: pagination.page,
@@ -41,27 +41,25 @@ const AdminActionCallInfos = ({
         </thead>
         <tbody>
           {action_call_infos.map((action_call_info, index) => (
-            <>
-              <AdminActionCallInfosActionCallInfo
-                key={index}
-                index={index + 1}
-                controller_name={action_call_info.controller_name}
-                action_name={action_call_info.action_name}
-                call_count={action_call_info.call_count}
-              />
-            </>
+            <AdminActionCallInfosActionCallInfo
+              key={index}
+              index={index + 1}
+              controller_name={action_call_info.controller_name}
+              action_name={action_call_info.action_name}
+              call_count={action_call_info.call_count}
+            />
           ))}
           {action_call_infos.length === 0 && pagination.page === 1 && (
             <tr>
-              <td colSpan={4} className="text-center">No action call infos found.</td>
+              <td colSpan={4} className="text-center">
+                No action call infos found.
+              </td>
             </tr>
           )}
         </tbody>
       </table>
 
-      {paginationProps.pages > 1 && (
-        <Pagination pagination={paginationProps} onChangePage={onChangePage} />
-      )}
+      {paginationProps.pages > 1 && <Pagination pagination={paginationProps} onChangePage={onChangePage} />}
     </div>
   );
 };

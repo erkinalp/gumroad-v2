@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import { Form } from "$app/components/Admin/Form";
 import { showAlert } from "$app/components/server-components/Alert";
 
@@ -27,6 +28,5 @@ const AdminAddCreditForm = ({ user_id }: { user_id: number }) => (
     )}
   </Form>
 );
-
 
 export default AdminAddCreditForm;

@@ -1,9 +1,9 @@
 import React from "react";
+
 import { formatDate } from "$app/utils/date";
 
-import { YesIcon, NoIcon } from "$app/components/Icons";
-
 import Loading from "$app/components/Admin/Loading";
+import { YesIcon, NoIcon } from "$app/components/Icons";
 
 type ComplianceInfoComponentProps = {
   isLoading: boolean;
@@ -31,14 +31,10 @@ export type ComplianceInfoProps = {
   business_country: string | null;
   business_tax_id: string | null;
   created_at: string;
-}
+};
 
-const ComplianceInfo = ({
-  complianceInfo,
-  isLoading,
-}: ComplianceInfoComponentProps) => {
-
-  if (isLoading) return <Loading />
+const ComplianceInfo = ({ complianceInfo, isLoading }: ComplianceInfoComponentProps) => {
+  if (isLoading) return <Loading />;
 
   if (!complianceInfo) return <div>No compliance info found.</div>;
 
@@ -66,7 +62,7 @@ const ComplianceInfo = ({
   } = complianceInfo || {};
 
   return (
-    <div className="grid md:grid-cols-2 gap-4 mt-4">
+    <div className="mt-4 grid gap-4 md:grid-cols-2">
       <div className="paragraphs">
         <h4 className="font-bold">Personal Info</h4>
         <dl>
@@ -91,7 +87,7 @@ const ComplianceInfo = ({
           <dt>Address State</dt>
           <dd>
             {state}
-            {state_code && ` (${state_code})`}
+            {state_code ? ` (${state_code})` : null}
           </dd>
 
           <dt>Address Zip</dt>
@@ -100,7 +96,7 @@ const ComplianceInfo = ({
           <dt>Address Country</dt>
           <dd>
             {country}
-            {country_code && ` (${country_code})`}
+            {country_code ? ` (${country_code})` : null}
           </dd>
 
           <dt>Individual Tax ID Provided</dt>
@@ -108,7 +104,7 @@ const ComplianceInfo = ({
         </dl>
       </div>
 
-      {is_business && (
+      {is_business ? (
         <div className="paragraphs">
           <h4 className="font-bold">Business Info</h4>
           <dl>
@@ -137,7 +133,7 @@ const ComplianceInfo = ({
             <dd>{business_tax_id ? <YesIcon /> : <NoIcon />}</dd>
           </dl>
         </div>
-      )}
+      ) : null}
     </div>
   );
 };

@@ -1,5 +1,6 @@
+import { usePage } from "@inertiajs/react";
 import React from "react";
-import { usePage } from '@inertiajs/react';
+
 import AdminSalesReportsPage from "$app/components/Admin/SalesReportsPage";
 
 type Props = {
@@ -20,12 +21,7 @@ type JobHistoryItem = {
 };
 
 const AdminSalesReports = () => {
-  const {
-    countries,
-    job_history,
-    form_action,
-    authenticity_token,
-  } = usePage().props as unknown as Props;
+  const { countries, job_history, form_action, authenticity_token } = usePage().props as unknown as Props;
 
   return (
     <AdminSalesReportsPage

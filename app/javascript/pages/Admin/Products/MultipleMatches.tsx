@@ -1,20 +1,21 @@
-import React from "react";
 import { Link, usePage } from "@inertiajs/react";
-import { Icon } from "$app/components/Icons";
+import React from "react";
+
 import DateTimeWithRelativeTooltip from "$app/components/Admin/DateTimeWithRelativeTooltip";
+import { Icon } from "$app/components/Icons";
 
 type ProductMatchProps = {
   id: number;
   name: string;
   price_formatted: string;
   long_url: string;
-  user: { id: number; name: string; },
+  user: { id: number; name: string };
   created_at: string;
-}
+};
 
 type Props = {
   product_matches: ProductMatchProps[];
-}
+};
 
 const ProductMatch = ({ product }: { product: ProductMatchProps }) => {
   const userName = product.user.name && product.user.name.length > 0 ? product.user.name : `User ${product.user.id}`;
@@ -55,7 +56,9 @@ const AdminProductsMultipleMatches = () => {
         </tr>
       </thead>
       <tbody>
-        {product_matches.map((product) => <ProductMatch key={product.id} product={product} />)}
+        {product_matches.map((product) => (
+          <ProductMatch key={product.id} product={product} />
+        ))}
       </tbody>
     </table>
   );
