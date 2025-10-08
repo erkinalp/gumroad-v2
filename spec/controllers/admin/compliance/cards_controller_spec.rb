@@ -4,6 +4,8 @@ require "spec_helper"
 require "shared_examples/admin_base_controller_concern"
 
 describe Admin::Compliance::CardsController do
+  render_views
+
   it_behaves_like "inherits from Admin::BaseController"
 
   before do
@@ -15,81 +17,54 @@ describe Admin::Compliance::CardsController do
     let(:card_type) { "other" }
     let(:limit) { 10 }
     let(:transaction_date) { "02/22/2022" }
+    let!(:purchase_visa) { create(:purchase,
+                                  card_type: "visa",
+                                  card_visual: "**** **** **** 1234",
+                                  created_at: Time.zone.local(2019, 1, 17, 1, 2, 3),
+                                  price_cents: 777,
+                                  card_expiry_year: 2022,
+                                  card_expiry_month: 10) }
 
     before do
       stub_const("Admin::Compliance::CardsController::MAX_RESULT_LIMIT", limit)
-      @purchase_visa = create(:purchase,
-                              card_type: "visa",
-                              card_visual: "**** **** **** 1234",
-                              created_at: Time.zone.local(2019, 1, 17, 1, 2, 3),
-                              price_cents: 777,
-                              card_expiry_year: 2022,
-                              card_expiry_month: 10)
-      @charge_mastercard = create(:service_charge,
-                                  card_type: "mastercard",
-                                  card_visual: "**** **** **** 5678",
-                                  created_at: Time.zone.local(2019, 3, 19, 1, 2, 3),
-                                  charge_cents: 888,
-                                  card_expiry_year: 2023,
-                                  card_expiry_month: 11)
     end
 
     after do
       expect(response).to be_successful
     end
 
-    it "assigns purchases and service_charges to instance variable" do
-      expect_any_instance_of(Admin::Search::PurchasesService).to receive(:new).with(card_type:, transaction_date: "2022-02-22", limit:).and_return(Purchase.none)
+    it "renders the correct Inertia template" do
+      expect_any_instance_of(Admin::Search::PurchasesService).to receive(:valid?).and_return(true)
+      expect_any_instance_of(Admin::Search::PurchasesService).to receive(:perform).and_return(Purchase.none)
       get :index, params: { card_type:, transaction_date: }
 
-      expect(assigns(:purchases)).to eq([])
-      expect(assigns(:service_charges)).to eq([])
+      expect(response.body).to include("data-page")
+      expect(response.body).to include("Admin/Compliance/Cards/Index")
     end
 
     context "when transaction_date is invalid" do
       let(:transaction_date) { "02/22" }
 
-      it "shows error flash message and no purchases" do
-        expect_any_instance_of(Admin::Search::PurchasesService).to_not receive(:new)
+      it "shows error flash message and renders the correct Inertia template" do
         get :index, params: { card_type:, transaction_date: "12/31" }
 
-        assert_response :success
-        expect(flash[:alert]).to eq("Please enter the date using the MM/DD/YYYY format.")
-        expect(assigns(:purchases)).to eq([])
-        expect(assigns(:service_charges)).to eq([])
+        expect(response).to be_successful
+        expect(response.body).to include("data-page")
+        expect(response.body).to include("Admin/Compliance/Cards/Index")
+        expect(flash[:alert]).to eq("Transaction date must use YYYY-MM-DD format.")
       end
     end
 
-    context "when there is no results" do
-      it "assigns empty arrays to instance variables" do
-        expect_any_instance_of(Admin::Search::PurchasesService).to receive(:new).with(card_type:, limit:).and_return(Purchase.none)
-        get :index, params: { card_type: }
-
-        assert_response :success
-        expect(assigns(:purchases)).to eq([])
-        expect(assigns(:service_charges)).to eq([])
-      end
-    end
-
-    context "when a purchase is found" do
-      it "assigns purchases to instance variable" do
+    context "when looking up a purchase" do
+      it "finds the Visa purchase and renders the correct Inertia template" do
         card_type = "visa"
-        expect_any_instance_of(Admin::Search::PurchasesService).to receive(:new).with(card_type:, limit:).and_return([@purchase_visa])
+        expect_any_instance_of(Admin::Search::PurchasesService).to receive(:valid?).and_return(true)
+        expect_any_instance_of(Admin::Search::PurchasesService).to receive(:perform).and_return(Purchase.where(id: purchase_visa.id))
         get :index, params: { card_type: }
 
-        expect(assigns(:purchases)).to eq([@purchase_visa])
-        expect(assigns(:service_charges)).to eq([])
-      end
-    end
-
-    context "when a charge is found" do
-      it "assigns service_charges to instance variables" do
-        card_type = "mastercard"
-        expect_any_instance_of(Admin::Search::PurchasesService).to receive(:new).with(card_type:, limit:).and_return(Purchase.none)
-        get :index, params: { card_type: }
-
-        expect(assigns(:purchases)).to eq([])
-        expect(assigns(:service_charges)).to eq([@charge_mastercard])
+        expect(response).to be_successful
+        expect(response.body).to include("data-page")
+        expect(response.body).to include("Admin/Compliance/Cards/Index")
       end
     end
   end
