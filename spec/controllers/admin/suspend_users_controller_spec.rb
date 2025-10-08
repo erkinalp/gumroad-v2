@@ -18,7 +18,21 @@ describe Admin::SuspendUsersController do
       get :show
 
       expect(response).to be_successful
-      expect(response).to render_template(:show)
+      expect(response.body).to include("data-page")
+      expect(response.body).to include("Admin/SuspendUsers/Show")
+
+      data_page = response.body.match(/data-page="([^"]+)"/)[1]
+      json_object = JSON.parse(CGI.unescapeHTML(data_page))
+      props = json_object["props"]
+
+      expect(props["title"]).to eq("Mass-suspend users")
+      expect(props["suspend_reasons"]).to eq([
+        "Violating our terms of service",
+        "Creating products that violate our ToS",
+        "Using Gumroad to commit fraud",
+        "Using Gumroad for posting spam or SEO manipulation",
+      ])
+      expect(props["authenticity_token"]).to be_present
     end
   end
 
