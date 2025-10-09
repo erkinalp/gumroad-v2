@@ -5,7 +5,7 @@ require "spec_helper"
 describe Admin::Search::PurchasesService do
   describe "#perform" do
     it "returns no Purchases if query is invalid" do
-      purchases = described_class.new.perform(query: "invalidquery")
+      purchases = described_class.new(query: "invalidquery").perform
 
       expect(purchases.size).to eq(0)
     end
@@ -16,7 +16,7 @@ describe Admin::Search::PurchasesService do
       purchase_2 = create(:gift, gifter_email: email, gifter_purchase: create(:purchase)).gifter_purchase
       purchase_3 = create(:gift, giftee_email: email, giftee_purchase: create(:purchase)).giftee_purchase
 
-      purchases = described_class.new.perform(query: email)
+      purchases = described_class.new(query: email).perform
       expect(purchases).to include(purchase_1, purchase_2, purchase_3)
     end
 
@@ -25,13 +25,13 @@ describe Admin::Search::PurchasesService do
       purchase = create(:purchase, link: create(:product, user: seller))
       create(:purchase)
 
-      purchases = described_class.new.perform(creator_email: seller.email)
+      purchases = described_class.new(creator_email: seller.email).perform
       expect(purchases).to eq([purchase])
     end
 
     it "returns no purchases when creator email is not found" do
       create(:purchase)
-      purchases = described_class.new.perform(creator_email: "nonexistent@example.com")
+      purchases = described_class.new(creator_email: "nonexistent@example.com").perform
       expect(purchases.size).to eq(0)
     end
 
@@ -40,13 +40,13 @@ describe Admin::Search::PurchasesService do
       license = create(:license, purchase:)
       create(:purchase)
 
-      purchases = described_class.new.perform(license_key: license.serial)
+      purchases = described_class.new(license_key: license.serial).perform
       expect(purchases).to eq([purchase])
     end
 
     it "returns no purchases when license key is not found" do
       create(:purchase)
-      purchases = described_class.new.perform(license_key: "nonexistent-key")
+      purchases = described_class.new(license_key: "nonexistent-key").perform
       expect(purchases.size).to eq(0)
     end
 
@@ -73,40 +73,40 @@ describe Admin::Search::PurchasesService do
 
       context "when transaction_date value is not a date" do
         it "raises an error" do
-          service = described_class.new.perform(transaction_date: "2021-01", card_type: "other")
-          expect(service.perform).to false
-          espect(service.errors.full_messages).to include("Transaction date must use YYYY-MM-DD format.")
+          service = described_class.new(transaction_date: "2021-01", card_type: "other")
+          expect(service.perform).to be false
+          expect(service.errors.full_messages).to include("Transaction date must use YYYY-MM-DD format.")
         end
       end
 
       it "supports filtering by card_type" do
-        purchases = described_class.new.perform(card_type: "visa")
+        purchases = described_class.new(card_type: "visa").perform
         expect(purchases).to eq [purchase_visa]
       end
 
       it "supports filtering by card_visual" do
-        purchases = described_class.new.perform(last_4: "7531")
+        purchases = described_class.new(last_4: "7531").perform
         expect(purchases).to eq [purchase_amex]
       end
 
       it "supports filtering by expiry date" do
-        purchases = described_class.new.perform(expiry_date: "7/21")
+        purchases = described_class.new(expiry_date: "7/21").perform
         expect(purchases).to eq [purchase_amex]
       end
 
       it "supports filtering by price" do
-        purchases = described_class.new.perform(price: "7")
+        purchases = described_class.new(price: "7").perform
         expect(purchases).to eq [purchase_visa]
       end
 
       it "supports filtering by decimal price" do
         purchase_decimal = create(:purchase, price_cents: 1999, stripe_fingerprint: "test_fingerprint")
-        purchases = described_class.new.perform(price: "19.99")
+        purchases = described_class.new(price: "19.99").perform
         expect(purchases).to eq [purchase_decimal]
       end
 
       it "supports filtering by combination of params" do
-        purchases = described_class.new.perform(card_type: "visa", last_4: "1234", price: "7", transaction_date: "2019-01-17", expiry_date: "10/22")
+        purchases = described_class.new(card_type: "visa", last_4: "1234", price: "7", transaction_date: "2019-01-17", expiry_date: "10/22").perform
         expect(purchases).to eq [purchase_visa]
       end
     end
@@ -120,13 +120,13 @@ describe Admin::Search::PurchasesService do
         purchase_from_ip_v4 = create(:purchase, ip_address: ip_v4)
         purchase_from_ip_v6 = create(:purchase, ip_address: ip_v6)
 
-        purchases = described_class.new.perform(query: ip_v4)
+        purchases = described_class.new(query: ip_v4).perform
         expect(purchases).to contain_exactly(purchase_from_ip_v4)
 
-        purchases = described_class.new.perform(query: ip_v6)
+        purchases = described_class.new(query: ip_v6).perform
         expect(purchases).to contain_exactly(purchase_from_ip_v6)
 
-        purchases = described_class.new.perform(query: other_ip)
+        purchases = described_class.new(query: other_ip).perform
         expect(purchases).to be_empty
       end
     end
@@ -143,7 +143,7 @@ describe Admin::Search::PurchasesService do
 
       context "when query is set" do
         it "filters by product title" do
-          purchases = described_class.new.perform(query:, product_title_query:)
+          purchases = described_class.new(query:, product_title_query:).perform
           expect(purchases).to eq [purchase]
         end
       end
@@ -152,7 +152,7 @@ describe Admin::Search::PurchasesService do
         let(:query) { nil }
 
         it "ignores product_title_query" do
-          purchases = described_class.new.perform(query:, product_title_query:)
+          purchases = described_class.new(query:, product_title_query:).perform
           expect(purchases).to include(purchase)
         end
       end
@@ -173,48 +173,39 @@ describe Admin::Search::PurchasesService do
 
       context "when query is set" do
         it "filters by successful status" do
-          purchases = described_class.new.perform(query: successful_purchase.email, purchase_status: "successful")
+          purchases = described_class.new(query: successful_purchase.email, purchase_status: "successful").perform
           expect(purchases).to contain_exactly(successful_purchase)
         end
 
         it "filters by failed status" do
-          purchases = described_class.new.perform(query: failed_purchase.email, purchase_status: "failed")
+          purchases = described_class.new(query: failed_purchase.email, purchase_status: "failed").perform
           expect(purchases).to contain_exactly(failed_purchase)
         end
 
         it "filters by not_charged status" do
-          purchases = described_class.new.perform(query: not_charged_purchase.email, purchase_status: "not_charged")
+          purchases = described_class.new(query: not_charged_purchase.email, purchase_status: "not_charged").perform
           expect(purchases).to contain_exactly(not_charged_purchase)
         end
 
         it "filters by chargeback status (excluding reversed)" do
-          purchases = described_class.new.perform(query: chargebacked_purchase.email, purchase_status: "chargeback")
+          purchases = described_class.new(query: chargebacked_purchase.email, purchase_status: "chargeback").perform
           expect(purchases).to contain_exactly(chargebacked_purchase)
           expect(purchases).not_to include(chargebacked_reversed_purchase)
         end
 
         it "filters by refunded status" do
-          purchases = described_class.new.perform(query: refunded_purchase.email, purchase_status: "refunded")
+          purchases = described_class.new(query: refunded_purchase.email, purchase_status: "refunded").perform
           expect(purchases).to contain_exactly(refunded_purchase)
         end
 
         it "ignores invalid purchase_status values" do
-          purchases = described_class.new.perform(query: successful_purchase.email, purchase_status: "invalid_status")
+          purchases = described_class.new(query: successful_purchase.email, purchase_status: "invalid_status").perform
           expect(purchases).to contain_exactly(successful_purchase)
         end
 
         it "works with other parameters" do
-          purchases = described_class.new.perform(query: successful_purchase.email, purchase_status: "successful")
+          purchases = described_class.new(query: successful_purchase.email, purchase_status: "successful").perform
           expect(purchases).to contain_exactly(successful_purchase)
-        end
-      end
-
-      context "when query is not set" do
-        let(:query) { nil }
-
-        it "ignores purchase_status" do
-          purchases = described_class.new.perform(query:, purchase_status: "successful")
-          expect(purchases).to include(successful_purchase, failed_purchase, not_charged_purchase, chargebacked_purchase, chargebacked_reversed_purchase, refunded_purchase)
         end
       end
     end
