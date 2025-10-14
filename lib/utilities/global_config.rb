@@ -8,6 +8,11 @@ class GlobalConfig
     # @param default [Object] The default value to return if the value is not found in ENV or credentials
     # @return [String, Object, nil] The value from environment variable, credentials, the default value, or nil if not found and no default provided
     def get(name, default = :__no_default_provided__)
+      # TODO (ershad): Remove this CI specific logic once we remove the requirement for Rails credentials in test environment
+      if Rails.env.test? && ENV["CI"].present?
+        return fetch_credentials_for_test_environment(name, default)
+      end
+
       if default == :__no_default_provided__
         value = ENV.fetch(name, fetch_from_credentials(name))
         value.presence
@@ -36,6 +41,16 @@ class GlobalConfig
       def fetch_from_credentials(name)
         keys = name.downcase.split("__").map(&:to_sym)
         Rails.application.credentials.dig(*keys)
+      end
+
+      # Prioritize Rails credentials over ENV variables in test environment for tests to pass in CI
+      def fetch_credentials_for_test_environment(name, default)
+        if default == :__no_default_provided__
+          value = fetch_from_credentials(name) || ENV[name]
+          value.presence
+        else
+          fetch_from_credentials(name) || ENV[name] || default
+        end
       end
   end
 end
