@@ -772,7 +772,7 @@ describe ProductFile do
         product_file.thumbnail.attach(io: File.open(Rails.root.join("spec", "support", "fixtures", "smilie.png")), filename: "smilie.png")
 
         expect(product_file).to be_valid
-        expect(product_file.thumbnail_variant.url).to match("https://gumroad-specs.s3.amazonaws.com/#{product_file.thumbnail_variant.key}")
+        expect(product_file.thumbnail_variant.url).to match("http://minio:9000/gumroad-test-public/#{product_file.thumbnail_variant.key}")
       end
     end
 
@@ -799,7 +799,7 @@ describe ProductFile do
 
         allow(product_file).to receive(:thumbnail_variant).and_raise(ActiveStorage::InvariableError)
 
-        expect(product_file.thumbnail_url).to match("https://gumroad-specs.s3.amazonaws.com/#{product_file.thumbnail.key}")
+        expect(product_file.thumbnail_url).to match("http://minio:9000/gumroad-test-public/#{product_file.thumbnail.key}")
       end
     end
 

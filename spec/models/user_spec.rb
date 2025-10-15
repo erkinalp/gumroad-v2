@@ -1264,7 +1264,7 @@ describe User, :vcr do
 
         it "returns URL to user's subscribe preview" do
           key = @user_with_preview.subscribe_preview.key
-          expect(@user_with_preview.subscribe_preview_url).to match("https://gumroad-specs.s3.amazonaws.com/#{key}")
+          expect(@user_with_preview.subscribe_preview_url).to match("http://minio:9000/gumroad-test-public/#{key}")
         end
       end
     end
@@ -1283,7 +1283,7 @@ describe User, :vcr do
 
         it "returns URL to user's avatar" do
           variant = @user_with_avatar.avatar.variant(resize_to_limit: [256, 256]).processed.key
-          expect(@user_with_avatar.resized_avatar_url(size: 256)).to match("https://gumroad-specs.s3.amazonaws.com/#{variant}")
+          expect(@user_with_avatar.resized_avatar_url(size: 256)).to match("http://minio:9000/gumroad-test-public/#{variant}")
         end
       end
     end
@@ -1306,7 +1306,7 @@ describe User, :vcr do
         end
 
         it "returns URL to user's avatar" do
-          expect(@user_with_avatar.avatar_url).to match("https://gumroad-specs.s3.amazonaws.com/#{@user_with_avatar.avatar_variant.key}")
+          expect(@user_with_avatar.avatar_url).to match("http://minio:9000/gumroad-test-public/#{@user_with_avatar.avatar_variant.key}")
         end
       end
 

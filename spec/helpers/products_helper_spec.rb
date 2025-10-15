@@ -25,7 +25,7 @@ describe ProductsHelper do
       stub_const("CDN_URL_MAP",
                  "https://s3.amazonaws.com/gumroad/" => "https://asset.host.example.com/res/gumroad/",
                  "https://s3.amazonaws.com/gumroad-staging/" => "https://asset.host.example.com/res/gumroad-staging/",
-                 "https://gumroad-specs.s3.amazonaws.com/" => "https://asset.host.example.com/res/gumroad-specs/")
+                 "http://minio:9000/gumroad-test-public/" => "https://asset.host.example.com/res/gumroad-specs/")
     end
 
     it "returns correct cloudfront url for gumroad-specs bucket" do
