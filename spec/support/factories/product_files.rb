@@ -16,7 +16,7 @@ FactoryBot.define do
     end
 
     factory :streamable_video do
-      url { "https://s3.amazonaws.com/gumroad-specs/specs/ScreenRecording.mov" }
+      url { "#{S3_BASE_URL}/specs/ScreenRecording.mov" }
       filetype { "mov" }
       filegroup { "video" }
     end

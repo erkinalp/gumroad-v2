@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :video_file do
-    url { "https://s3.amazonaws.com/gumroad-specs/specs/ScreenRecording.mov" }
+    url { "#{S3_BASE_URL}/specs/ScreenRecording.mov" }
     filetype { "mov" }
     user { create(:user) }
     record { user }
