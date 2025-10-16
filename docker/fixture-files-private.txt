@@ -5,3 +5,4 @@ magic.mp3
 test.pdf
 file_with_double_quotes".png
 kFDzu.png
+test-small+with+[square+brackets].jpg
