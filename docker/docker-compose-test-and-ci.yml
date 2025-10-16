@@ -103,7 +103,8 @@ services:
           echo \"Setting public-read ACL for '$$file'\";
           /usr/bin/mc anonymous set download \"myminio/gumroad-specs/specs/$$file\";
         else
-          echo \"Warning: '$$file' not found in fixtures directory\";
+          echo \"Error: '$$file' not found in fixtures directory\";
+          exit 1;
         fi;
       done < /fixture-files-public.txt; echo \"Fixture files copied successfully\"; exit 0; "
 

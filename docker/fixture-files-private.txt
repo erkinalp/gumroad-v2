@@ -3,3 +3,5 @@ encrypted_pdf.pdf
 ScreenRecording.mov
 magic.mp3
 test.pdf
+file_with_double_quotes".png
+kFDzu.png
