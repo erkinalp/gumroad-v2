@@ -69,10 +69,9 @@ services:
         if ! /usr/bin/mc ls myminio/$$bucket > /dev/null 2>&1; then
           echo \"Bucket $$bucket does not exist. Creating...\";
           /usr/bin/mc mb myminio/$$bucket;
-          if [[ $$bucket == *-public ]]; then
-            echo \"Setting public read policy for $$bucket\";
-            /usr/bin/mc anonymous set public myminio/$$bucket;
-          fi;
+
+          echo \"Setting public read policy for $$bucket\";
+          /usr/bin/mc anonymous set public myminio/$$bucket;
         else
           echo \"Bucket $$bucket already exists.\";
         fi;
