@@ -5,7 +5,7 @@ require "spec_helper"
 describe UpdateProductFilesArchiveWorker, :vcr do
   describe "#perform" do
     before do
-      @long_file_name = "个出租车学习杯子人个出租车学习杯子人个出租车学习杯子人个出租车学习杯子人个出租车学习杯子人个出租车学习杯子人个出租车学习杯子人个出租车学习杯子人个出租车学习杯子人个出租车学习杯子人个出租车学习杯子人个出租车学习杯子人个出租车学习杯子人个出租车学习杯子人个出租车学习杯子人个出租车学习杯子人个出租车学习杯子人个出租车学习杯子人个出租车学习杯子人个出租车学习杯子人个出租车学习杯子人个出租车学习杯子人个出租车学习杯子人个出租车学习杯子人个出租车学习杯子人个出租车学习杯子人个出租车学习杯子人"
+      @long_file_name = "2d04543f25c2abbea7740c6abf71d07a12abff9b6ef45f1fabab0b6efb4679643f87131f869bbc7a2a146c3730ee57c65839"
 
       allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new("production"))
     end
