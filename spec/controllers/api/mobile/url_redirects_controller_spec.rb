@@ -60,7 +60,7 @@ describe Api::Mobile::UrlRedirectsController do
       expect(response.parsed_body[:product]).to include(name: "The Works of Edgar Gumstein", description: "A collection of works spanning 1984 — 1994")
       expect(response.parsed_body[:product][:file_data][0]).to include(name_displayable: "kFDzu", description: nil)
       expect(response.parsed_body[:product][:file_data][1]).to include(name_displayable: "magic", description: "A magic song")
-      expect(response.parsed_body[:product][:file_data][2]).to include(name_displayable: "amir", description: "A picture")
+      expect(response.parsed_body[:product][:file_data][2]).to include(name_displayable: "test", description: "A picture")
     end
 
     it "correctly marks if the url_redirect's purchase is invalid" do
