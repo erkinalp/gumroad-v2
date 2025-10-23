@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_10_03_165816) do
+ActiveRecord::Schema[7.1].define(version: 2025_10_22_212307) do
   create_table "active_storage_attachments", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.string "name", limit: 191, null: false
     t.string "record_type", limit: 191, null: false
@@ -981,6 +981,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_03_165816) do
     t.integer "base_variant_id"
     t.string "slug"
     t.integer "installment_events_count", default: 0
+    t.integer "comments_count"
     t.index ["base_variant_id"], name: "index_installments_on_base_variant_id"
     t.index ["created_at"], name: "index_installments_on_created_at"
     t.index ["link_id"], name: "index_installments_on_link_id"
@@ -1111,6 +1112,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_03_165816) do
     t.string "native_type", default: "digital", null: false
     t.integer "discover_fee_per_thousand", default: 100, null: false
     t.string "support_email"
+    t.integer "comments_count"
     t.index ["banned_at"], name: "index_links_on_banned_at"
     t.index ["custom_permalink"], name: "index_links_on_custom_permalink", length: 191
     t.index ["deleted_at"], name: "index_links_on_deleted_at"
@@ -1739,6 +1741,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_03_165816) do
     t.bigint "price_id"
     t.string "recommended_by"
     t.datetime "deleted_at", precision: nil
+    t.integer "comments_count"
     t.index ["affiliate_id", "created_at"], name: "index_purchases_on_affiliate_id_and_created_at"
     t.index ["browser_guid"], name: "index_purchases_on_browser_guid"
     t.index ["card_type", "card_visual", "created_at", "stripe_fingerprint"], name: "index_purchases_on_card_type_visual_date_fingerprint"
@@ -2508,6 +2511,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_10_03_165816) do
     t.string "notification_content_type", default: "application/x-www-form-urlencoded"
     t.string "google_uid"
     t.integer "purchasing_power_parity_limit"
+    t.integer "comments_count"
     t.index ["account_created_ip"], name: "index_users_on_account_created_ip"
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", length: 191
     t.index ["created_at"], name: "index_users_on_created_at"

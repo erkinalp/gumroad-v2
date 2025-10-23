@@ -26,7 +26,7 @@ class Comment < ApplicationRecord
   has_ancestry cache_depth: true
   has_paper_trail
 
-  belongs_to :commentable, polymorphic: true, optional: true
+  belongs_to :commentable, polymorphic: true, optional: true, counter_cache: true
   belongs_to :author, class_name: "User", optional: true
   belongs_to :purchase, optional: true
 
@@ -94,6 +94,7 @@ class Comment < ApplicationRecord
     def notify_seller_of_new_comment
       return unless user_submitted?
       return unless root?
+      return unless commentable.respond_to?(:seller_id)
       return if authored_by_seller?
       return if commentable.seller.disable_comments_email?
 
@@ -105,6 +106,6 @@ class Comment < ApplicationRecord
     end
 
     def authored_by_seller?
-      commentable.respond_to?(:seller_id) && commentable.seller_id == author_id
+      commentable.seller_id == author_id
     end
 end

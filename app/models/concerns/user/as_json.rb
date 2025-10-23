@@ -71,7 +71,9 @@ module User::AsJson
       id:,
       impersonatable:,
       user_risk_state: user_risk_state.humanize,
-      comment_count: comments.size
+      # TODO: Replace with comments.size once backfill is complete
+      # Onetime::BackfillCommentableCommentsCount is used to backfill the comments_count for all commentable objects
+      comment_count: comments.count
     )
   end
 
