@@ -345,14 +345,8 @@ def setup_caching(val = false)
 end
 
 def setup_js(val = false)
-  if val
-    VCR.turn_off!
-    # See also https://github.com/teamcapybara/capybara#gotchas
-    WebMock.allow_net_connect!(net_http_connect_on_start: true)
-  else
-    VCR.turn_on!
-    WebMock.disable_net_connect!(allow_localhost: true, allow: ["api.knapsackpro.com"])
-  end
+  VCR.turn_on!
+  WebMock.disable_net_connect!(allow_localhost: true, allow: ["api.knapsackpro.com"])
 end
 
 def teardown_caching(val = false)
