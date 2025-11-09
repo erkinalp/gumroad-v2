@@ -63,7 +63,7 @@ export const Stats = ({
       <h2 className="flex gap-2 text-base">
         {title}
         {description ? (
-          <WithTooltip tip={description} position="top">
+          <WithTooltip tip={description} side="top">
             <Icon name="info-circle" />
           </WithTooltip>
         ) : null}

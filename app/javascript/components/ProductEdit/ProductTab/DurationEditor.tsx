@@ -23,10 +23,7 @@ export const DurationEditor = () => {
           <legend>
             <label htmlFor={uid}>Number of months</label>
           </legend>
-          <WithTooltip
-            tip="Any change in the length of your membership will only affect new members."
-            position="bottom"
-          >
+          <WithTooltip tip="Any change in the length of your membership will only affect new members." side="bottom">
             <NumberInput
               value={product.duration_in_months}
               onChange={(duration_in_months) => updateProduct({ duration_in_months })}

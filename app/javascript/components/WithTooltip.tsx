@@ -1,28 +1,35 @@
-import cx from "classnames";
+import * as Tooltip from "@radix-ui/react-tooltip";
 import * as React from "react";
 
 export type Position = "top" | "left" | "bottom" | "right";
 
-type Props = {
-  children: React.ReactNode;
-  tip: React.ReactNode | null;
-  className?: string | undefined;
-  position?: Position | undefined;
-  fullWidth?: boolean | undefined;
-};
-export const WithTooltip = ({ tip, children, position, className }: Props) => {
-  const id = React.useId();
+export const tooltipClasses = "w-40 max-w-max rounded-md bg-primary p-3 text-primary-foreground";
 
+export const WithTooltip = ({
+  tip,
+  children,
+  open,
+  triggerProps,
+  ...props
+}: {
+  tip: React.ReactNode | null;
+  children: React.ReactNode;
+  open?: boolean;
+  triggerProps?: Tooltip.TooltipTriggerProps;
+} & Tooltip.TooltipContentProps) => {
   if (tip == null) return children;
 
   return (
-    <span className={cx("has-tooltip", position, className)}>
-      <span aria-describedby={id} style={{ display: "contents" }}>
-        {children}
-      </span>
-      <span role="tooltip" id={id}>
-        {tip}
-      </span>
-    </span>
+    <Tooltip.Root {...(open ? { open } : {})}>
+      <Tooltip.Trigger asChild {...triggerProps}>
+        <div>{children}</div>
+      </Tooltip.Trigger>
+      <Tooltip.Portal>
+        <Tooltip.Content {...props} className={tooltipClasses}>
+          <Tooltip.Arrow className="fill-primary" />
+          {tip}
+        </Tooltip.Content>
+      </Tooltip.Portal>
+    </Tooltip.Root>
   );
 };

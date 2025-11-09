@@ -318,7 +318,7 @@ const TeamMembersSection = ({
                     {memberInfo.is_expired ? (
                       <WithTooltip
                         tip="Invitation has expired. You can resend the invitation from the member's menu options."
-                        position="top"
+                        side="top"
                       >
                         <Icon
                           name="solid-shield-exclamation"

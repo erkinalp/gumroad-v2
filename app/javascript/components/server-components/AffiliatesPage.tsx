@@ -147,7 +147,7 @@ const SearchBoxPopover = ({ initialQuery, onSearch }: { initialQuery: string; on
       onToggle={setSearchBoxOpen}
       aria-label="Toggle Search"
       trigger={
-        <WithTooltip tip="Search" position="bottom">
+        <WithTooltip tip="Search" side="bottom">
           <div className="button">
             <Icon name="solid-search" />
           </div>
@@ -294,7 +294,7 @@ const AffiliateRequestsTable = ({
                           ? "You have approved this request but the affiliate hasn't created a Gumroad account yet"
                           : null
                       }
-                      position="bottom"
+                      side="bottom"
                     >
                       <Button
                         color="primary"
@@ -444,7 +444,7 @@ const AffiliatesTab = () => {
       actions={
         <>
           <SearchBoxPopover onSearch={onSearch} initialQuery={searchQuery} />
-          <WithTooltip position="bottom" tip={data.affiliates_disabled_reason}>
+          <WithTooltip side="bottom" tip={data.affiliates_disabled_reason}>
             <Link
               to="/affiliates/new"
               className="button accent"
@@ -480,7 +480,7 @@ const AffiliatesTab = () => {
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                         Affiliates
                         <div className="text-base">
-                          <WithTooltip tip="Export" position="top">
+                          <WithTooltip tip="Export" side="top">
                             <a href={Routes.export_affiliates_path()} className="button primary" aria-label="Export">
                               <Icon name="download" />
                             </a>

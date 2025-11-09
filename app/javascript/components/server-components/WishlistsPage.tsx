@@ -87,7 +87,7 @@ const WishlistsPage = ({
                         May be recommended on Gumroad Discover. You will receive an affiliate commission for any sales.
                       </span>
                     }
-                    position="top"
+                    side="top"
                   >
                     <Icon name="info-circle" />
                   </WithTooltip>

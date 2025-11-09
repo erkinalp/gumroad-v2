@@ -40,7 +40,7 @@ export const CopyToClipboard = ({
   });
 
   return (
-    <WithTooltip tip={status === "initial" ? copyTooltip : copiedTooltip} position={tooltipPosition}>
+    <WithTooltip tip={status === "initial" ? copyTooltip : copiedTooltip} side={tooltipPosition ?? "top"}>
       <span ref={ref} className="contents">
         {children}
       </span>

@@ -57,7 +57,7 @@ export const CreditCardForm = ({ card, can_remove, read_only }: Props) => {
                 ? null
                 : "Please cancel any active preorder or membership purchases before removing your credit card."
             }
-            position="top"
+            side="top"
           >
             <Button outline color="danger" onClick={remove} disabled={!can_remove || status === "removing"}>
               {status === "removing" ? "Removing..." : "Remove credit card"}

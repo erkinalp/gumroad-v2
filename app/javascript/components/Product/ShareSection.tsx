@@ -142,7 +142,7 @@ export const ShareSection = ({
         <Popover
           aria-label="Share"
           trigger={
-            <WithTooltip tip="Share" position="bottom">
+            <WithTooltip tip="Share" side="bottom">
               <Button aria-label="Share">
                 <Icon name="share" />
               </Button>

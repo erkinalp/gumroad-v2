@@ -30,7 +30,7 @@ const BlockedUserTooltip = ({ user, position = "bottom" }: Props) => {
   );
 
   return (
-    <WithTooltip tip={content()} position={position}>
+    <WithTooltip tip={content()} side={position}>
       <Icon name="solid-shield-exclamation" style={{ color: "rgb(var(--warning))" }} />
     </WithTooltip>
   );

@@ -1,3 +1,4 @@
+import { TooltipProvider } from "@radix-ui/react-tooltip";
 import React from "react";
 
 import { ClientAlertProvider } from "$app/components/ClientAlertProvider";
@@ -59,32 +60,34 @@ type GlobalProps = {
 export default function AppWrapper({ children, global }: { children: React.ReactNode; global: GlobalProps }) {
   return (
     <DesignContextProvider value={global.design_settings}>
-      <DomainSettingsProvider
-        value={{
-          scheme: global.domain_settings.scheme,
-          appDomain: global.domain_settings.app_domain,
-          rootDomain: global.domain_settings.root_domain,
-          shortDomain: global.domain_settings.short_domain,
-          discoverDomain: global.domain_settings.discover_domain,
-          thirdPartyAnalyticsDomain: global.domain_settings.third_party_analytics_domain,
-          apiDomain: global.domain_settings.api_domain,
-        }}
-      >
-        <UserAgentProvider
+      <TooltipProvider delayDuration={0}>
+        <DomainSettingsProvider
           value={{
-            isMobile: global.user_agent_info.is_mobile,
-            locale: global.locale,
+            scheme: global.domain_settings.scheme,
+            appDomain: global.domain_settings.app_domain,
+            rootDomain: global.domain_settings.root_domain,
+            shortDomain: global.domain_settings.short_domain,
+            discoverDomain: global.domain_settings.discover_domain,
+            thirdPartyAnalyticsDomain: global.domain_settings.third_party_analytics_domain,
+            apiDomain: global.domain_settings.api_domain,
           }}
         >
-          <LoggedInUserProvider value={parseLoggedInUser(global.logged_in_user)}>
-            <CurrentSellerProvider value={parseCurrentSeller(global.current_seller)}>
-              <SSRLocationProvider value={global.href}>
-                <ClientAlertProvider>{children}</ClientAlertProvider>
-              </SSRLocationProvider>
-            </CurrentSellerProvider>
-          </LoggedInUserProvider>
-        </UserAgentProvider>
-      </DomainSettingsProvider>
+          <UserAgentProvider
+            value={{
+              isMobile: global.user_agent_info.is_mobile,
+              locale: global.locale,
+            }}
+          >
+            <LoggedInUserProvider value={parseLoggedInUser(global.logged_in_user)}>
+              <CurrentSellerProvider value={parseCurrentSeller(global.current_seller)}>
+                <SSRLocationProvider value={global.href}>
+                  <ClientAlertProvider>{children}</ClientAlertProvider>
+                </SSRLocationProvider>
+              </CurrentSellerProvider>
+            </LoggedInUserProvider>
+          </UserAgentProvider>
+        </DomainSettingsProvider>
+      </TooltipProvider>
     </DesignContextProvider>
   );
 }

@@ -713,7 +713,7 @@ const AbandonedCartProductListNodeView = (props: NodeViewProps) => {
         </button>
       ) : null}
 
-      <WithTooltip tip={isPreview ? null : "This cannot be deleted"} position="top">
+      <WithTooltip tip={isPreview ? null : "This cannot be deleted"} side="top">
         <NavigationButton
           color="primary"
           href={Routes.checkout_index_url({ host: appDomain })}

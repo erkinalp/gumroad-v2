@@ -1,3 +1,4 @@
+import { TooltipProvider } from "@radix-ui/react-tooltip";
 import * as React from "react";
 import ReactDOMServer from "react-dom/server";
 import { RouteObject } from "react-router-dom";
@@ -65,29 +66,31 @@ export const register =
         return (
           <React.StrictMode>
             <DesignContextProvider value={global.design_settings}>
-              <DomainSettingsProvider
-                value={{
-                  scheme: global.domain_settings.scheme,
-                  appDomain: global.domain_settings.app_domain,
-                  rootDomain: global.domain_settings.root_domain,
-                  shortDomain: global.domain_settings.short_domain,
-                  discoverDomain: global.domain_settings.discover_domain,
-                  thirdPartyAnalyticsDomain: global.domain_settings.third_party_analytics_domain,
-                  apiDomain: global.domain_settings.api_domain,
-                }}
-              >
-                <UserAgentProvider value={{ isMobile: global.user_agent_info.is_mobile, locale: global.locale }}>
-                  <LoggedInUserProvider value={parseLoggedInUser(global.logged_in_user)}>
-                    <CurrentSellerProvider value={parseCurrentSeller(global.current_seller)}>
-                      <SSRLocationProvider value={global.href}>
-                        <FeatureFlagsProvider value={global.feature_flags}>
-                          <Component {...parsedProps} />
-                        </FeatureFlagsProvider>
-                      </SSRLocationProvider>
-                    </CurrentSellerProvider>
-                  </LoggedInUserProvider>
-                </UserAgentProvider>
-              </DomainSettingsProvider>
+              <TooltipProvider delayDuration={0}>
+                <DomainSettingsProvider
+                  value={{
+                    scheme: global.domain_settings.scheme,
+                    appDomain: global.domain_settings.app_domain,
+                    rootDomain: global.domain_settings.root_domain,
+                    shortDomain: global.domain_settings.short_domain,
+                    discoverDomain: global.domain_settings.discover_domain,
+                    thirdPartyAnalyticsDomain: global.domain_settings.third_party_analytics_domain,
+                    apiDomain: global.domain_settings.api_domain,
+                  }}
+                >
+                  <UserAgentProvider value={{ isMobile: global.user_agent_info.is_mobile, locale: global.locale }}>
+                    <LoggedInUserProvider value={parseLoggedInUser(global.logged_in_user)}>
+                      <CurrentSellerProvider value={parseCurrentSeller(global.current_seller)}>
+                        <SSRLocationProvider value={global.href}>
+                          <FeatureFlagsProvider value={global.feature_flags}>
+                            <Component {...parsedProps} />
+                          </FeatureFlagsProvider>
+                        </SSRLocationProvider>
+                      </CurrentSellerProvider>
+                    </LoggedInUserProvider>
+                  </UserAgentProvider>
+                </DomainSettingsProvider>
+              </TooltipProvider>
             </DesignContextProvider>
           </React.StrictMode>
         );

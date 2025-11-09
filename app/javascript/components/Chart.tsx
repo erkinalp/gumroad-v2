@@ -1,6 +1,8 @@
 import * as React from "react";
 import { ResponsiveContainer, ComposedChart, XAxisProps, YAxisProps, LineProps } from "recharts";
 
+import { WithTooltip } from "$app/components/WithTooltip";
+
 type TickProps = {
   x: number;
   y: number;
@@ -38,19 +40,16 @@ export const Chart = ({
           <ComposedChart margin={{ top: 32, right: 0, bottom: 16, left: 0 }} {...props} />
         </ResponsiveContainer>
         {tooltipPosition && tooltip ? (
-          <div className="has-tooltip top" style={{ position: "absolute", ...tooltipPosition }}>
-            <div
-              id={uid}
-              role="tooltip"
-              style={{
-                display: "block",
-                width: "max-content",
-                pointerEvents: "none",
-              }}
-            >
-              {tooltip}
-            </div>
-          </div>
+          <WithTooltip
+            key={tooltipPosition.left}
+            id={uid}
+            open
+            tip={tooltip}
+            triggerProps={{ className: "absolute", style: tooltipPosition }}
+            side="top"
+          >
+            <div />
+          </WithTooltip>
         ) : null}
       </div>
     </section>

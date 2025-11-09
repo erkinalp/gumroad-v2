@@ -220,7 +220,7 @@ const SettingsPage = ({ creator_profile, profile_settings, settings_pages, ...pr
         <aside>
           <header>
             <h2>Preview</h2>
-            <WithTooltip tip="Preview" position="bottom">
+            <WithTooltip tip="Preview" side="bottom">
               <a
                 className="button"
                 href={Routes.root_url({ host: creatorProfile.subdomain })}

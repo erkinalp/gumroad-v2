@@ -63,7 +63,7 @@ const Header = ({ user, isAffiliateUser = false, url }: HeaderProps) => {
               <li>
                 <WithTooltip
                   tip="Custom fee that will be charged on all their new direct (non-discover) sales"
-                  position="bottom"
+                  side="bottom"
                 >
                   <span>Custom fee: {(user.custom_fee_per_thousand / 10).toFixed(1)}%</span>
                 </WithTooltip>

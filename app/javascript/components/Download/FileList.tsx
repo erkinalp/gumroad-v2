@@ -442,7 +442,7 @@ const MobileAppAudioFileRow = ({ file }: { file: FileItem }) => {
 
   return (
     <div ref={selfRef} className="embed" {...touchAndHoldEventListeners}>
-      <WithTooltip tip={showTooltip ? file.file_name : null} position="top">
+      <WithTooltip tip={showTooltip ? file.file_name : null} side="top">
         <TrackClick
           eventName="play_click"
           resourceId={isProcessing || showTooltip ? null : file.id} // Prevent playback when processing or showing tooltip

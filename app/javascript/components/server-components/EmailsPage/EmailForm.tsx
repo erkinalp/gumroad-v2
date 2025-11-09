@@ -843,7 +843,7 @@ export const EmailForm = () => {
                             ? "This post will be visible to your logged-in followers only."
                             : "This post will be visible to your logged-in affiliates only."
                     }
-                    position="top"
+                    side="top"
                   >
                     (?)
                   </WithTooltip>

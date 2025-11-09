@@ -370,7 +370,7 @@ const WithContent = ({
               )}
             </Popover>
           )}
-          <WithTooltip position="top" tip={hasPreviousPage ? null : "No more pages"}>
+          <WithTooltip side="top" tip={hasPreviousPage ? null : "No more pages"}>
             <Button
               disabled={!hasPreviousPage}
               onClick={() => setActivePageIndex(activePageIndex - 1)}
@@ -380,7 +380,7 @@ const WithContent = ({
               Previous
             </Button>
           </WithTooltip>
-          <WithTooltip position="top" tip={hasNextPage ? null : "No more pages"}>
+          <WithTooltip side="top" tip={hasNextPage ? null : "No more pages"}>
             <Button
               disabled={!hasNextPage}
               onClick={() => setActivePageIndex(activePageIndex + 1)}

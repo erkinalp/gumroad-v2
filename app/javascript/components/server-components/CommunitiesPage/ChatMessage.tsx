@@ -166,7 +166,7 @@ export const ChatMessage = ({
           >
             {isOwnMessage ? (
               <>
-                <WithTooltip position="top" tip="Edit">
+                <WithTooltip side="top" tip="Edit">
                   <button
                     className="flex items-center rounded-md border-r border-gray-200 px-2 py-1.5 text-xs hover:bg-gray dark:hover:bg-dark-gray"
                     onClick={handleEdit}
@@ -178,7 +178,7 @@ export const ChatMessage = ({
                 <div className="flex border-r dark:border-[rgb(var(--parent-color)/var(--border-alpha))]" />
               </>
             ) : null}
-            <WithTooltip position="top" tip="Delete">
+            <WithTooltip side="top" tip="Delete">
               <button
                 className="flex items-center rounded-md px-2 py-1.5 text-xs hover:bg-gray hover:text-red dark:hover:bg-dark-gray"
                 onClick={() => setDeleteConfirmation({ deleting: false })}

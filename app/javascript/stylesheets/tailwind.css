@@ -36,6 +36,8 @@
   --color-backdrop: rgb(0 0 0 / 0.8);
   --color-accent: rgb(var(--accent));
   --color-accent-foreground: rgb(var(--contrast-accent));
+  --color-primary: rgb(var(--primary));
+  --color-primary-foreground: rgb(var(--contrast-primary));
   --color-active-bg: rgb(var(--color) / var(--gray-1));
   --color-muted: rgb(var(--color) / var(--gray-3));
   --color-success: rgb(var(--success));

@@ -124,7 +124,7 @@ export const FileRow = ({ file }: { file: FileState }) => {
             <Icon name="pencil" />
           </Button>
         ) : null}
-        <WithTooltip tip={uploadProgress === null ? "Remove" : "Cancel"} position="left">
+        <WithTooltip tip={uploadProgress === null ? "Remove" : "Cancel"} side="left">
           <Button
             outline
             color="danger"

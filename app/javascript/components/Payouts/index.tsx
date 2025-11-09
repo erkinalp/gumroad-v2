@@ -338,7 +338,7 @@ const Period = ({ payoutPeriodData }: { payoutPeriodData: PayoutPeriodData }) =>
         ) : null}
         <span style={{ marginLeft: "auto" }}>{payoutPeriodData.displayable_payout_period_range}</span>
         {payoutPeriodData.status === "completed" && payoutPeriodData.payment_external_id ? (
-          <WithTooltip position="top" tip="Export">
+          <WithTooltip side="top" tip="Export">
             <Button
               color="primary"
               disabled={isCSVDownloadInProgress}
@@ -485,7 +485,7 @@ const Period = ({ payoutPeriodData }: { payoutPeriodData: PayoutPeriodData }) =>
             </h4>
             <div>
               <WithTooltip
-                position="top"
+                side="top"
                 tip="Gumroad does not collect tax for you; this is a calculation to help you with remittance."
               >
                 <span>{formatDollarAmount(payoutPeriodData.taxes_cents)}</span>

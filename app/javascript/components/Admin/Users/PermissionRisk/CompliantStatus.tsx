@@ -10,7 +10,7 @@ type CompliantStatusProps = {
 
 const CompliantStatus = ({ user }: CompliantStatusProps) => (
   <div>
-    <WithTooltip tip="Risk state" position="left">
+    <WithTooltip tip="Risk state" side="left">
       <div className={classNames("pill small", user.compliant ? "success" : "warning")}>{user.user_risk_state}</div>
     </WithTooltip>
   </div>

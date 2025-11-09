@@ -45,7 +45,7 @@ export const ArchivedProductsPage = ({
             onToggle={setIsSearchPopoverOpen}
             aria-label="Toggle Search"
             trigger={
-              <WithTooltip tip="Search" position="bottom">
+              <WithTooltip tip="Search" side="bottom">
                 <div className="button">
                   <Icon name="solid-search" />
                 </div>

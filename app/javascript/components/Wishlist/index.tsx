@@ -120,7 +120,7 @@ const WishlistItemCard = ({
         <>
           {canEdit ? (
             <div style={{ padding: 0, display: "grid" }}>
-              <WithTooltip position="top" tip="Remove this product">
+              <WithTooltip side="top" tip="Remove this product">
                 <button
                   disabled={isDeleting}
                   aria-label="Remove this product"
@@ -134,7 +134,7 @@ const WishlistItemCard = ({
           ) : null}
           {item.purchasable && item.giftable ? (
             <div style={{ padding: 0, display: "grid" }}>
-              <WithTooltip position="top" tip="Gift this product">
+              <WithTooltip side="top" tip="Gift this product">
                 <a
                   aria-label="Gift this product"
                   href={Routes.checkout_index_url({ params: { gift_wishlist_product: item.id } })}
@@ -150,7 +150,7 @@ const WishlistItemCard = ({
       badge={
         item.purchasable ? (
           <div style={{ position: "absolute", top: "var(--spacer-4)", right: "var(--spacer-4)" }}>
-            <WithTooltip position="top" tip="Add to cart">
+            <WithTooltip side="top" tip="Add to cart">
               <NavigationButton
                 href={addToCartUrl(item)}
                 color="primary"
