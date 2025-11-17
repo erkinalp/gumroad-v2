@@ -61,7 +61,7 @@ class Settings::PaymentsController < Settings::BaseController
 
     return unless update_user_compliance_info
 
-    if params[:payout_threshold_cents].present? && params[:payout_threshold_cents] < current_seller.minimum_payout_threshold_cents
+    if params[:payout_threshold_cents].present? && params[:payout_threshold_cents].to_i < current_seller.minimum_payout_threshold_cents
       return re_render_with_error("Your payout threshold must be greater than the minimum payout amount")
     end
 
@@ -106,7 +106,7 @@ class Settings::PaymentsController < Settings::BaseController
   def opt_in_to_au_backtax_collection
     # Just rudimentary validation on the name here. We want an honest attempt at putting their name, but we don't want a meaningless string of characters.
     if current_seller.alive_user_compliance_info&.legal_entity_name && current_seller.alive_user_compliance_info.legal_entity_name.length != params["signature"].length
-      return render json: { errors: { base: "Please enter your exact name." }}, status: :unprocessable_entity
+      return render json: { success: false, error: "Please enter your exact name." }
     end
 
     BacktaxAgreement.create!(user: current_seller,
@@ -114,7 +114,7 @@ class Settings::PaymentsController < Settings::BaseController
                              signature: params["signature"])
 
 
-    render json: { success: true }, status: :ok
+    render json: { success: true }
   end
 
   def paypal_connect
@@ -139,7 +139,7 @@ class Settings::PaymentsController < Settings::BaseController
     if current_seller.remove_credit_card
       head :no_content
     else
-      render json: { errors: { base: current_seller.errors.full_messages.join(",") }}, status: :unprocessable_entity
+      render json: { error: current_seller.errors.full_messages.join(",") }, status: :bad_request
     end
   end
 

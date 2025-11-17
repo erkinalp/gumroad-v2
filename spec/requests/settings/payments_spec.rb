@@ -6057,6 +6057,7 @@ describe("Payments Settings Scenario", type: :system, js: true) do
           check "Pause payouts", unchecked: true
         end
         click_on "Update settings"
+        wait_for_ajax
 
         expect(page).to have_alert(text: "Thanks! You're all set.")
         expect(user.reload.payouts_paused_by_user?).to be true
@@ -6067,6 +6068,7 @@ describe("Payments Settings Scenario", type: :system, js: true) do
           uncheck "Pause payouts", checked: true
         end
         click_on "Update settings"
+        wait_for_ajax
 
         expect(page).to have_alert(text: "Thanks! You're all set.")
         expect(user.reload.payouts_paused_by_user?).to be false
@@ -6139,6 +6141,7 @@ describe("Payments Settings Scenario", type: :system, js: true) do
         expect(page).to_not have_text("Your payout threshold must be at least $10.")
 
         click_on "Update settings"
+        wait_for_ajax
 
         expect(page).to have_alert(text: "Thanks! You're all set.")
         expect(user.reload.minimum_payout_amount_cents).to eq(1500)
@@ -6167,6 +6170,7 @@ describe("Payments Settings Scenario", type: :system, js: true) do
           expect(page).to_not have_text("Your payout threshold must be at least $34.74.")
 
           click_on "Update settings"
+          wait_for_ajax
 
           expect(page).to have_alert(text: "Thanks! You're all set.")
           expect(user.reload.minimum_payout_amount_cents).to eq(4000)
@@ -6182,6 +6186,7 @@ describe("Payments Settings Scenario", type: :system, js: true) do
         select "Monthly", from: "Schedule"
 
         click_on "Update settings"
+        wait_for_ajax
 
         expect(page).to have_alert(text: "Thanks! You're all set.")
         expect(user.reload.payout_frequency).to eq(User::PayoutSchedule::MONTHLY)
@@ -6192,6 +6197,7 @@ describe("Payments Settings Scenario", type: :system, js: true) do
         select "Quarterly", from: "Schedule"
 
         click_on "Update settings"
+        wait_for_ajax
 
         expect(page).to have_alert(text: "Thanks! You're all set.")
         expect(user.reload.payout_frequency).to eq(User::PayoutSchedule::QUARTERLY)

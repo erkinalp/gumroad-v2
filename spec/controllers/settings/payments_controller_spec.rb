@@ -139,9 +139,8 @@ describe Settings::PaymentsController, :vcr, type: :controller, inertia: true do
       it "returns an error for invalid amounts" do
         put :update, params: { payout_threshold_cents: 500 }
 
-        expect(response).to redirect_to(settings_payments_path)
-        expect(response).to have_http_status :see_other
-        expect(flash[:alert]).to eq("Your payout threshold must be greater than the minimum payout amount")
+        expect(response).to have_http_status :unprocessable_entity
+        expect(inertia.props[:error_message]).to eq("Your payout threshold must be greater than the minimum payout amount")
         expect(user.reload.payout_threshold_cents).to eq(1000)
       end
     end
@@ -160,9 +159,8 @@ describe Settings::PaymentsController, :vcr, type: :controller, inertia: true do
       it "returns an error for invalid values" do
         put :update, params: { payout_frequency: "invalid" }
 
-        expect(response).to redirect_to(settings_payments_path)
-        expect(response).to have_http_status :see_other
-        expect(flash[:alert]).to eq("Payout frequency must be daily, weekly, monthly, or quarterly")
+        expect(response).to have_http_status :unprocessable_entity
+        expect(inertia.props[:error_message]).to eq("Payout frequency must be daily, weekly, monthly, or quarterly")
         expect(user.reload.payout_frequency).to eq(User::PayoutSchedule::WEEKLY)
       end
     end
@@ -317,9 +315,8 @@ describe Settings::PaymentsController, :vcr, type: :controller, inertia: true do
             put :update, params: all_params
 
             expect(user.reload.stripe_account).to be_nil
-            expect(response).to redirect_to(settings_payments_path)
-            expect(response).to have_http_status :see_other
-            expect(flash[:alert]).to eq("You must use a test bank account number in test mode. Try 000123456789 or see more options at https://stripe.com/docs/connect/testing#account-numbers.")
+            expect(response).to have_http_status :unprocessable_entity
+            expect(inertia.props[:error_message]).to eq("You must use a test bank account number in test mode. Try 000123456789 or see more options at https://stripe.com/docs/connect/testing#account-numbers.")
           end
         end
       end
@@ -336,9 +333,8 @@ describe Settings::PaymentsController, :vcr, type: :controller, inertia: true do
 
         it "returns an error" do
           put :update, params: { user: params }
-          expect(response).to redirect_to(settings_payments_path)
-        expect(response).to have_http_status :see_other
-          expect(flash[:alert]).to eq("You must be 13 years old to use Gumroad.")
+          expect(response).to have_http_status :unprocessable_entity
+          expect(inertia.props[:error_message]).to eq("You must be 13 years old to use Gumroad.")
         end
 
         it "leaves the previous user compliance info data unchanged" do
@@ -359,10 +355,8 @@ describe Settings::PaymentsController, :vcr, type: :controller, inertia: true do
 
         it "returns an error response" do
           put :update, params: { user: params }
-          expect(response).to redirect_to(settings_payments_path)
-        expect(response).to have_http_status :see_other
-
-          expect(flash[:alert]).to eq("You entered a ZIP Code that doesn't exist within your country.")
+          expect(response).to have_http_status :unprocessable_entity
+          expect(inertia.props[:error_message]).to eq("You entered a ZIP Code that doesn't exist within your country.")
         end
       end
 
@@ -405,9 +399,8 @@ describe Settings::PaymentsController, :vcr, type: :controller, inertia: true do
           end
 
           it "returns an error" do
-            expect(response).to redirect_to(settings_payments_path)
-            expect(response).to have_http_status :see_other
-
+            expect(response).to have_http_status :unprocessable_entity
+            expect(inertia.props[:error_message]).to be_present
           end
 
           it "the users current compliance info should be changed" do
@@ -706,9 +699,8 @@ describe Settings::PaymentsController, :vcr, type: :controller, inertia: true do
           it "returns error" do
             put(:update, params:)
 
-            expect(response).to redirect_to(settings_payments_path)
-            expect(response).to have_http_status :see_other
-            expect(flash[:alert]).to eq("The bank code is invalid. and The branch code is invalid.")
+            expect(response).to have_http_status :unprocessable_entity
+            expect(inertia.props[:error_message]).to eq("The bank code is invalid. and The branch code is invalid.")
           end
         end
       end
@@ -774,8 +766,8 @@ describe Settings::PaymentsController, :vcr, type: :controller, inertia: true do
 
         it "fails if the account numbers don't match" do
           put(:update, params:)
-          expect(response).to redirect_to(settings_payments_path)
-          expect(response).to have_http_status :see_other
+          expect(response).to have_http_status :unprocessable_entity
+          expect(inertia.props[:error_message]).to eq("The account numbers do not match.")
         end
 
         it "does not clear the request for the bank account" do
@@ -855,8 +847,8 @@ describe Settings::PaymentsController, :vcr, type: :controller, inertia: true do
 
           it "fails if the account numbers don't match" do
             put(:update, params:)
-            expect(response).to redirect_to(settings_payments_path)
-            expect(response).to have_http_status :see_other
+            expect(response).to have_http_status :unprocessable_entity
+            expect(inertia.props[:error_message]).to eq("The account numbers do not match.")
           end
 
           it "does not clear the request for the bank account" do
@@ -936,9 +928,8 @@ describe Settings::PaymentsController, :vcr, type: :controller, inertia: true do
 
           it "fails if the account numbers don't match" do
             put(:update, params:)
-            expect(response).to redirect_to(settings_payments_path)
-            expect(response).to have_http_status :see_other
-            expect(flash[:alert]).to eq("The account numbers do not match.")
+            expect(response).to have_http_status :unprocessable_entity
+            expect(inertia.props[:error_message]).to eq("The account numbers do not match.")
           end
 
           it "does not clear the request for the bank account" do
@@ -1017,8 +1008,8 @@ describe Settings::PaymentsController, :vcr, type: :controller, inertia: true do
 
           it "fails if the account numbers don't match" do
             put(:update, params:)
-            expect(response).to redirect_to(settings_payments_path)
-            expect(response).to have_http_status :see_other
+            expect(response).to have_http_status :unprocessable_entity
+            expect(inertia.props[:error_message]).to eq("The account numbers do not match.")
           end
 
           it "does not clear the request for the bank account" do
@@ -1038,17 +1029,15 @@ describe Settings::PaymentsController, :vcr, type: :controller, inertia: true do
       it "fails if payout address contains non-ASCII characters" do
         put :update, params: { payment_address: "sebastian.ripenås@example.com" }
 
-        expect(response).to redirect_to(settings_payments_path)
-        expect(response).to have_http_status :see_other
-        expect(flash[:alert]).to eq("Email address cannot contain non-ASCII characters")
+        expect(response).to have_http_status :unprocessable_entity
+        expect(inertia.props[:error_message]).to eq("Email address cannot contain non-ASCII characters")
       end
 
       it "fails if bank payouts are supported in seller's country" do
         put :update, params: { payment_address: "sebastian@example.com" }
 
-        expect(response).to redirect_to(settings_payments_path)
-        expect(response).to have_http_status :see_other
-        expect(flash[:alert]).to eq("PayPal payouts are not supported in your country.")
+        expect(response).to have_http_status :unprocessable_entity
+        expect(inertia.props[:error_message]).to eq("PayPal payouts are not supported in your country.")
       end
 
       it "succeeds if bank payouts are not supported in seller's country" do
@@ -1148,9 +1137,8 @@ describe Settings::PaymentsController, :vcr, type: :controller, inertia: true do
 
         put :update, params: { user: { updated_country_code: "GB" } }
 
-        expect(response).to redirect_to(settings_payments_path)
-        expect(response).to have_http_status :see_other
-        expect(flash[:alert]).to eq("Country update failed")
+        expect(response).to have_http_status :unprocessable_entity
+        expect(inertia.props[:error_message]).to eq("Country update failed")
       end
     end
   end
