@@ -100,7 +100,7 @@ const ThirdPartyAnalyticsPage = ({ settings_pages, third_party_analytics, produc
               </label>
             }
           >
-            <div className="dropdown paragraphs">
+            <div className="dropdown flex flex-col gap-4">
               <fieldset>
                 <legend>
                   <label htmlFor={`${uid}googleAnalyticsId`}>Google Analytics Property ID</label>
@@ -163,7 +163,7 @@ const ThirdPartyAnalyticsPage = ({ settings_pages, third_party_analytics, produc
               </label>
             }
           >
-            <div className="dropdown paragraphs">
+            <div className="dropdown flex flex-col gap-4">
               <fieldset>
                 <legend>
                   <label htmlFor={`${uid}facebookMetaTag`}>Facebook Business</label>
@@ -276,7 +276,7 @@ const SnippetRow = ({
         </Button>
       </div>
       {expanded ? (
-        <div className="paragraphs">
+        <div className="flex flex-col gap-4">
           <fieldset>
             <label htmlFor={`${uid}name`}>Name</label>
             <input

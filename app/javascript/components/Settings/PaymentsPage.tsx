@@ -931,7 +931,7 @@ const PaymentsPage = (props: PaymentsPageProps) => {
           <header>
             <h2>Payout schedule</h2>
           </header>
-          <section className="paragraphs">
+          <section className="flex flex-col gap-4">
             <fieldset>
               <label htmlFor="payout_frequency">Schedule</label>
               <TypeSafeOptionSelect
