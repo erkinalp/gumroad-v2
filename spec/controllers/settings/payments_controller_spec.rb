@@ -499,7 +499,7 @@ describe Settings::PaymentsController, :vcr, type: :controller, inertia: true do
 
           expect(response).to redirect_to(settings_payments_path)
           expect(response).to have_http_status :see_other
-        expect(flash[:notice]).to eq("Thanks! You're all set.")
+          expect(flash[:notice]).to eq("Thanks! You're all set.")
 
           compliance_info = user.alive_user_compliance_info
           expect(compliance_info.first_name).to eq "barnabas"

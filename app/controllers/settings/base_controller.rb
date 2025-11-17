@@ -16,4 +16,3 @@ class Settings::BaseController < Sellers::BaseController
       @settings_presenter ||= SettingsPresenter.new(pundit_user:)
     end
 end
-
