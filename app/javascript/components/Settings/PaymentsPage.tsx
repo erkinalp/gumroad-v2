@@ -17,7 +17,6 @@ import { CountrySelectionModal } from "$app/components/CountrySelectionModal";
 import { Icon } from "$app/components/Icons";
 import { StripeConnectEmbeddedNotificationBanner } from "$app/components/PayoutPage/StripeConnectEmbeddedNotificationBanner";
 import { PriceInput } from "$app/components/PriceInput";
-import { showAlert } from "$app/components/server-components/Alert";
 import { CreditCardForm } from "$app/components/Settings/AdvancedPage/CreditCardForm";
 import { Layout } from "$app/components/Settings/Layout";
 import AccountDetailsSection from "$app/components/Settings/PaymentsPage/AccountDetailsSection";
@@ -767,9 +766,6 @@ const PaymentsPage = (props: PaymentsPageProps) => {
 
     form.put(Routes.settings_payments_path(), {
       preserveScroll: true,
-      onSuccess: () => {
-        showAlert("Thanks! You're all set.", "success");
-      },
       onError: (errors: Record<string, string>) => {
         const error = errors.error_message || Object.values(errors).join(", ");
         setErrorMessage({ message: error, code: errors.error_code ?? null });
