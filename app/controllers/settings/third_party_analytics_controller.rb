@@ -19,32 +19,16 @@ class Settings::ThirdPartyAnalyticsController < Settings::BaseController
       ThirdPartyAnalytic.save_third_party_analytics(third_party_analytics_params[:snippets] || [], current_seller)
 
       if current_seller.save
-        redirect_to(
-          settings_third_party_analytics_path,
-          status: :see_other,
-          notice: "Changes saved!"
-        )
+        return redirect_to settings_third_party_analytics_path, status: :see_other, notice: "Changes saved!"
       else
-        redirect_to(
-          settings_third_party_analytics_path,
-          status: :see_other,
-          alert: current_seller.errors.full_messages.to_sentence
-        )
+        return redirect_to settings_third_party_analytics_path, status: :see_other, alert: current_seller.errors.full_messages.to_sentence
       end
     end
   rescue ThirdPartyAnalytic::ThirdPartyAnalyticInvalid => e
-    redirect_to(
-      settings_third_party_analytics_path,
-      status: :see_other,
-      alert: e.message
-    )
+    return redirect_to settings_third_party_analytics_path, status: :see_other, alert: e.message
   rescue StandardError => e
     Bugsnag.notify(e)
-    redirect_to(
-      settings_third_party_analytics_path,
-      status: :see_other,
-      alert: "Something broke. We're looking into what happened. Sorry about this!"
-    )
+    return redirect_to settings_third_party_analytics_path, status: :see_other, alert: "Something broke. We're looking into what happened. Sorry about this!"
   end
 
   private

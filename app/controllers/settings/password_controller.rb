@@ -15,11 +15,7 @@ class Settings::PasswordController < Settings::BaseController
 
     if @user.provider.present?
       unless @user.confirmed?
-        return redirect_to(
-          settings_password_path,
-          status: :see_other,
-          alert: "You have to confirm your email address before you can do that."
-        )
+        return redirect_to settings_password_path, status: :see_other, alert: "You have to confirm your email address before you can do that."
       end
 
       @user.password = params["user"]["new_password"]
@@ -28,11 +24,7 @@ class Settings::PasswordController < Settings::BaseController
     else
       if params["user"].blank? || params["user"]["password"].blank? ||
          !@user.valid_password?(params["user"]["password"])
-        return redirect_to(
-          settings_password_path,
-          status: :see_other,
-          alert: "Incorrect password."
-        )
+        return redirect_to settings_password_path, status: :see_other, alert: "Incorrect password."
       end
 
       @user.password = params["user"]["new_password"]
@@ -42,17 +34,9 @@ class Settings::PasswordController < Settings::BaseController
       invalidate_active_sessions_except_the_current_session!
 
       bypass_sign_in(@user)
-      redirect_to(
-        settings_password_path,
-        status: :see_other,
-        notice: "You have successfully changed your password."
-      )
+      return redirect_to settings_password_path, status: :see_other, notice: "You have successfully changed your password."
     else
-      redirect_to(
-        settings_password_path,
-        status: :see_other,
-        alert: "New password #{@user.errors[:password].to_sentence}"
-      )
+      return redirect_to settings_password_path, status: :see_other, alert: "New password #{@user.errors[:password].to_sentence}"
     end
   end
 

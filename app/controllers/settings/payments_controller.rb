@@ -13,11 +13,7 @@ class Settings::PaymentsController < Settings::BaseController
 
   def update
     unless current_seller.email.present?
-      return redirect_to(
-        settings_payments_path,
-        inertia: { errors: { error_message: "You have to confirm your email address before you can do that." } },
-        status: :see_other,
-      )
+      return redirect_to settings_payments_path, inertia: { errors: { error_message: "You have to confirm your email address before you can do that." } }, status: :see_other
     end
     return unless current_seller.fetch_or_build_user_compliance_info.country.present?
 
@@ -28,18 +24,10 @@ class Settings::PaymentsController < Settings::BaseController
       begin
         UpdateUserCountry.new(new_country_code: updated_country_code, user: current_seller).process
         flash[:notice] = "Your country has been updated!"
-        return redirect_to(
-          settings_payments_path,
-          status: :see_other,
-          notice: "Your country has been updated!"
-        )
+        return redirect_to settings_payments_path, status: :see_other, notice: "Your country has been updated!"
       rescue => e
         Bugsnag.notify("Update country failed for user #{current_seller.id} (from #{compliance_info.country_code} to #{updated_country_code}): #{e}")
-        return redirect_to(
-          settings_payments_path,
-          inertia: { errors: { error_message: "Country update failed" } },
-          status: :see_other,
-        )
+        return redirect_to settings_payments_path, inertia: { errors: { error_message: "Country update failed" } }, status: :see_other
       end
     end
 
@@ -47,11 +35,7 @@ class Settings::PaymentsController < Settings::BaseController
       zip_code = params.dig(:user, :is_business) ? params.dig(:user, :business_zip_code).presence : params.dig(:user, :zip_code).presence
       if zip_code
         unless UsZipCodes.identify_state_code(zip_code).present?
-          return redirect_to(
-            settings_payments_path,
-            inertia: { errors: { error_message: "You entered a ZIP Code that doesn't exist within your country." } },
-            status: :see_other,
-          )
+          return redirect_to settings_payments_path, inertia: { errors: { error_message: "You entered a ZIP Code that doesn't exist within your country." } }, status: :see_other
         end
       end
     end
@@ -65,18 +49,10 @@ class Settings::PaymentsController < Settings::BaseController
     end
 
     if params.dig(:user, :country) == Compliance::Countries::ARE.alpha2 && !params.dig(:user, :is_business) && payout_type != "PayPal"
-      return redirect_to(
-        settings_payments_path,
-        inertia: { errors: { error_message: "Individual accounts from the UAE are not supported. Please use a business account." } },
-        status: :see_other,
-      )
+      return redirect_to settings_payments_path, inertia: { errors: { error_message: "Individual accounts from the UAE are not supported. Please use a business account." } }, status: :see_other
     end
     if current_seller.has_stripe_account_connected?
-      return redirect_to(
-        settings_payments_path,
-        inertia: { errors: { error_message: "You cannot change your payout method to #{payout_type} because you have a stripe account connected." } },
-        status: :see_other,
-      )
+      return redirect_to settings_payments_path, inertia: { errors: { error_message: "You cannot change your payout method to #{payout_type} because you have a stripe account connected." } }, status: :see_other
     end
 
     current_seller.tos_agreements.create!(ip: request.remote_ip)
@@ -86,21 +62,13 @@ class Settings::PaymentsController < Settings::BaseController
     return unless update_user_compliance_info
 
     if params[:payout_threshold_cents].present? && params[:payout_threshold_cents].to_i < current_seller.minimum_payout_threshold_cents
-      return redirect_to(
-        settings_payments_path,
-        inertia: { errors: { error_message: "Your payout threshold must be greater than the minimum payout amount" } },
-        status: :see_other,
-      )
+      return redirect_to settings_payments_path, inertia: { errors: { error_message: "Your payout threshold must be greater than the minimum payout amount" } }, status: :see_other
     end
 
     update_params = params.permit(:payouts_paused_by_user, :payout_threshold_cents, :payout_frequency)
     update_params[:payout_threshold_cents] = update_params[:payout_threshold_cents].to_i if update_params[:payout_threshold_cents].present?
     unless current_seller.update(update_params)
-      return redirect_to(
-        settings_payments_path,
-        inertia: { errors: { error_message: current_seller.errors.full_messages.first } },
-        status: :see_other,
-      )
+      return redirect_to settings_payments_path, inertia: { errors: { error_message: current_seller.errors.full_messages.first } }, status: :see_other
     end
 
     # Once the user has submitted all their information, and a bank account record was created for them,
@@ -109,11 +77,7 @@ class Settings::PaymentsController < Settings::BaseController
       begin
         StripeMerchantAccountManager.create_account(current_seller, passphrase: GlobalConfig.get("STRONGBOX_GENERAL_PASSWORD"))
       rescue => e
-        return redirect_to(
-          settings_payments_path,
-          inertia: { errors: { error_message: e.try(:message) || "Something went wrong." } },
-          status: :see_other,
-        )
+        return redirect_to settings_payments_path, inertia: { errors: { error_message: e.try(:message) || "Something went wrong." } }, status: :see_other
       end
     end
 
@@ -121,11 +85,7 @@ class Settings::PaymentsController < Settings::BaseController
       flash[:notice] = "Thanks! You're all set."
     end
 
-    redirect_to(
-      settings_payments_path,
-      status: :see_other,
-      notice: "Thanks! You're all set."
-    )
+    redirect_to settings_payments_path, status: :see_other, notice: "Thanks! You're all set."
   end
 
   def set_country
@@ -238,12 +198,7 @@ class Settings::PaymentsController < Settings::BaseController
         "PayPal payouts are not supported in your country."
       end
 
-      redirect_to(
-        settings_payments_path,
-        inertia: { errors: { error_message: message } },
-        status: :see_other
-      )
-
+      return redirect_to settings_payments_path, inertia: { errors: { error_message: message } }, status: :see_other
       false
     end
 
@@ -258,12 +213,7 @@ class Settings::PaymentsController < Settings::BaseController
           comment_type: :note,
           content: result[:error_message]
         )
-        redirect_to(
-          settings_payments_path,
-          inertia: { errors: { error_message: result[:error_message], error_code: result[:error_code] } },
-          alert: result[:error_message],
-          status: :see_other
-        )
+        return redirect_to settings_payments_path, inertia: { errors: { error_message: result[:error_message], error_code: result[:error_code] } }, status: :see_other
         false
       end
     end
