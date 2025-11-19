@@ -244,7 +244,7 @@ const Discover = (props: Props) => {
             <img
               src="/assets/illustrations/sale.svg"
               alt="Sale"
-              className="absolute right-0 bottom-0 w-24 rotate-[16deg] object-contain md:hidden"
+              className="absolute right-0 bottom-0 w-27.5 rotate-[16deg] object-contain md:hidden"
               draggable={false}
             />
           </div>
