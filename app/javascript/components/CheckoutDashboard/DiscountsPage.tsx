@@ -336,7 +336,7 @@ const DiscountsPage = ({ offer_codes, pages, products, pagination: initialPagina
               </div>
             </div>
             <Button
-              color="black"
+              color="primary"
               className="mt-2 shrink-0 md:mt-0"
               onClick={() => {
                 setIsBlackFridayMode(true);
