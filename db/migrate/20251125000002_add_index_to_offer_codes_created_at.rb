@@ -5,4 +5,3 @@ class AddIndexToOfferCodesCreatedAt < ActiveRecord::Migration[7.1]
     add_index :offer_codes, :created_at
   end
 end
-

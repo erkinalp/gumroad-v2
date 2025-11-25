@@ -77,7 +77,7 @@ describe BlackFridayStatsService do
     end
 
     it "only considers offer codes from last 30 days for average discount" do
-      old_offer_code = create(:offer_code, user: seller1, code: "BLACKFRIDAY2025", amount_percentage: 50, products: [product1], created_at: 31.days.ago)
+      create(:offer_code, user: seller1, code: "BLACKFRIDAY2025", amount_percentage: 50, products: [product1], created_at: 31.days.ago)
       stats = described_class.calculate_stats
 
       expect(stats[:average_discount_percentage]).to eq(28)
