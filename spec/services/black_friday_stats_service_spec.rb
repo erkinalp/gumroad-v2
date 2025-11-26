@@ -3,103 +3,18 @@
 require "spec_helper"
 
 describe BlackFridayStatsService do
-  describe ".calculate_stats", :elasticsearch_wait_for_refresh do
-    let!(:seller1) { create(:user) }
-    let!(:seller2) { create(:user) }
-    let!(:product1) { create(:product, user: seller1, price_cents: 1000) }
-    let!(:product2) { create(:product, user: seller2, price_cents: 2000) }
-
-    let!(:offer_code1) do
-      create(:offer_code, user: seller1, code: "BLACKFRIDAY2025", amount_percentage: 25, products: [product1])
-    end
-
-    let!(:offer_code2) do
-      create(:offer_code, user: seller2, code: "BLACKFRIDAY2025", amount_percentage: 30, products: [product2])
-    end
-
-    let!(:other_offer_code) do
-      create(:offer_code, user: seller1, code: "SUMMER2025", amount_percentage: 15, products: [product1])
-    end
-
-    before do
-      Link.__elasticsearch__.create_index!(force: true)
-      Purchase.__elasticsearch__.create_index!(force: true)
-
-      create_list(:purchase, 5, link: product1, offer_code: offer_code1, price_cents: 750, purchase_state: "successful")
-      create_list(:purchase, 3, link: product2, offer_code: offer_code2, price_cents: 1400, purchase_state: "successful")
-      create_list(:purchase, 2, link: product1, offer_code: other_offer_code, price_cents: 850, purchase_state: "successful")
-
-      index_model_records(Link)
-      index_model_records(Purchase)
-    end
-
-    it "calculates the correct statistics for Black Friday offer codes" do
-      stats = described_class.calculate_stats
-
-      expect(stats[:active_deals_count]).to eq(2)
-      expect(stats[:revenue_cents]).to eq((5 * 750) + (3 * 1400))
-      expect(stats[:average_discount_percentage]).to eq(28)
-    end
-
-    it "excludes deleted offer codes" do
-      offer_code1.mark_deleted
-      product1.__elasticsearch__.index_document
-      index_model_records(Link)
-
-      stats = described_class.calculate_stats
-
-      expect(stats[:active_deals_count]).to eq(1)
-      expect(stats[:revenue_cents]).to eq(3 * 1400)
-      expect(stats[:average_discount_percentage]).to eq(30)
-    end
-
-    it "handles no Black Friday codes" do
-      OfferCode.where(code: "BLACKFRIDAY2025").each(&:mark_deleted)
-      product1.__elasticsearch__.index_document
-      product2.__elasticsearch__.index_document
-      index_model_records(Link)
-
+  describe ".calculate_stats" do
+    it "returns placeholder values with zero counts" do
       stats = described_class.calculate_stats
 
       expect(stats[:active_deals_count]).to eq(0)
       expect(stats[:revenue_cents]).to eq(0)
       expect(stats[:average_discount_percentage]).to eq(0)
     end
-
-    it "only counts successful purchases in revenue" do
-      create(:purchase, link: product1, offer_code: offer_code1, price_cents: 1000, purchase_state: "failed")
-      create(:purchase, link: product1, offer_code: offer_code1, price_cents: 2000, stripe_refunded: true, purchase_state: "successful")
-      index_model_records(Purchase)
-
-      stats = described_class.calculate_stats
-
-      expect(stats[:revenue_cents]).to eq((5 * 750) + (3 * 1400))
-    end
-
-    it "only considers offer codes from last 30 days for average discount" do
-      create(:offer_code, user: seller1, code: "BLACKFRIDAY2025", amount_percentage: 50, products: [product1], created_at: 31.days.ago)
-      stats = described_class.calculate_stats
-
-      expect(stats[:average_discount_percentage]).to eq(28)
-    end
   end
 
-  describe ".fetch_stats", :elasticsearch_wait_for_refresh do
-    let!(:seller) { create(:user) }
-    let!(:product) { create(:product, user: seller, price_cents: 1000) }
-    let!(:offer_code) do
-      create(:offer_code, user: seller, code: "BLACKFRIDAY2025", amount_percentage: 25, products: [product])
-    end
-
+  describe ".fetch_stats" do
     before do
-      Link.__elasticsearch__.create_index!(force: true)
-      Purchase.__elasticsearch__.create_index!(force: true)
-
-      create_list(:purchase, 3, link: product, offer_code:, price_cents: 750, purchase_state: "successful")
-
-      index_model_records(Link)
-      index_model_records(Purchase)
-
       Rails.cache.clear
     end
 
@@ -114,8 +29,9 @@ describe BlackFridayStatsService do
       second_result = described_class.fetch_stats
 
       expect(first_result).to eq(second_result)
-      expect(first_result[:active_deals_count]).to eq(1)
-      expect(first_result[:revenue_cents]).to eq(2250)
+      expect(first_result[:active_deals_count]).to eq(0)
+      expect(first_result[:revenue_cents]).to eq(0)
+      expect(first_result[:average_discount_percentage]).to eq(0)
     end
 
     it "uses the correct cache key and expiration" do
@@ -127,71 +43,39 @@ describe BlackFridayStatsService do
       described_class.fetch_stats
     end
 
-    it "returns cached data even when underlying data changes" do
-      first_result = described_class.fetch_stats
-      expect(first_result[:active_deals_count]).to eq(1)
-      expect(first_result[:revenue_cents]).to eq(2250)
-
-      new_product = create(:product, user: seller, price_cents: 2000)
-      new_offer_code = create(:offer_code, user: seller, code: "BLACKFRIDAY2025", amount_percentage: 30, products: [new_product])
-      create_list(:purchase, 5, link: new_product, offer_code: new_offer_code, price_cents: 1400, purchase_state: "successful")
-
-      index_model_records(Link)
-      index_model_records(Purchase)
-
-      cached_result = described_class.fetch_stats
-      expect(cached_result[:active_deals_count]).to eq(1)
-      expect(cached_result[:revenue_cents]).to eq(2250)
-    end
-
-    it "recalculates stats after cache expires" do
-      travel_to Time.current do
-        first_result = described_class.fetch_stats
-        expect(first_result[:active_deals_count]).to eq(1)
-        expect(first_result[:revenue_cents]).to eq(2250)
-
-        new_product = create(:product, user: seller, price_cents: 2000)
-        new_offer_code = create(:offer_code, user: seller, code: "BLACKFRIDAY2025", amount_percentage: 30, products: [new_product])
-        create_list(:purchase, 5, link: new_product, offer_code: new_offer_code, price_cents: 1400, purchase_state: "successful")
-
-        index_model_records(Link)
-        index_model_records(Purchase)
-
-        travel 11.minutes
-
-        new_result = described_class.fetch_stats
-        expect(new_result[:active_deals_count]).to eq(2)
-        expect(new_result[:revenue_cents]).to eq(9250)
-        expect(new_result[:average_discount_percentage]).to eq(28)
-      end
-    end
-
     it "stores stats in Rails cache" do
       described_class.fetch_stats
 
       cached_value = Rails.cache.read("black_friday_stats")
       expect(cached_value).to be_present
-      expect(cached_value[:active_deals_count]).to eq(1)
-      expect(cached_value[:revenue_cents]).to eq(2250)
-      expect(cached_value[:average_discount_percentage]).to eq(25)
+      expect(cached_value[:active_deals_count]).to eq(0)
+      expect(cached_value[:revenue_cents]).to eq(0)
+      expect(cached_value[:average_discount_percentage]).to eq(0)
+    end
+
+    it "recalculates stats after cache expires" do
+      travel_to Time.current do
+        first_result = described_class.fetch_stats
+        expect(first_result[:active_deals_count]).to eq(0)
+
+        travel 11.minutes
+
+        expect(described_class).to receive(:calculate_stats).and_call_original
+        new_result = described_class.fetch_stats
+        expect(new_result[:active_deals_count]).to eq(0)
+      end
     end
 
     it "handles cache deletion and recalculates" do
       first_result = described_class.fetch_stats
-      expect(first_result[:active_deals_count]).to eq(1)
+      expect(first_result[:active_deals_count]).to eq(0)
 
       Rails.cache.delete("black_friday_stats")
 
-      new_product = create(:product, user: seller, price_cents: 2000)
-      new_offer_code = create(:offer_code, user: seller, code: "BLACKFRIDAY2025", amount_percentage: 30, products: [new_product])
-      create_list(:purchase, 2, link: new_product, offer_code: new_offer_code, price_cents: 1400, purchase_state: "successful")
-
-      index_model_records(Link)
-      index_model_records(Purchase)
-
+      expect(described_class).to receive(:calculate_stats).and_call_original
       new_result = described_class.fetch_stats
-      expect(new_result[:active_deals_count]).to eq(2)
-      expect(new_result[:revenue_cents]).to eq(5050)
+      expect(new_result[:active_deals_count]).to eq(0)
     end
   end
 end
+

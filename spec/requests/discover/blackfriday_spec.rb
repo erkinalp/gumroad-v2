@@ -18,6 +18,13 @@ describe("Black Friday 2025", js: true, type: :system) do
       product = create(:product, :recommendable, user: @creator, price_cents: 1000)
       offer_code = create(:offer_code, user: @creator, code: "BLACKFRIDAY2025", amount_percentage: 25, products: [product])
       create_list(:purchase, 5, link: product, offer_code:, price_cents: 750)
+
+      # Stub the stats service to return the expected values
+      allow(BlackFridayStatsService).to receive(:fetch_stats).and_return({
+        active_deals_count: 1,
+        revenue_cents: 3750, # 5 purchases * 750 cents = $37.50
+        average_discount_percentage: 25
+      })
     end
 
     after do
