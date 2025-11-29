@@ -52,7 +52,7 @@ describe("Discover - Nav - Mobile", :js, :mobile_view, type: :system) do
     click_on "Categories"
     expect(page).to have_text("All")
 
-    find("[role=menu]").send_keys(:escape)
+    send_keys(:escape)
     expect(page).not_to have_text("All")
   end
 end

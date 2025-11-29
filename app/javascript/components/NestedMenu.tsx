@@ -236,65 +236,59 @@ const MenubarItem = ({
     closeTimeoutRef.current = setTimeout(() => handleToggleMenu(false), 400);
   };
 
-  return menuItem.children.length > 0 ? (
-    <div
-      className={classNames("popover", { expanded: menuOpen })}
-      ref={ref}
-      onMouseEnter={() => handleToggleMenu(true)}
-      onMouseLeave={closeAfterDelay}
-    >
-      <a
-        href={menuItem.href ?? "#"}
-        className={classNames(
-          "pill button",
-          { "border-transparent! bg-transparent! text-inherit!": !isHighlighted },
-          { expandable: showExpandableIcon },
-        )}
-        role="menuitem"
-        aria-current={isHighlighted}
-        aria-haspopup="menu"
-        aria-expanded={menuOpen}
-        aria-controls={uid}
-        onClick={(e) => {
+  const hasChildren = menuItem.children.length > 0;
+
+  const menuItemAnchor = (
+    <a
+      href={menuItem.href ?? "#"}
+      className={classNames(
+        "pill button",
+        { "border-transparent! bg-transparent! text-inherit!": !isHighlighted },
+        { expandable: showExpandableIcon },
+      )}
+      role="menuitem"
+      aria-current={isHighlighted}
+      aria-haspopup={hasChildren ? "menu" : undefined}
+      aria-expanded={hasChildren ? menuOpen : undefined}
+      aria-controls={hasChildren ? uid : undefined}
+      {...extraAriaAttrs}
+      onClick={(e) => {
+        if (hasChildren) {
           if (isOnTouchDevice) e.preventDefault();
           else onSelectItem?.(menuItem, e);
-        }}
-      >
-        {menuItem.label}
-      </a>
-      <div className="dropdown" hidden={!menuOpen} style={dropdownPosition}>
-        <ItemsList
-          menuId={uid}
-          menuItem={menuItem}
-          showAllItemOnInitialList={showAllItem ?? false}
-          open={menuOpen}
-          onSelectItem={(newSelectedItem, e) => {
-            if (newSelectedItem === selectedItem) handleToggleMenu(false);
-            onSelectItem?.(newSelectedItem, e);
-          }}
-          className="flex h-full w-48 flex-col bg-white dark:bg-dark-gray"
-        />
-      </div>
-    </div>
-  ) : (
-    <div onMouseEnter={() => handleToggleMenu(true)} onMouseLeave={() => handleToggleMenu(false)}>
-      <a
-        href={menuItem.href ?? "#"}
-        className={classNames(
-          "pill button",
-          { "border-transparent! bg-transparent! text-inherit!": !isHighlighted },
-          { expandable: showExpandableIcon },
-        )}
-        role="menuitem"
-        aria-current={isHighlighted}
-        {...extraAriaAttrs}
-        onClick={(e) => {
+        } else {
           onHighlightIn();
           onSelectItem?.(menuItem, e);
-        }}
-      >
-        {menuItem.label}
-      </a>
+        }
+      }}
+    >
+      {menuItem.label}
+    </a>
+  );
+
+  return (
+    <div
+      ref={hasChildren ? ref : undefined}
+      className={hasChildren ? classNames("popover", { expanded: menuOpen }) : undefined}
+      onMouseEnter={() => handleToggleMenu(true)}
+      onMouseLeave={hasChildren ? closeAfterDelay : () => handleToggleMenu(false)}
+    >
+      {menuItemAnchor}
+      {hasChildren ? (
+        <div className="dropdown" hidden={!menuOpen} style={dropdownPosition}>
+          <ItemsList
+            menuId={uid}
+            menuItem={menuItem}
+            showAllItemOnInitialList={showAllItem ?? false}
+            open={menuOpen}
+            onSelectItem={(newSelectedItem, e) => {
+              if (newSelectedItem === selectedItem) handleToggleMenu(false);
+              onSelectItem?.(newSelectedItem, e);
+            }}
+            className="flex h-full w-48 flex-col bg-white dark:bg-dark-gray"
+          />
+        </div>
+      ) : null}
     </div>
   );
 };
@@ -330,7 +324,7 @@ const OverlayMenu = ({
         open={menuOpen}
         onOpenChange={setMenuOpen}
         modal
-        className="right-auto! left-0! max-w-80 border-l-0! p-0 md:border-r"
+        className="right-auto w-80 max-w-80 border-l-0 p-0 md:left-0 md:border-r"
       >
         <ItemsList
           menuId={overlayMenuUID}
@@ -390,7 +384,6 @@ const ItemsList = ({
             setDisplayedItem(displayedItem.parent ?? initialMenuItem);
             e.preventDefault();
           }}
-          className="justify-normal bg-[inherit]!"
         >
           <Icon name="outline-cheveron-left" />
           <span>Back</span>
@@ -435,7 +428,7 @@ const MenuItemLink = ({
     {...props}
     href={props.href ?? "#"}
     className={classNames(
-      "shrink-0 justify-between gap-2 overflow-visible! p-4! whitespace-normal! hover:bg-foreground! hover:text-background!",
+      "shrink-0 justify-between gap-2 overflow-visible! p-4! whitespace-normal! hover:bg-primary! hover:text-background!",
       className,
     )}
     role="menuitem"
