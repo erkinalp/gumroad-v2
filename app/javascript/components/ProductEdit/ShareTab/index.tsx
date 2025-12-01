@@ -122,8 +122,7 @@ const DiscoverEligibilityPromo = () => {
   });
 
   if (!show) return null;
-  // TODO(review note - cleanup before merging):
-  // Before hands were only visible on mobile view but sizing was off. Now it is visible on all views.
+
   return (
     <Alert role="status">
       <AlertIcon asChild>

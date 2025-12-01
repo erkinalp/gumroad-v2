@@ -294,7 +294,6 @@ const NewProductPage = ({
                 </p>
               </header>
 
-              {/* TODO(review note - cleanup before merging): Alert component's !border-pink was not visibile earlier. Now it is. */}
               {ai_generation_enabled && aiPromoVisible ? (
                 <Alert className="gap-4 p-6" role="status" variant="pink">
                   <AlertIcon asChild>

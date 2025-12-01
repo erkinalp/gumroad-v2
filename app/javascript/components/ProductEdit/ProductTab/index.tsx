@@ -86,7 +86,6 @@ export const ProductTab = () => {
       <div className="squished">
         <form>
           <section className="p-4! md:p-8!">
-            {/* TODO cleanup before merge: Icon was not visible earlier and p-6 was not being applied */}
             {showAiNotification ? (
               <Alert role="status" className="grid grid-cols-[auto_1fr_auto] gap-4" variant="pink">
                 <AlertIcon className="self-center text-lg">
