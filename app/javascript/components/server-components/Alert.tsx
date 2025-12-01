@@ -2,6 +2,9 @@ import cx from "classnames";
 import * as React from "react";
 import { is } from "ts-safe-cast";
 
+import { classNames } from "$app/utils/classNames";
+
+import { Alert } from "$app/components/ui/Alert";
 import { useGlobalEventListener } from "$app/components/useGlobalEventListener";
 import { useRunOnce } from "$app/components/useRunOnce";
 
@@ -9,7 +12,7 @@ const ALERT_KEY = "alert";
 
 export type AlertPayload = { message: string; status: "success" | "danger" | "info" | "warning"; html?: boolean };
 
-const Alert = ({ initial }: { initial: AlertPayload | null }) => {
+const ToastAlert = ({ initial }: { initial: AlertPayload | null }) => {
   const [alert, setAlert] = React.useState<AlertPayload | null>(initial);
   const [isVisible, setIsVisible] = React.useState(!!initial);
   const timerRef = React.useRef<number | null>(null);
@@ -40,22 +43,23 @@ const Alert = ({ initial }: { initial: AlertPayload | null }) => {
   });
 
   return (
-    <div
-      role="alert"
-      className={cx(
-        "bg-filled fixed top-4 left-1/2 w-max max-w-[calc(100vw-2rem)] px-4 py-2 md:max-w-sm",
-        alert?.status,
+    <Alert
+      asChild
+      className={classNames(
+        "fixed top-4 left-1/2 z-100 w-max max-w-[calc(100vw-2rem)] bg-blend-overlay md:max-w-sm",
         isVisible ? "visible" : "invisible",
       )}
       style={{
+        backgroundImage: `linear-gradient(rgb(var(--filled)), rgb(var(--filled)))`,
         transform: `translateX(-50%) translateY(${isVisible ? 0 : "calc(-100% - var(--spacer-4))"})`,
         transition: "all 0.3s ease-out 0.5s",
-        zIndex: "var(--z-index-tooltip)",
       }}
-      dangerouslySetInnerHTML={alert?.html ? { __html: alert.message } : undefined}
+      variant={alert?.status}
     >
-      {!alert?.html ? alert?.message : null}
-    </div>
+      <div dangerouslySetInnerHTML={alert?.html ? { __html: alert.message } : undefined}>
+        {!alert?.html ? alert?.message : null}
+      </div>
+    </Alert>
   );
 };
 
@@ -73,4 +77,4 @@ export const showAlert = (
   );
 };
 
-export default Alert;
+export default ToastAlert;
