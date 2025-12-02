@@ -42,7 +42,6 @@ class CreateIndiaSalesReportJob
                 .where(created_at: start_date..end_date)
                 .where("(country = 'India') OR (country IS NULL AND ip_country = 'India') OR (card_country = 'IN')")
                 .where("price_cents > 0")
-                .where("purchase_sales_tax_infos.business_vat_id IS NULL OR purchase_sales_tax_infos.business_vat_id = ''")
                 .find_each do |purchase|
           next if purchase.chargeback_date.present? && !purchase.chargeback_reversed?
           next if purchase.stripe_refunded == true
@@ -68,9 +67,12 @@ class CreateIndiaSalesReportJob
             0
           end
 
+          buyer_tax_id = purchase.purchase_sales_tax_info&.business_vat_id || ""
+
           row = [
             purchase.external_id,
             purchase.created_at.strftime("%Y-%m-%d"),
+            buyer_tax_id,
             display_state,
             india_tax_rate_percentage,
             price_cents,
@@ -103,6 +105,7 @@ class CreateIndiaSalesReportJob
       [
         "ID",
         "Date",
+        "Buyer Tax ID (GSTIN)",
         "Place of Supply (State)",
         "Zip Tax Rate (%) (Rate from Database)",
         "Taxable Value (cents)",
