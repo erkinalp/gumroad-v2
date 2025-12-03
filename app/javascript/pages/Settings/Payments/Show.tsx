@@ -171,10 +171,12 @@ export default function PaymentsPage() {
   const [debitCard, setDebitCard] = React.useState<PayoutDebitCardData | null>(null);
   const [showNewBankAccount, setShowNewBankAccount] = React.useState(!props.bank_account_details.account_number_visual);
 
+  // Sync form data when compliance_info changes (e.g., after country change redirect)
   React.useEffect(() => {
     form.setData("user", props.compliance_info);
   }, [props.compliance_info]);
 
+  // Sync showNewBankAccount when bank account details change (e.g., after successful save or country change)
   React.useEffect(() => {
     setShowNewBankAccount(!props.bank_account_details.account_number_visual);
   }, [props.bank_account_details.account_number_visual]);
