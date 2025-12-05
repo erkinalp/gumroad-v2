@@ -20,7 +20,7 @@ import { PriceInput } from "$app/components/PriceInput";
 import { CreditCardForm } from "$app/components/Settings/AdvancedPage/CreditCardForm";
 import { Layout } from "$app/components/Settings/Layout";
 import AccountDetailsSection from "$app/components/Settings/PaymentsPage/AccountDetailsSection";
-import AusBackTaxesSection from "$app/components/Settings/PaymentsPage/AusBackTaxesSection";
+import AusBackTaxesSection, { type AusBacktaxDetails } from "$app/components/Settings/PaymentsPage/AusBackTaxesSection";
 import BankAccountSection, {
   BankAccountDetails,
   type BankAccount,
@@ -44,16 +44,8 @@ type PaymentsPageProps = {
   settings_pages: SettingPage[];
   is_form_disabled: boolean;
   should_show_country_modal: boolean;
-  aus_backtax_details: {
+  aus_backtax_details: AusBacktaxDetails & {
     show_au_backtax_prompt: boolean;
-    total_amount_to_au: string;
-    au_backtax_amount: string;
-    credit_creation_date: string;
-    opt_in_date: string | null;
-    opted_in_to_au_backtax: boolean;
-    legal_entity_name: string;
-    are_au_backtaxes_paid: boolean;
-    au_backtaxes_paid_date: string | null;
   };
   show_verification_section: boolean;
   countries: Record<string, string>;
