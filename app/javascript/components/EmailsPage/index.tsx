@@ -1,35 +1,24 @@
 import cx from "classnames";
 import React from "react";
-import { RouterProvider, createBrowserRouter, RouteObject, Link, json, useLocation } from "react-router-dom";
-import { StaticRouterProvider } from "react-router-dom/server";
+import { Link } from "react-router-dom";
 
-import {
-  getDraftInstallments,
-  getEditInstallment,
-  getNewInstallment,
-  getPublishedInstallments,
-  getScheduledInstallments,
-  previewInstallment,
-  SavedInstallment,
-} from "$app/data/installments";
-import { assertDefined } from "$app/utils/assert";
+import { previewInstallment, SavedInstallment } from "$app/data/installments";
 import { formatStatNumber } from "$app/utils/formatStatNumber";
 import { asyncVoid } from "$app/utils/promise";
 import { assertResponseError } from "$app/utils/request";
-import { register, GlobalProps, buildStaticRouter } from "$app/utils/serverComponentUtil";
 
 import { Button } from "$app/components/Button";
 import { Icon } from "$app/components/Icons";
 import { Popover } from "$app/components/Popover";
 import { showAlert } from "$app/components/server-components/Alert";
 import { DraftsTab } from "$app/components/server-components/EmailsPage/DraftsTab";
-import { EmailForm } from "$app/components/server-components/EmailsPage/EmailForm";
 import { PublishedTab } from "$app/components/server-components/EmailsPage/PublishedTab";
 import { ScheduledTab } from "$app/components/server-components/EmailsPage/ScheduledTab";
 import { PageHeader } from "$app/components/ui/PageHeader";
 import Placeholder from "$app/components/ui/Placeholder";
 import { Tabs, Tab } from "$app/components/ui/Tabs";
 import { WithTooltip } from "$app/components/WithTooltip";
+
 const TABS = ["published", "scheduled", "drafts", "subscribers"] as const;
 
 export const emailTabPath = (tab: (typeof TABS)[number]) => `/emails/${tab}`;
@@ -106,13 +95,11 @@ export const Layout = ({
   );
 };
 
-export const NewEmailButton = ({ copyFrom }: { copyFrom?: string }) => {
-  const { pathname: from } = useLocation();
+export const NewEmailButton = ({ copyFrom }: { copyFrom?: string } = {}) => {
   return (
     <Link
       className={cx("button", { accent: !copyFrom })}
       to={copyFrom ? `${newEmailPath}?copy_from=${copyFrom}` : newEmailPath}
-      state={{ from }}
     >
       {copyFrom ? "Duplicate" : "New email"}
     </Link>
@@ -120,9 +107,8 @@ export const NewEmailButton = ({ copyFrom }: { copyFrom?: string }) => {
 };
 
 export const EditEmailButton = ({ id }: { id: string }) => {
-  const { pathname: from } = useLocation();
   return (
-    <Link className="button" to={editEmailPath(id)} state={{ from }}>
+    <Link className="button" to={editEmailPath(id)}>
       Edit
     </Link>
   );
@@ -187,61 +173,32 @@ export const audienceCountValue = (audienceCounts: AudienceCounts, installmentId
       : formatStatNumber({ value: count });
 };
 
-const routes: RouteObject[] = [
-  {
-    path: emailTabPath("published"),
-    element: <PublishedTab />,
-    loader: async () => json(await getPublishedInstallments({ page: 1, query: "" }).response, { status: 200 }),
-  },
-  {
-    path: emailTabPath("scheduled"),
-    element: <ScheduledTab />,
-    loader: async () => json(await getScheduledInstallments({ page: 1, query: "" }).response, { status: 200 }),
-  },
-  {
-    path: emailTabPath("drafts"),
-    element: <DraftsTab />,
-    loader: async () => json(await getDraftInstallments({ page: 1, query: "" }).response, { status: 200 }),
-  },
-  {
-    path: newEmailPath,
-    element: <EmailForm />,
-    loader: async ({ request }) =>
-      json(await getNewInstallment(new URL(request.url).searchParams.get("copy_from")), {
-        status: 200,
-      }),
-  },
-  {
-    path: editEmailPath(":id"),
-    element: <EmailForm />,
-    loader: async ({ params }) =>
-      json(await getEditInstallment(assertDefined(params.id, "Installment ID is required")), { status: 200 }),
-  },
-];
-
 const SearchContext = React.createContext<[string, (thing: string) => void] | null>(null);
-export const useSearchContext = () => assertDefined(React.useContext(SearchContext));
+export const useSearchContext = () => {
+  const context = React.useContext(SearchContext);
+  if (!context) throw new Error("useSearchContext must be used within SearchContext.Provider");
+  return context;
+};
 
-const EmailsPage = () => {
-  const router = createBrowserRouter(routes);
+export default function EmailsPageComponent() {
   const queryState = React.useState("");
+  const currentPath = typeof window !== "undefined" ? window.location.pathname : "";
+
+  const selectedTab = currentPath.includes("/scheduled")
+    ? "scheduled"
+    : currentPath.includes("/drafts")
+      ? "drafts"
+      : "published";
+
+  const hasPosts = true; // This will be passed as a prop in the future if needed
 
   return (
     <SearchContext.Provider value={queryState}>
-      <RouterProvider router={router} />
+      <Layout selectedTab={selectedTab} hasPosts={hasPosts}>
+        {selectedTab === "published" && <PublishedTab />}
+        {selectedTab === "scheduled" && <ScheduledTab />}
+        {selectedTab === "drafts" && <DraftsTab />}
+      </Layout>
     </SearchContext.Provider>
   );
-};
-
-const EmailsRouter = async (global: GlobalProps) => {
-  const { router, context } = await buildStaticRouter(global, routes);
-  const component = () => (
-    <SearchContext.Provider value={["", () => {}]}>
-      <StaticRouterProvider router={router} context={context} nonce={global.csp_nonce} />
-    </SearchContext.Provider>
-  );
-  component.displayName = "EmailsRouter";
-  return component;
-};
-
-export default register({ component: EmailsPage, ssrComponent: EmailsRouter, propParser: () => ({}) });
+}

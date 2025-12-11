@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class EmailsController < Sellers::BaseController
-  before_action :set_body_id_as_app
+  layout "inertia"
 
   def index
     authorize Installment
@@ -11,6 +11,8 @@ class EmailsController < Sellers::BaseController
     if request.path == emails_path
       default_tab = Installment.alive.not_workflow_installment.scheduled.where(seller: current_seller).exists? ? "scheduled" : "published"
       redirect_to "#{emails_path}/#{default_tab}", status: :moved_permanently
+    else
+      render inertia: "Emails/Index"
     end
   end
 

@@ -1,7 +1,5 @@
 import { formatDistanceToNow } from "date-fns";
 import React from "react";
-import { useLoaderData } from "react-router-dom";
-import { cast } from "ts-safe-cast";
 
 import {
   deleteInstallment,
@@ -25,11 +23,10 @@ import {
   audienceCountValue,
   EditEmailButton,
   EmptyStatePlaceholder,
-  Layout,
   NewEmailButton,
   useSearchContext,
   ViewEmailButton,
-} from "$app/components/server-components/EmailsPage";
+} from "$app/components/EmailsPage";
 import { Sheet, SheetHeader } from "$app/components/ui/Sheet";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "$app/components/ui/Table";
 import { useDebouncedCallback } from "$app/components/useDebouncedCallback";
@@ -39,9 +36,8 @@ import { useUserAgentInfo } from "$app/components/UserAgent";
 import draftsPlaceholder from "$assets/images/placeholders/draft_posts.png";
 
 export const DraftsTab = () => {
-  const data = cast<{ installments: DraftInstallment[]; pagination: Pagination } | undefined>(useLoaderData());
-  const [installments, setInstallments] = React.useState(data?.installments ?? []);
-  const [pagination, setPagination] = React.useState(data?.pagination ?? { count: 0, next: null });
+  const [installments, setInstallments] = React.useState<DraftInstallment[]>([]);
+  const [pagination, setPagination] = React.useState<Pagination>({ count: 0, next: null });
   const currentSeller = assertDefined(useCurrentSeller(), "currentSeller is required");
   const [audienceCounts, setAudienceCounts] = React.useState<AudienceCounts>(new Map());
   React.useEffect(() => {
@@ -97,6 +93,11 @@ export const DraftsTab = () => {
   const debouncedFetchInstallments = useDebouncedCallback((reset: boolean) => void fetchInstallments(reset), 500);
   useOnChange(() => debouncedFetchInstallments(true), [query]);
 
+  // Fetch initial data on mount
+  React.useEffect(() => {
+    void fetchInstallments(true);
+  }, []);
+
   const handleDelete = async () => {
     if (!deletingInstallment) return;
     try {
@@ -114,8 +115,7 @@ export const DraftsTab = () => {
   const userAgentInfo = useUserAgentInfo();
 
   return (
-    <Layout selectedTab="drafts" hasPosts={!!data?.installments.length}>
-      <div className="space-y-4 p-4 md:p-8">
+    <div className="space-y-4 p-4 md:p-8">
         {installments.length > 0 ? (
           <>
             <Table
@@ -249,6 +249,5 @@ export const DraftsTab = () => {
           />
         )}
       </div>
-    </Layout>
-  );
+    );
 };

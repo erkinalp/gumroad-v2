@@ -1,6 +1,4 @@
 import React from "react";
-import { useLoaderData } from "react-router-dom";
-import { cast } from "ts-safe-cast";
 
 import { deleteInstallment, getPublishedInstallments, Pagination, PublishedInstallment } from "$app/data/installments";
 import { assertDefined } from "$app/utils/assert";
@@ -16,11 +14,10 @@ import { showAlert } from "$app/components/server-components/Alert";
 import {
   EditEmailButton,
   EmptyStatePlaceholder,
-  Layout,
   NewEmailButton,
   useSearchContext,
   ViewEmailButton,
-} from "$app/components/server-components/EmailsPage";
+} from "$app/components/EmailsPage";
 import { Sheet, SheetHeader } from "$app/components/ui/Sheet";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "$app/components/ui/Table";
 import { useDebouncedCallback } from "$app/components/useDebouncedCallback";
@@ -31,9 +28,8 @@ import { WithTooltip } from "$app/components/WithTooltip";
 import publishedPlaceholder from "$assets/images/placeholders/published_posts.png";
 
 export const PublishedTab = () => {
-  const data = cast<{ installments: PublishedInstallment[]; pagination: Pagination } | undefined>(useLoaderData());
-  const [installments, setInstallments] = React.useState(data?.installments ?? []);
-  const [pagination, setPagination] = React.useState(data?.pagination ?? { count: 0, next: null });
+  const [installments, setInstallments] = React.useState<PublishedInstallment[]>([]);
+  const [pagination, setPagination] = React.useState<Pagination>({ count: 0, next: null });
   const currentSeller = assertDefined(useCurrentSeller(), "currentSeller is required");
   const [selectedInstallmentId, setSelectedInstallmentId] = React.useState<string | null>(null);
   const [deletingInstallment, setDeletingInstallment] = React.useState<{
@@ -79,6 +75,11 @@ export const PublishedTab = () => {
     debouncedFetchInstallments({ reset: true });
   }, [query]);
 
+  // Fetch initial data on mount
+  React.useEffect(() => {
+    void fetchInstallments({ reset: true });
+  }, []);
+
   const handleDelete = async () => {
     if (!deletingInstallment) return;
     try {
@@ -96,15 +97,14 @@ export const PublishedTab = () => {
   const userAgentInfo = useUserAgentInfo();
 
   return (
-    <Layout selectedTab="published" hasPosts={!!data?.installments.length}>
-      <div className="space-y-4 p-4 md:p-8">
-        {installments.length > 0 ? (
-          <>
-            <Table
-              aria-live="polite"
-              className={classNames(isLoading && "pointer-events-none opacity-50")}
-              aria-label="Published"
-            >
+    <div className="space-y-4 p-4 md:p-8">
+      {installments.length > 0 ? (
+        <>
+          <Table
+            aria-live="polite"
+            className={classNames(isLoading && "pointer-events-none opacity-50")}
+            aria-label="Published"
+          >
               <TableHeader>
                 <TableRow>
                   <TableHead>Subject</TableHead>
@@ -296,6 +296,5 @@ export const PublishedTab = () => {
           />
         )}
       </div>
-    </Layout>
-  );
+    );
 };
