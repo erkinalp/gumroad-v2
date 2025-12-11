@@ -60,7 +60,7 @@ export const PageTab = ({
     if (renaming) editor?.commands.focus("end");
   }, [renaming, editor]);
 
-  const iconLabels = {
+  const iconLabels: Record<string, string> = {
     "file-arrow-down": "Page has various types of files",
     "file-music": "Page has audio files",
     "file-play": "Page has videos",

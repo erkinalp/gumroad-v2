@@ -20,10 +20,10 @@ $alert-icons: (
       @include bg-bordered($name);
 
       &::before {
-        @extend %icon, .icon-#{map-get($alert-icons, $name)};
         width: 1lh;
         color: full-color($name);
         grid-column: -3;
+        @include icon(map-get($alert-icons, $name));
       }
     }
   }

@@ -47,9 +47,9 @@ $pill-icons: (
       cursor: pointer;
 
       &::before {
-        @extend %icon, .icon-#{$icon};
         float: right;
         margin-left: spacer(2);
+        @include icon($icon);
       }
     }
   }

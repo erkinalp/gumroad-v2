@@ -294,3 +294,28 @@ $form-element-height: nth($font-sizes, $form-element-font-size) * nth($line-heig
 $body-padding-desktop-center: max((100% - #{$body-max-width}) / 2, #{$body-padding-desktop});
 $button-hover-transform-length: spacer(1);
 $header-padding-y: spacer(6);
+
+@mixin icon($name: null) {
+  content: "\00a0";
+  display: inline-block;
+  background: currentColor;
+  min-height: max(1lh, 1em);
+  width: 1em;
+  mask-position: 50% 50%;
+  mask-size: 120%;
+  mask-repeat: no-repeat;
+  flex-shrink: 0;
+
+  @if $name {
+    @if str-index($name, "brand-") == 1 {
+      $brand-name: str-slice($name, 7);
+      mask-image: url("~images/brands/#{$brand-name}.svg");
+    } @else {
+      mask-image: url("~images/icons/#{$name}.svg");
+    }
+  }
+
+  &::after {
+    content: "\00a0";
+  }
+}

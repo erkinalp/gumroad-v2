@@ -131,8 +131,8 @@ details {
     }
 
     &::before {
-      @extend %icon, .icon-outline-cheveron-right;
       margin-right: spacer(1);
+      @include icon("outline-cheveron-right");
     }
   }
   &[open] > summary {
@@ -140,7 +140,7 @@ details {
     margin-bottom: spacer(2);
 
     &::before {
-      @extend .icon-outline-cheveron-down;
+      @include icon("outline-cheveron-down");
     }
   }
 

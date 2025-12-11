@@ -4,7 +4,7 @@ import * as React from "react";
 
 import { classNames } from "$app/utils/classNames";
 
-import { Icon } from "$app/components/Icons";
+import { Icon, IconName } from "$app/components/Icons";
 
 const tabsVariants = cva("", {
   variants: {

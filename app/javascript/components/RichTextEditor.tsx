@@ -14,7 +14,7 @@ import * as React from "react";
 import { assertDefined } from "$app/utils/assert";
 
 import { InputtedDiscount } from "$app/components/CheckoutDashboard/DiscountInput";
-import { Icon } from "$app/components/Icons";
+import { Icon, IconName } from "$app/components/Icons";
 import { Popover, Props as PopoverProps } from "$app/components/Popover";
 import { Separator } from "$app/components/Separator";
 import { TestimonialSelectModal } from "$app/components/TestimonialSelectModal";

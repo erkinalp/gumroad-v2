@@ -17,7 +17,7 @@ import NavbarFooter from "$app/components/client-components/Nav/footer";
 import { CloseOnNavigate } from "$app/components/CloseOnNavigate";
 import { useCurrentSeller } from "$app/components/CurrentSeller";
 import { useAppDomain, useDiscoverUrl } from "$app/components/DomainSettings";
-import { Icon } from "$app/components/Icons";
+import { Icon, IconName } from "$app/components/Icons";
 import { useLoggedInUser } from "$app/components/LoggedInUser";
 import { Nav as NavFramework, NavLink, NavSection } from "$app/components/Nav";
 import { useRunOnce } from "$app/components/useRunOnce";

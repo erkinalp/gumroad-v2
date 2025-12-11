@@ -6,7 +6,7 @@ import { classNames } from "$app/utils/classNames";
 import { asyncVoid } from "$app/utils/promise";
 import { assertResponseError, request, ResponseError } from "$app/utils/request";
 
-import { Icon } from "$app/components/Icons";
+import { Icon, IconName } from "$app/components/Icons";
 import { TeamMembership } from "$app/components/LoggedInUser";
 import { showAlert } from "$app/components/server-components/Alert";
 import { useOriginalLocation } from "$app/components/useOriginalLocation";

@@ -1,5 +1,7 @@
 import { FILE_TYPE_EXTENSIONS_MAP } from "$app/utils/file";
 
+import { IconName } from "$app/components/Icons";
+
 export const generatePageIcon = ({
   hasLicense,
   fileIds,

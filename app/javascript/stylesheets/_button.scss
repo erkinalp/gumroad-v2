@@ -63,7 +63,7 @@
       color: map-get($info, text-color) or fg-color($color);
 
       &::before {
-        @extend .brand-icon, .brand-icon-#{$name};
+        @include icon("brand-#{$name}");
       }
     }
   }
