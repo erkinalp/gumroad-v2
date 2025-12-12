@@ -926,8 +926,10 @@ describe("Email Creation Flow", :js, type: :system) do
 
     set_rich_text_editor_input(find("[aria-label='Email message']"), to_text: "Hi there!")
 
-    select_disclosure "Insert" do
-      click_on "Upsell"
+    within(".rich-text-editor-toolbar", match: :first) do
+      select_disclosure "Insert" do
+        click_on "Upsell"
+      end
     end
     select_combo_box_option search: "Sample product", from: "Product"
     check "Add a discount to the offered product"

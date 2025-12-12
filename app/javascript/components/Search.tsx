@@ -16,7 +16,7 @@ export const Search = ({ onSearch, value: initialValue, placeholder = "Search" }
 
   return (
     <Popover>
-      <PopoverTrigger aria-label="Search" asChild>
+      <PopoverTrigger aria-label="Toggle Search" asChild>
         <Button>
           <Icon name="solid-search" />
         </Button>

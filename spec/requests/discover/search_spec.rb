@@ -206,7 +206,7 @@ describe("Discover - Search scenarios", js: true, type: :system) do
         wait_for_ajax
 
         within "[role=menubar]" do
-          click_on "Design"
+          click_link "Design"
         end
 
         within("header [role=navigation]") do
@@ -222,7 +222,7 @@ describe("Discover - Search scenarios", js: true, type: :system) do
         wait_for_ajax
 
         within "[role=menubar]" do
-          click_on "Design"
+          click_link "Design"
         end
         wait_for_ajax
 

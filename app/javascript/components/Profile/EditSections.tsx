@@ -157,13 +157,12 @@ export const EditorMenu = ({
 
   return (
     <Popover
-      aria-label={label}
       onOpenChange={(open) => {
         if (!open) onClose();
         setMenuState("menu");
       }}
     >
-      <PopoverTrigger>
+      <PopoverTrigger aria-label={label}>
         <div className={sectionButtonClasses}>
           <Icon name="three-dots" />
         </div>

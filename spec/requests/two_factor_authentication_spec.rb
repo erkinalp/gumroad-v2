@@ -48,7 +48,9 @@ describe "Two-Factor Authentication", js: true, type: :system do
 
         fill_in_profile
 
-        first("nav[aria-label='Main'] details summary").click
+        within("nav[aria-label='Main']") do
+          find_and_click("[aria-expanded]")
+        end
         click_on "Logout"
         login_to_app
 

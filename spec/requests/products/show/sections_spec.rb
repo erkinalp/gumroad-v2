@@ -61,49 +61,40 @@ describe "Profile settings on product pages", type: :system, js: true do
     product2 = create(:product, user: seller, name: "Product 2")
     visit short_link_path(product)
 
-    select_disclosure "Add section", match: :first do
-      click_on "Products"
-    end
-    select_disclosure "Edit section" do
-      click_on "Products"
-      check product2.name
-    end
-    toggle_disclosure "Edit section"
+    all("[aria-label='Add section']").first.click
+    click_on "Products"
+    find("[aria-label='Edit section']").click
+    click_on "Products"
+    check product2.name
+    find("[aria-label='Edit section']").click
     click_on "Move section down"
 
-    select_disclosure "Add section", match: :first do
-      click_on "Featured Product"
-    end
+    all("[aria-label='Add section']").first.click
+    click_on "Featured Product"
     sleep 1
-    select_disclosure "Edit section", match: :first do
-      click_on "Featured Product"
-      select_combo_box_option search: product2.name, from: "Featured Product"
-    end
+    all("[aria-label='Edit section']").first.click
+    click_on "Featured Product"
+    select_combo_box_option search: product2.name, from: "Featured Product"
 
-    all(:disclosure, "Add section").last.select_disclosure do
-      click_on "Posts"
-    end
+    all("[aria-label='Add section']").last.click
+    click_on "Posts"
     sleep 1
-    all(:disclosure, "Edit section").last.select_disclosure do
-      click_on "Name"
-      fill_in "Name", with: "Posts!"
-    end
+    all("[aria-label='Edit section']").last.click
+    click_on "Name"
+    fill_in "Name", with: "Posts!"
 
-    all(:disclosure, "Add section").last.select_disclosure do
-      click_on "Subscribe"
-    end
+    all("[aria-label='Add section']").last.click
+    click_on "Subscribe"
     sleep 1
 
-    all(:disclosure, "Add section")[2].select_disclosure do
-      click_on "Rich text"
-    end
+    all("[aria-label='Add section']")[2].click
+    click_on "Rich text"
     sleep 1
-    edit_rich_text_disclosure = all(:disclosure, "Edit section")[1]
-    edit_rich_text_disclosure.select_disclosure do
-      click_on "Name"
-      fill_in "Name", with: "Rich text!"
-    end
-    edit_rich_text_disclosure.toggle_disclosure
+    edit_rich_text_button = all("[aria-label='Edit section']")[1]
+    edit_rich_text_button.click
+    click_on "Name"
+    fill_in "Name", with: "Rich text!"
+    edit_rich_text_button.click
 
     # all these sleeps can hopefully be cleaned up when flashMessage is in react and less buggy
     sleep 1
