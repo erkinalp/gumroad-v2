@@ -4,9 +4,6 @@ require "spec_helper"
 
 describe "Checkout cart", :js, type: :system do
   before do
-    # Stub Braintree client token generation to avoid authentication errors in tests
-    allow(Braintree::ClientToken).to receive(:generate).and_return("fake_client_token")
-
     @product = create(:product, price_cents: 1000, quantity_enabled: true)
     @pwyw_product = create(:product, price_cents: 1000, customizable_price: true, thumbnail: create(:thumbnail))
     @versioned_product = create(:product_with_digital_versions, thumbnail: create(:thumbnail))
