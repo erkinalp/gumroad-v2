@@ -29,13 +29,7 @@ type Props = {
 };
 
 export default function WishlistsPage() {
-  const {
-    wishlists: preloadedWishlists,
-    reviews_page_enabled,
-    following_wishlists_enabled,
-  } = cast<Props>(usePage().props);
-
-  const [wishlists, setWishlists] = React.useState<Wishlist[]>(preloadedWishlists);
+  const { wishlists, reviews_page_enabled, following_wishlists_enabled } = cast<Props>(usePage().props);
   const [deletingWishlist, setConfirmingDeleteWishlist] = React.useState<Wishlist | null>(null);
 
   const deleteForm = useForm({});
@@ -48,10 +42,6 @@ export default function WishlistsPage() {
   };
 
   const updateDiscoverOptOut = async (id: string, optOut: boolean) => {
-    setWishlists(
-      wishlists.map((wishlist) => (wishlist.id === id ? { ...wishlist, discover_opted_out: optOut } : wishlist)),
-    );
-
     router.put(
       Routes.wishlist_path(id),
       { wishlist: { discover_opted_out: optOut } },
