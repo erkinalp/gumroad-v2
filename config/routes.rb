@@ -388,6 +388,7 @@ Rails.application.routes.draw do
         get :unsubscribe_posts
       end
       collection do
+        get :onboarding
         get :export
       end
     end
@@ -397,7 +398,6 @@ Rails.application.routes.draw do
     get "/collaborators/incomings", to: "collaborators#index"
     get "/collaborators/*other", to: "collaborators#index"
 
-    get "/affiliates/*other", to: "affiliates#index" # route handled by react-router
     get "/emails/*other", to: "emails#index" # route handled by react-router
     get "/dashboard/utm_links/*other", to: "utm_links#index" # route handled by react-router
     get "/communities/*other", to: "communities#index" # route handled by react-router
