@@ -105,7 +105,7 @@ describe ChurnController, type: :controller, inertia: true do
 
       context "when capabilities are satisfied" do
         let(:capabilities) do
-          Hash[StripeMerchantAccountManager::REQUESTED_CAPABILITIES.map { |capability| [capability, "active"] }]
+          StripeMerchantAccountManager::REQUESTED_CAPABILITIES.index_with { |capability| "active" }
         end
 
         it "clears the redis flag and renders churn data" do
