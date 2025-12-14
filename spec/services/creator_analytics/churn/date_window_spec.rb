@@ -236,11 +236,11 @@ describe CreatorAnalytics::Churn::DateWindow do
       )
 
       expect(window.daily_dates).to eq([
-        Date.new(2020, 1, 15),
-        Date.new(2020, 1, 16),
-        Date.new(2020, 1, 17),
-        Date.new(2020, 1, 18)
-      ])
+                                         Date.new(2020, 1, 15),
+                                         Date.new(2020, 1, 16),
+                                         Date.new(2020, 1, 17),
+                                         Date.new(2020, 1, 18)
+                                       ])
     end
 
     it "memoizes the result" do
@@ -272,10 +272,10 @@ describe CreatorAnalytics::Churn::DateWindow do
       )
 
       expect(window.monthly_dates).to eq([
-        Date.new(2020, 1, 1),
-        Date.new(2020, 2, 1),
-        Date.new(2020, 3, 1)
-      ])
+                                           Date.new(2020, 1, 1),
+                                           Date.new(2020, 2, 1),
+                                           Date.new(2020, 3, 1)
+                                         ])
     end
 
     it "memoizes the result" do
@@ -317,4 +317,3 @@ describe CreatorAnalytics::Churn::DateWindow do
     end
   end
 end
-

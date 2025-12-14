@@ -15,20 +15,20 @@ class CreatorAnalytics::Churn::DatasetBuilder
     @initial_active_counts = initial_active_counts
   end
 
-# Sample output:
-# {
-#   metadata: { timezone: "-07:00", products: [{ external_id: "123", name: "Alpha" }] },
-#   data: {
-#     daily: { "2024-05-01" => { total: { churn_rate: 1.0, subscriber_base: 100 } } },
-#     monthly: { "2024-05-01" => { total: { churn_rate: 1.5, subscriber_base: 300 } } },
-#     summary: {
-#       by_product: {
-#         "alpha" => { churn_rate: 1.0, churned_customers_count: 3, revenue_lost_cents: 15000, subscriber_base: 300 }
-#       },
-#       total: { churn_rate: 1.2, churned_customers_count: 10, revenue_lost_cents: 50000, subscriber_base: 820 },
-#     }
-#   }
-# }
+  # Sample output:
+  # {
+  #   metadata: { timezone: "-07:00", products: [{ external_id: "123", name: "Alpha" }] },
+  #   data: {
+  #     daily: { "2024-05-01" => { total: { churn_rate: 1.0, subscriber_base: 100 } } },
+  #     monthly: { "2024-05-01" => { total: { churn_rate: 1.5, subscriber_base: 300 } } },
+  #     summary: {
+  #       by_product: {
+  #         "alpha" => { churn_rate: 1.0, churned_customers_count: 3, revenue_lost_cents: 15000, subscriber_base: 300 }
+  #       },
+  #       total: { churn_rate: 1.2, churned_customers_count: 10, revenue_lost_cents: 50000, subscriber_base: 820 },
+  #     }
+  #   }
+  # }
   def build
     daily_data, monthly_inputs = build_daily_data
 

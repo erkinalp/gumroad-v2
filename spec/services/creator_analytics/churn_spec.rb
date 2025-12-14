@@ -298,4 +298,3 @@ describe CreatorAnalytics::Churn do
     end
   end
 end
-
