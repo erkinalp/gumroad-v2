@@ -41,7 +41,7 @@ export default function WishlistsPage() {
     });
   };
 
-  const updateDiscoverOptOut = async (id: string, optOut: boolean) => {
+  const updateDiscoverOptOut = (id: string, optOut: boolean) => {
     router.put(
       Routes.wishlist_path(id),
       { wishlist: { discover_opted_out: optOut } },
