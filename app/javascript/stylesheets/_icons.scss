@@ -25,12 +25,6 @@
   }
 }
 
-// TODO: Remove this class and tailwind-override-icons class from ui/Alert.tsx when this file is migrated to tailwind.
-// Icon sizing is correctly handled inside Alert so it'll be safe to directly remove it at that time
-.icon.tailwind-override-icons {
-  width: 1lh;
-}
-
 .logo-full {
   @extend %icon;
   width: calc(1em / #{$logo-aspect-ratio});

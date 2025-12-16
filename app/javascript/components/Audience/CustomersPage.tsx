@@ -77,6 +77,7 @@ import { showAlert } from "$app/components/server-components/Alert";
 import { Toggle } from "$app/components/Toggle";
 import { Alert } from "$app/components/ui/Alert";
 import { PageHeader } from "$app/components/ui/PageHeader";
+import { Pill } from "$app/components/ui/Pill";
 import Placeholder from "$app/components/ui/Placeholder";
 import { Row, RowActions, RowContent, Rows } from "$app/components/ui/Rows";
 import { Sheet, SheetHeader } from "$app/components/ui/Sheet";
@@ -481,37 +482,37 @@ const CustomersPage = ({
                       <TableCell>
                         {customer.product.name}
                         {customer.subscription?.is_installment_plan ? (
-                          <span className="pill small" style={{ marginLeft: "var(--spacer-2)" }}>
+                          <Pill size="small" className="ml-2">
                             Installments
-                          </span>
+                          </Pill>
                         ) : null}
                         {customer.is_bundle_purchase ? (
-                          <span className="pill small" style={{ marginLeft: "var(--spacer-2)" }}>
+                          <Pill size="small" className="ml-2">
                             Bundle
-                          </span>
+                          </Pill>
                         ) : null}
                         {customer.subscription ? (
                           !customer.subscription.is_installment_plan && customer.subscription.status !== "alive" ? (
-                            <span className="pill small" style={{ marginLeft: "var(--spacer-2)" }}>
+                            <Pill size="small" className="ml-2">
                               Inactive
-                            </span>
+                            </Pill>
                           ) : null
                         ) : (
                           <>
                             {customer.partially_refunded ? (
-                              <span className="pill small" style={{ marginLeft: "var(--spacer-2)" }}>
+                              <Pill size="small" className="ml-2">
                                 Partially refunded
-                              </span>
+                              </Pill>
                             ) : null}
                             {customer.refunded ? (
-                              <span className="pill small" style={{ marginLeft: "var(--spacer-2)" }}>
+                              <Pill size="small" className="ml-2">
                                 Refunded
-                              </span>
+                              </Pill>
                             ) : null}
                             {customer.chargedback ? (
-                              <span className="pill small" style={{ marginLeft: "var(--spacer-2)" }}>
+                              <Pill size="small" className="ml-2">
                                 Chargedback
-                              </span>
+                              </Pill>
                             ) : null}
                           </>
                         )}
@@ -520,9 +521,9 @@ const CustomersPage = ({
                             tooltipProps={{ className: "w-80 p-0" }}
                             tip={<UtmLinkStack link={customer.utm_link} showHeader={false} />}
                           >
-                            <span className="pill small" style={{ marginLeft: "var(--spacer-2)" }}>
+                            <Pill size="small" className="ml-2">
                               UTM
-                            </span>
+                            </Pill>
                           </WithTooltip>
                         ) : null}
                       </TableCell>
@@ -790,7 +791,11 @@ const CustomerDrawer = ({
           <h2>{customer.product.name}</h2>
         </div>
       </SheetHeader>
-      {commission ? <CommissionStatusPill commission={commission} /> : null}
+      {commission ? (
+        <div>
+          <CommissionStatusPill commission={commission} />
+        </div>
+      ) : null}
       {customer.is_additional_contribution ? (
         <Alert role="status" variant="info">
           <strong>Additional amount: </strong>
@@ -935,7 +940,7 @@ const CustomerDrawer = ({
             {customer.discount.code ? (
               <div>
                 {formatDiscount(customer.discount, customer.price.currency_type)} off with code{" "}
-                <div className="pill small">{customer.discount.code.toUpperCase()}</div>
+                <Pill size="small">{customer.discount.code.toUpperCase()}</Pill>
               </div>
             ) : (
               `${formatDiscount(customer.discount, customer.price.currency_type)} off`
@@ -1305,19 +1310,16 @@ const CustomerDrawer = ({
 };
 
 const CommissionStatusPill = ({ commission }: { commission: Commission }) => (
-  <span
-    className={cx("pill small", {
-      primary: commission.status === "completed",
-      danger: commission.status === "cancelled",
-    })}
-    style={{ width: "fit-content" }}
+  <Pill
+    size="small"
+    color={commission.status === "completed" ? "primary" : commission.status === "cancelled" ? "danger" : undefined}
   >
     {commission.status === "in_progress"
       ? "In progress"
       : commission.status === "completed"
         ? "Completed"
         : "Cancelled"}
-  </span>
+  </Pill>
 );
 
 const AddressSection = ({
@@ -2274,16 +2276,16 @@ const ChargeRow = ({
             <Icon name="arrow-up-right-square" />
           </a>
           {purchase.partially_refunded ? (
-            <span className="pill small">Partial refund</span>
+            <Pill size="small">Partial refund</Pill>
           ) : purchase.refunded ? (
-            <span className="pill small">Refunded</span>
+            <Pill size="small">Refunded</Pill>
           ) : null}
           {purchase.is_upgrade_purchase ? (
             <WithTooltip tip="This is an upgrade charge, generated when the subscriber upgraded to a more expensive plan.">
-              <span className="pill small">Upgrade</span>
+              <Pill size="small">Upgrade</Pill>
             </WithTooltip>
           ) : null}
-          {purchase.chargedback ? <span className="pill small">Chargedback</span> : null}
+          {purchase.chargedback ? <Pill size="small">Chargedback</Pill> : null}
         </section>
         {!purchase.refunded && !purchase.chargedback && purchase.amount_refundable > 0 ? (
           <button className="underline" onClick={() => setIsRefunding((prev) => !prev)}>

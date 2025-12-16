@@ -254,7 +254,7 @@ const EmailAddress = () => {
   );
 };
 
-const SharedInputs = () => {
+const SharedInputs = ({ showCustomFields }: { showCustomFields: boolean }) => {
   const uid = React.useId();
   const [state, dispatch] = useState();
   const errors = getErrors(state);
@@ -402,7 +402,7 @@ const SharedInputs = () => {
           </div>
         </div>
       ) : null}
-      <CustomFields />
+      {showCustomFields ? <CustomFields /> : null}
     </>
   );
 };
@@ -438,7 +438,7 @@ const useFail = () => {
   };
 };
 
-const CustomerDetails = () => {
+const CustomerDetails = ({ showCustomFields }: { showCustomFields: boolean }) => {
   const isLoggedIn = !!useLoggedInUser();
   const [state, dispatch] = useState();
   const uid = React.useId();
@@ -485,7 +485,7 @@ const CustomerDetails = () => {
 
   return (
     <>
-      <SharedInputs />
+      <SharedInputs showCustomFields={showCustomFields} />
       {hasShipping(state) ? (
         <div>
           <div className="flex flex-col gap-4">
@@ -1173,7 +1173,8 @@ const StripePaymentRequest = () => {
 export const PaymentForm = ({
   className,
   notice,
-}: React.HTMLAttributes<HTMLDivElement> & { notice?: string | null }) => {
+  showCustomFields = true,
+}: React.HTMLAttributes<HTMLDivElement> & { notice?: string | null; showCustomFields?: boolean }) => {
   const [state, dispatch] = useState();
   const loggedInUser = useLoggedInUser();
   const isTestPurchase = loggedInUser && state.products.find((product) => product.testPurchase);
@@ -1242,7 +1243,7 @@ export const PaymentForm = ({
           <CreditCard />
         </>
       ) : null}
-      <CustomerDetails />
+      <CustomerDetails showCustomFields={showCustomFields} />
       {!isFreePurchase ? (
         <>
           <PayPal />

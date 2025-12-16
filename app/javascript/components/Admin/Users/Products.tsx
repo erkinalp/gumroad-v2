@@ -29,7 +29,7 @@ const AdminUsersProductsContent = ({
   return (
     <div className="space-y-4">
       {products.map((product) => (
-        <AdminUsersProductsProduct key={product.external_id} product={product} isAffiliateUser={isAffiliateUser} />
+        <AdminUsersProductsProduct key={product.id} product={product} isAffiliateUser={isAffiliateUser} />
       ))}
     </div>
   );
@@ -40,7 +40,7 @@ type Props = {
 };
 
 type AdminUsersProductsProps = {
-  user: { external_id: string };
+  user: { id: number };
   products: ProductType[];
   pagination: PaginationProps;
 };
@@ -51,11 +51,7 @@ const AdminUsersProducts = ({ isAffiliateUser = false }: Props) => {
 
   return (
     <div className="flex flex-col gap-4">
-      <AdminUserAndProductsTabs
-        selectedTab="products"
-        userExternalId={user.external_id}
-        isAffiliateUser={isAffiliateUser}
-      />
+      <AdminUserAndProductsTabs selectedTab="products" userId={user.id} isAffiliateUser={isAffiliateUser} />
       <AdminUsersProductsContent products={products} isAffiliateUser={isAffiliateUser} pagination={pagination} />
       {pagination.pages > 1 && <Pagination pagination={pagination} onChangePage={onChangePage} />}
     </div>

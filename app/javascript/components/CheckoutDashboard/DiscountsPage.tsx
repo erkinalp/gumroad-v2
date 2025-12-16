@@ -35,6 +35,7 @@ import { Skeleton } from "$app/components/Skeleton";
 import { TypeSafeOptionSelect } from "$app/components/TypeSafeOptionSelect";
 import { Alert } from "$app/components/ui/Alert";
 import { PageHeader } from "$app/components/ui/PageHeader";
+import { Pill } from "$app/components/ui/Pill";
 import Placeholder from "$app/components/ui/Placeholder";
 import { Sheet, SheetHeader } from "$app/components/ui/Sheet";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "$app/components/ui/Table";
@@ -391,9 +392,9 @@ const DiscountsPage = ({
                       <TableCell hideLabel>
                         <div className="grid gap-2">
                           <div>
-                            <div className="pill small mr-2" aria-label="Offer code">
+                            <Pill size="small" className="mr-2" aria-label="Offer code">
                               {offerCode.code.toUpperCase()}
-                            </div>
+                            </Pill>
                             <b>{offerCode.name}</b>
                           </div>
                           <small>
@@ -519,7 +520,7 @@ const DiscountsPage = ({
               <h3>Details</h3>
               <div>
                 <h5>Code</h5>
-                <div className="pill small">{selectedOfferCode.code.toUpperCase()}</div>
+                <Pill size="small">{selectedOfferCode.code.toUpperCase()}</Pill>
               </div>
               <div>
                 <h5>Discount</h5>

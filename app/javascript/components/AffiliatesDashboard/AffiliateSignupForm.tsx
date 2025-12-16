@@ -20,6 +20,7 @@ import { AffiliatesNavigation, Layout } from "$app/components/server-components/
 import { showAlert } from "$app/components/server-components/Alert";
 import { ToggleSettingRow } from "$app/components/SettingRow";
 import { Alert } from "$app/components/ui/Alert";
+import { Pill } from "$app/components/ui/Pill";
 import Placeholder from "$app/components/ui/Placeholder";
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "$app/components/ui/Table";
 import { WithTooltip } from "$app/components/WithTooltip";
@@ -249,7 +250,7 @@ export const ProductRow = ({ product, disabled, onChange }: ProductRowProps) => 
                   disabled={disabled || !product.enabled}
                   {...inputProps}
                 />
-                <div className="pill">%</div>
+                <Pill className="-mr-2 shrink-0">%</Pill>
               </div>
             )}
           </NumberInput>
