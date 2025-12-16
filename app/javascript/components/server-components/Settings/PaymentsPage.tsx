@@ -854,26 +854,24 @@ const PaymentsPage = (props: Props) => {
       <form ref={formRef}>
         {props.payouts_paused_by !== null ? (
           <Alert className="m-4 md:m-8" role="status" variant="warning">
-            <p>
-              {props.payouts_paused_by === "stripe" ? (
-                <strong>
-                  Your payouts are currently paused by our payment processor. Please check for any pending verification
-                  requirements below.
-                </strong>
-              ) : props.payouts_paused_by === "admin" ? (
-                <strong>
-                  Your payouts have been paused by Gumroad admin.
-                  {props.payouts_paused_for_reason ? ` Reason for pause: ${props.payouts_paused_for_reason}` : null}
-                </strong>
-              ) : props.payouts_paused_by === "system" ? (
-                <strong>
-                  Your payouts have been automatically paused for a security review and will be resumed once the review
-                  completes.
-                </strong>
-              ) : (
-                <strong>You have paused your payouts.</strong>
-              )}
-            </p>
+            {props.payouts_paused_by === "stripe" ? (
+              <strong>
+                Your payouts are currently paused by our payment processor. Please check for any pending verification
+                requirements below.
+              </strong>
+            ) : props.payouts_paused_by === "admin" ? (
+              <strong>
+                Your payouts have been paused by Gumroad admin.
+                {props.payouts_paused_for_reason ? ` Reason for pause: ${props.payouts_paused_for_reason}` : null}
+              </strong>
+            ) : props.payouts_paused_by === "system" ? (
+              <strong>
+                Your payouts have been automatically paused for a security review and will be resumed once the review
+                completes.
+              </strong>
+            ) : (
+              <strong>You have paused your payouts.</strong>
+            )}
           </Alert>
         ) : null}
 
@@ -952,15 +950,13 @@ const PaymentsPage = (props: Props) => {
             </fieldset>
             {payoutFrequency === "daily" && props.payout_frequency_daily_supported ? (
               <Alert role="status" variant="info">
-                <div>
-                  Every day, your balance from the previous day will be sent to you via instant payouts, subject to a{" "}
-                  <b>3% fee</b>.
-                </div>
+                Every day, your balance from the previous day will be sent to you via instant payouts, subject to a{" "}
+                <b>3% fee</b>.
               </Alert>
             ) : null}
             {payoutFrequency === "daily" && !props.payout_frequency_daily_supported && (
               <Alert role="status" variant="danger">
-                <div>Your account is no longer eligible for daily payouts. Please update your schedule.</div>
+                Your account is no longer eligible for daily payouts. Please update your schedule.
               </Alert>
             )}
             <fieldset className={cx({ danger: payoutThresholdCents.error })}>

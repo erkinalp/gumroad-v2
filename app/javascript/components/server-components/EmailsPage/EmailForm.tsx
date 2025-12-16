@@ -881,16 +881,14 @@ export const EmailForm = () => {
                       ))}
                       {installment?.published_at ? null : (
                         <Alert role="status" variant="info">
-                          <div>The post will be shown in the selected profile sections once it is published.</div>
+                          The post will be shown in the selected profile sections once it is published.
                         </Alert>
                       )}
                     </>
                   ) : (
                     <Alert role="status" variant="info">
-                      <div>
-                        You currently have no sections in your profile to display this,{" "}
-                        <a href={Routes.root_url({ host: currentSeller.subdomain })}>create one here</a>
-                      </div>
+                      You currently have no sections in your profile to display this,{" "}
+                      <a href={Routes.root_url({ host: currentSeller.subdomain })}>create one here</a>
                     </Alert>
                   )
                 ) : null}

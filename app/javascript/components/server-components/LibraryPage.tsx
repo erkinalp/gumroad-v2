@@ -375,16 +375,14 @@ const LibraryPage = ({ results, creators, bundles, reviews_page_enabled, followi
         ) : null}
         {archivedCount > 0 && !state.search.showArchivedOnly && !showArchivedNotice ? (
           <Alert role="status" variant="info" className="mb-5">
-            <span>
-              You have {archivedCount} archived purchase{archivedCount === 1 ? "" : "s"}.{" "}
-              <button
-                type="button"
-                className="underline"
-                onClick={() => dispatch({ type: "update-search", search: { showArchivedOnly: true } })}
-              >
-                Click here to view
-              </button>
-            </span>
+            You have {archivedCount} archived purchase{archivedCount === 1 ? "" : "s"}.{" "}
+            <button
+              type="button"
+              className="underline"
+              onClick={() => dispatch({ type: "update-search", search: { showArchivedOnly: true } })}
+            >
+              Click here to view
+            </button>
           </Alert>
         ) : null}
         <div

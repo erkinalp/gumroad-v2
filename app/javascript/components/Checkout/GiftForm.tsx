@@ -42,10 +42,8 @@ export const GiftForm = ({ isMembership }: { isMembership: boolean }) => {
         <div className="flex w-full flex-col gap-4">
           {isMembership ? (
             <Alert variant="info">
-              <div>
-                Note: Free trials will be charged immediately. The membership will not auto-renew. The recipient must
-                update the payment method to renew the membership.
-              </div>
+              Note: Free trials will be charged immediately. The membership will not auto-renew. The recipient must
+              update the payment method to renew the membership.
             </Alert>
           ) : null}
           {gift.type === "normal" ? (
@@ -65,12 +63,10 @@ export const GiftForm = ({ isMembership }: { isMembership: boolean }) => {
             </fieldset>
           ) : (
             <Alert variant="info">
-              <div>
-                {gift.name}'s email has been hidden for privacy purposes.{" "}
-                <button className="underline" onClick={() => setCancellingPresetGift(true)}>
-                  Cancel gift option
-                </button>
-              </div>
+              {gift.name}'s email has been hidden for privacy purposes.{" "}
+              <button className="underline" onClick={() => setCancellingPresetGift(true)}>
+                Cancel gift option
+              </button>
               <Modal
                 open={cancellingPresetGift}
                 onClose={() => setCancellingPresetGift(false)}

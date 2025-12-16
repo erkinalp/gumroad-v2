@@ -26,7 +26,7 @@ const iconNames: Record<Exclude<AlertVariant, "accent">, IconName> = {
   info: "info-circle-fill",
 };
 
-const iconColorVariants = cva("tailwind-override-icons size-[1lh]", {
+const iconColorVariants = cva("tailwind-override-icons size-[1lh]!", {
   variants: {
     variant: {
       success: "text-success",

@@ -750,44 +750,38 @@ const Payouts = ({
         {!instant_payout ? (
           show_instant_payouts_notice ? (
             <Alert role="status" variant="info">
-              <p>
-                To enable <strong>instant</strong> payouts,{" "}
-                <a href={Routes.settings_payments_path()}>update your payout method</a> to one of the{" "}
-                <a href="https://docs.stripe.com/payouts/instant-payouts-banks">
-                  supported bank accounts or debit cards
-                </a>
-                .
-              </p>
+              To enable <strong>instant</strong> payouts,{" "}
+              <a href={Routes.settings_payments_path()}>update your payout method</a> to one of the{" "}
+              <a href="https://docs.stripe.com/payouts/instant-payouts-banks">supported bank accounts or debit cards</a>
+              .
             </Alert>
           ) : null
         ) : instant_payout.payable_amount_cents >= MINIMUM_INSTANT_PAYOUT_AMOUNT_CENTS ? (
           <Alert role="status" variant="info">
-            <div>
-              <b>
-                You have{" "}
-                {formatPriceCentsWithCurrencySymbol("usd", instant_payout.payable_amount_cents, {
-                  symbolFormat: "short",
-                  noCentsIfWhole: false,
-                })}{" "}
-                available for instant payout:
-              </b>{" "}
-              No need to wait—get paid now!
-              <div style={{ marginTop: "var(--spacer-3)" }}>
-                {instant_payout.payable_balances.some(
-                  (balance) => balance.amount_cents > MAXIMUM_INSTANT_PAYOUT_AMOUNT_CENTS,
-                ) ? (
-                  <a href={Routes.support_index_path()}>Contact us for an instant payout</a>
-                ) : (
-                  <Button
-                    small
-                    color="primary"
-                    aria-label="Get paid now"
-                    onClick={() => setIsInstantPayoutModalOpen(true)}
-                  >
-                    Get paid!
-                  </Button>
-                )}
-              </div>
+            <b>
+              You have{" "}
+              {formatPriceCentsWithCurrencySymbol("usd", instant_payout.payable_amount_cents, {
+                symbolFormat: "short",
+                noCentsIfWhole: false,
+              })}{" "}
+              available for instant payout:
+            </b>{" "}
+            No need to wait—get paid now!
+            <div className="mt-3">
+              {instant_payout.payable_balances.some(
+                (balance) => balance.amount_cents > MAXIMUM_INSTANT_PAYOUT_AMOUNT_CENTS,
+              ) ? (
+                <a href={Routes.support_index_path()}>Contact us for an instant payout</a>
+              ) : (
+                <Button
+                  small
+                  color="primary"
+                  aria-label="Get paid now"
+                  onClick={() => setIsInstantPayoutModalOpen(true)}
+                >
+                  Get paid!
+                </Button>
+              )}
             </div>
             <Modal
               open={isInstantPayoutModalOpen}
@@ -884,54 +878,50 @@ const Payouts = ({
         ) : null}
         {payouts_status === "paused" ? (
           <Alert role="status" variant="warning">
-            <p>
-              {payouts_paused_by === "stripe" ? (
-                <strong>
-                  Your payouts are currently paused by our payment processor. Please check your{" "}
-                  <a href="/settings/payments">Payment Settings</a> for any verification requirements.
-                </strong>
-              ) : payouts_paused_by === "admin" ? (
-                <strong>
-                  Your payouts have been paused by Gumroad admin.
-                  {payouts_paused_for_reason ? ` Reason for pause: ${payouts_paused_for_reason}` : null}
-                </strong>
-              ) : payouts_paused_by === "system" ? (
-                <strong>
-                  Your payouts have been automatically paused for a security review and will be resumed once the review
-                  completes.
-                </strong>
-              ) : (
-                <strong>
-                  You have paused your payouts. Please go to <a href="/settings/payments">Payment Settings</a> to resume
-                  payouts.
-                </strong>
-              )}
-            </p>
+            {payouts_paused_by === "stripe" ? (
+              <strong>
+                Your payouts are currently paused by our payment processor. Please check your{" "}
+                <a href="/settings/payments">Payment Settings</a> for any verification requirements.
+              </strong>
+            ) : payouts_paused_by === "admin" ? (
+              <strong>
+                Your payouts have been paused by Gumroad admin.
+                {payouts_paused_for_reason ? ` Reason for pause: ${payouts_paused_for_reason}` : null}
+              </strong>
+            ) : payouts_paused_by === "system" ? (
+              <strong>
+                Your payouts have been automatically paused for a security review and will be resumed once the review
+                completes.
+              </strong>
+            ) : (
+              <strong>
+                You have paused your payouts. Please go to <a href="/settings/payments">Payment Settings</a> to resume
+                payouts.
+              </strong>
+            )}
           </Alert>
         ) : null}
         {next_payout_period_data != null ? (
           next_payout_period_data.has_stripe_connect ? (
             <Alert role="status" variant="info">
-              <p>For Stripe Connect users, all future payouts will be deposited directly to your Stripe account</p>
+              For Stripe Connect users, all future payouts will be deposited directly to your Stripe account
             </Alert>
           ) : (
             <section className="grid gap-4">
               {next_payout_period_data.payout_note &&
               !["processing", "paused"].includes(next_payout_period_data.status) ? (
                 <Alert role="status" variant="info">
-                  <p>{next_payout_period_data.payout_note}</p>
+                  {next_payout_period_data.payout_note}
                 </Alert>
               ) : null}
               {next_payout_period_data.status === "not_payable" ? (
                 pastPayoutPeriodData.length > 0 ? (
                   <Alert role="status" variant="info">
-                    <p>
-                      Reach a balance of at least{" "}
-                      {formatPriceCentsWithCurrencySymbol("usd", next_payout_period_data.minimum_payout_amount_cents, {
-                        symbolFormat: "short",
-                      })}{" "}
-                      to be paid out for your sales.
-                    </p>
+                    Reach a balance of at least{" "}
+                    {formatPriceCentsWithCurrencySymbol("usd", next_payout_period_data.minimum_payout_amount_cents, {
+                      symbolFormat: "short",
+                    })}{" "}
+                    to be paid out for your sales.
                   </Alert>
                 ) : (
                   <PeriodEmpty minimumPayoutAmountCents={next_payout_period_data.minimum_payout_amount_cents} />

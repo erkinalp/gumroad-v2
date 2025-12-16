@@ -64,11 +64,9 @@ const PayPalEmailSection = ({
       </div>
       {user.country_code === "UA" ? (
         <Alert variant="warning">
-          <div>
-            PayPal blocks commercial payments to Ukraine, which will prevent payouts to your PayPal account until
-            further notice. Your balance will remain in your Gumroad account until this restriction is lifted or payouts
-            are directed to a PayPal account outside of Ukraine.
-          </div>
+          PayPal blocks commercial payments to Ukraine, which will prevent payouts to your PayPal account until further
+          notice. Your balance will remain in your Gumroad account until this restriction is lifted or payouts are
+          directed to a PayPal account outside of Ukraine.
         </Alert>
       ) : null}
     </section>

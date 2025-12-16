@@ -63,10 +63,8 @@ export const ProfileSectionsEditor = ({
         </fieldset>
       ) : (
         <Alert role="status" variant="info">
-          <div>
-            You currently have no sections in your profile to display this,{" "}
-            <a href={Routes.root_url({ host: currentSeller.subdomain })}>create one here</a>
-          </div>
+          You currently have no sections in your profile to display this,{" "}
+          <a href={Routes.root_url({ host: currentSeller.subdomain })}>create one here</a>
         </Alert>
       )}
     </section>

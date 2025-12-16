@@ -92,21 +92,19 @@ const LookupLayout = ({ children, title, type }: {
               </Alert>
             ) : (
               <Alert role="status" variant="warning">
-                <div>
-                  <p>We weren't able to find a match. Email <a href="mailto:support@gumroad.com">support@gumroad.com</a> with more information, and we'll respond promptly with any information we find about the {type}.</p>
-                  {type === "charge" ? (
-                  <ul>
-                    <li>
-                      <strong>charge date</strong> (the date that your statement says you were charged)
-                    </li>
-                    <li>
-                      <strong>charge amount</strong> (the price you were charged)
-                    </li>
-                    <li>
-                      <strong>card details (last 4 and expiry date)</strong> or <strong>PayPal invoice ID</strong>
-                    </li>
-                  </ul>) : null}
-                </div>
+                <p>We weren't able to find a match. Email <a href="mailto:support@gumroad.com">support@gumroad.com</a> with more information, and we'll respond promptly with any information we find about the {type}.</p>
+                {type === "charge" ? (
+                <ul>
+                  <li>
+                    <strong>charge date</strong> (the date that your statement says you were charged)
+                  </li>
+                  <li>
+                    <strong>charge amount</strong> (the price you were charged)
+                  </li>
+                  <li>
+                    <strong>card details (last 4 and expiry date)</strong> or <strong>PayPal invoice ID</strong>
+                  </li>
+                </ul>) : null}
               </Alert>
             )}
           </div>

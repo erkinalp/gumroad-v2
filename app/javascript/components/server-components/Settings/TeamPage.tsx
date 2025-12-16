@@ -268,30 +268,30 @@ const TeamMembersSection = ({
         <h2 ref={ref}>Team members</h2>
       </header>
       {deletedMember ? (
-        <Alert className="grid-cols-[auto_1fr_auto]" variant="success">
-          <div>
+        <Alert variant="success">
+          <div className="grid grid-cols-[1fr_auto]">
             {deletedMember.name !== "" ? deletedMember.name : deletedMember.email} was removed from team members
+            <button
+              className="col-start-1 underline sm:col-start-2"
+              type="button"
+              onClick={asyncVoid(async () => {
+                try {
+                  await restoreMember(deletedMember);
+                  refreshMemberInfos();
+                  showAlert(
+                    `${deletedMember.name !== "" ? deletedMember.name : deletedMember.email} was added back to the team`,
+                    "success",
+                  );
+                  setDeletedMember(null);
+                } catch (e) {
+                  assertResponseError(e);
+                  showAlert(e.message, "error");
+                }
+              })}
+            >
+              Undo
+            </button>
           </div>
-          <button
-            className="col-start-2 underline sm:col-start-3"
-            type="button"
-            onClick={asyncVoid(async () => {
-              try {
-                await restoreMember(deletedMember);
-                refreshMemberInfos();
-                showAlert(
-                  `${deletedMember.name !== "" ? deletedMember.name : deletedMember.email} was added back to the team`,
-                  "success",
-                );
-                setDeletedMember(null);
-              } catch (e) {
-                assertResponseError(e);
-                showAlert(e.message, "error");
-              }
-            })}
-          >
-            Undo
-          </button>
         </Alert>
       ) : null}
       <Table>

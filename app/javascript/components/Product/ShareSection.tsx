@@ -164,9 +164,9 @@ export const ShareSection = ({
       {saveState.type === "success" ? (
         <Alert variant="success">
           {saveState.newlyCreated ? (
-            <span>
+            <>
               Wishlist created! <a href={Routes.wishlists_url()}>Edit it here.</a>
-            </span>
+            </>
           ) : (
             "Added to wishlist!"
           )}

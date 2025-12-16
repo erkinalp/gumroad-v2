@@ -516,25 +516,23 @@ export const Product = ({
           />
           {product.ppp_details && pppDiscounted ? (
             <Alert role="status" variant="info">
-              <div>
-                This product supports purchasing power parity. Because you're located in{" "}
-                <b>{product.ppp_details.country}</b>, the price has been discounted by{" "}
-                <b>
-                  {(Math.round((1 - discountedPriceCents / priceCents) * 100) / 100).toLocaleString(undefined, {
-                    style: "percent",
-                  })}
-                </b>{" "}
-                to{" "}
-                <b>
-                  {formatPriceCentsWithCurrencySymbol(product.currency_code, discountedPriceCents, {
-                    symbolFormat: "long",
-                  })}
-                </b>
-                .
-                {discountCode?.valid
-                  ? " This discount will be applied because it is greater than the offer code discount."
-                  : null}
-              </div>
+              This product supports purchasing power parity. Because you're located in{" "}
+              <b>{product.ppp_details.country}</b>, the price has been discounted by{" "}
+              <b>
+                {(Math.round((1 - discountedPriceCents / priceCents) * 100) / 100).toLocaleString(undefined, {
+                  style: "percent",
+                })}
+              </b>{" "}
+              to{" "}
+              <b>
+                {formatPriceCentsWithCurrencySymbol(product.currency_code, discountedPriceCents, {
+                  symbolFormat: "long",
+                })}
+              </b>
+              .
+              {discountCode?.valid
+                ? " This discount will be applied because it is greater than the offer code discount."
+                : null}
             </Alert>
           ) : null}
           {product.free_trial ? (
@@ -563,17 +561,15 @@ export const Product = ({
           />
           {product.sales_count !== null ? (
             <Alert role="status" variant="info">
-              <span>
-                <strong>{product.sales_count.toLocaleString()}</strong>{" "}
-                {product.recurrences
-                  ? "member"
-                  : product.preorder
-                    ? "pre-order"
-                    : product.price_cents > 0 || product.options.some((option) => option.price_difference_cents)
-                      ? "sale"
-                      : "download"}
-                {product.sales_count === 1 ? "" : "s"}
-              </span>
+              <strong>{product.sales_count.toLocaleString()}</strong>{" "}
+              {product.recurrences
+                ? "member"
+                : product.preorder
+                  ? "pre-order"
+                  : product.price_cents > 0 || product.options.some((option) => option.price_difference_cents)
+                    ? "sale"
+                    : "download"}
+              {product.sales_count === 1 ? "" : "s"}
             </Alert>
           ) : null}
           {product.preorder ? (

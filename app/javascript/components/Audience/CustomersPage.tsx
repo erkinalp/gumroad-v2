@@ -1883,7 +1883,7 @@ const UtmLinkStack = ({ link, showHeader }: { link: Customer["utm_link"]; showHe
             <h3>UTM link</h3>
           </section>
           <div>
-            <Alert className="flex-1 text-sm" role="status" variant="info">
+            <Alert className="text-sm" role="status" variant="info">
               This sale was driven by a{" "}
               <a href={link.utm_url} target="_blank" rel="noreferrer">
                 UTM link

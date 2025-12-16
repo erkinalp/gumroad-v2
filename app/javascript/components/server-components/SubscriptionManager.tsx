@@ -337,10 +337,8 @@ const SubscriptionManager = ({
       {!hasSavedCard && subscription.is_gift ? (
         <div>
           <Alert variant="warning">
-            <div>
-              Your {subscriptionEntity} is paid up until {formattedSubscriptionEndDate}. Add your own payment method
-              below to ensure that your {subscriptionEntity} renews.
-            </div>
+            Your {subscriptionEntity} is paid up until {formattedSubscriptionEndDate}. Add your own payment method below
+            to ensure that your {subscriptionEntity} renews.
           </Alert>
         </div>
       ) : null}

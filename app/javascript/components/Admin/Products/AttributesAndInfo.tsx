@@ -62,13 +62,11 @@ const ProductAttributesAndInfo = ({ productData }: Props) => {
       No additional details.
     </Alert>
   ) : (
-    <div className="product-info grid gap-4">
+    <div className="grid gap-4">
       {should_show_sales_count ? (
         <Alert variant="info">
-          <div>
-            <strong>{sales_count.toLocaleString(userAgentInfo.locale)}</strong> {salesUnit}
-            {sales_count === 1 ? "" : "s"}
-          </div>
+          <strong>{sales_count.toLocaleString(userAgentInfo.locale)}</strong> {salesUnit}
+          {sales_count === 1 ? "" : "s"}
         </Alert>
       ) : null}
       {preorder != null ? (

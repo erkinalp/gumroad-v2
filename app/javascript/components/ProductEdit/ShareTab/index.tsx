@@ -72,11 +72,13 @@ export const ShareTab = () => {
               </a>
             </header>
             {isListedOnDiscover ? (
-              <Alert className="grid-cols-[auto_1fr_auto]" role="status" variant="success">
-                <div>{product.name} is listed on Gumroad Discover.</div>
-                <a className="col-start-2 sm:col-start-3" href={discoverLink.toString()}>
-                  View
-                </a>
+              <Alert role="status" variant="success">
+                <div className="grid grid-cols-[1fr_auto]">
+                  {product.name} is listed on Gumroad Discover.
+                  <a className="col-start-1 sm:col-start-2" href={discoverLink.toString()}>
+                    View
+                  </a>
+                </div>
               </Alert>
             ) : null}
             <div className="flex flex-col gap-4">
@@ -127,7 +129,7 @@ const DiscoverEligibilityPromo = () => {
     <Alert role="status">
       <div className="flex items-center gap-2">
         <img src={hands} alt="" className="size-12" />
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-1 flex-col gap-2">
           <div>
             To appear on Gumroad Discover, make sure to meet all the{" "}
             <a href="/help/article/79-gumroad-discover" target="_blank" rel="noreferrer">

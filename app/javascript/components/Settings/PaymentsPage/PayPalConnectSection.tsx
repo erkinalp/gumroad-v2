@@ -77,14 +77,12 @@ const PayPalConnectSection = ({
                 </div>
                 {!paypalConnect.allow_paypal_connect ? (
                   <Alert variant="warning">
-                    <div>
-                      <p>You must meet the following requirements in order to connect a PayPal account:</p>
-                      <ul>
-                        <li>Your account must be marked as compliant</li>
-                        <li>You must have earned at least $100</li>
-                        <li>You must have received at least one successful payout</li>
-                      </ul>
-                    </div>
+                    <p>You must meet the following requirements in order to connect a PayPal account:</p>
+                    <ul>
+                      <li>Your account must be marked as compliant</li>
+                      <li>You must have earned at least $100</li>
+                      <li>You must have received at least one successful payout</li>
+                    </ul>
                   </Alert>
                 ) : null}
               </>
@@ -144,14 +142,12 @@ const PayPalConnectSection = ({
                 </p>
                 {!paypalConnect.allow_paypal_connect ? (
                   <Alert variant="warning">
-                    <div>
-                      <p>You must meet the following requirements in order to connect a PayPal account:</p>
-                      <ul>
-                        <li>Your account must be marked as compliant</li>
-                        <li>You must have earned at least $100</li>
-                        <li>You must have received at least one successful payout</li>
-                      </ul>
-                    </div>
+                    <p>You must meet the following requirements in order to connect a PayPal account:</p>
+                    <ul>
+                      <li>Your account must be marked as compliant</li>
+                      <li>You must have earned at least $100</li>
+                      <li>You must have received at least one successful payout</li>
+                    </ul>
                   </Alert>
                 ) : null}
                 <Alert variant="warning">
