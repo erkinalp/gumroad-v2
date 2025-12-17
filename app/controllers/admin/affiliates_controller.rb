@@ -27,7 +27,7 @@ class Admin::AffiliatesController < Admin::BaseController
                  user: Admin::UserPresenter::Card.new(user: @affiliate_user, pundit_user:).props,
                }
       end
-      format.json { render json: Admin::UserPresenter::Card.new(user: @affiliate_user, pundit_user:).props }
+      format.json { render json: @affiliate_user }
     end
   end
 

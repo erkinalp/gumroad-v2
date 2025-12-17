@@ -50,7 +50,9 @@ const Payout = ({ payout }: Props) => (
     <div>
       <h3>
         <span>{payout.displayed_amount} to&nbsp;</span>
-        <Link href={Routes.admin_user_path(payout.user.external_id)}>{payout.user.name}</Link>
+        <Link href={Routes.admin_user_path(payout.user.external_id)} title={payout.user.external_id}>
+          {payout.user.name}
+        </Link>
       </h3>
 
       <DateTimeWithRelativeTooltip date={payout.created_at} />
