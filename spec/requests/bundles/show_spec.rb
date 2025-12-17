@@ -48,18 +48,14 @@ describe("Bundle page", type: :system, js: true) do
         expect(page).to have_link("Product", href: product.long_url)
         expect(page).to have_selector("[aria-label='Rating']", text: "0.0 (0)")
         expect(page).to have_selector("[aria-label='Price'] s", text: "$5")
-        within("[aria-label='Quantity']") do
-          expect(page).to have_text("1")
-        end
+        expect(page).to have_text("Qty: 1")
       end
 
       within_cart_item "Versioned product" do
         expect(page).to have_link("Versioned product", href: versioned_product.long_url)
         expect(page).to have_selector("[aria-label='Rating']", text: "0.0 (0)")
         expect(page).to have_selector("[aria-label='Price'] s", text: "$15")
-        within("[aria-label='Quantity']") do
-          expect(page).to have_text("3")
-        end
+        expect(page).to have_text("Qty: 3")
         expect(page).to have_text("Version: Untitled 1")
       end
     end

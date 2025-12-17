@@ -18,6 +18,7 @@ export const buttonVariants = cva("button", {
     size: {
       default: "",
       sm: "small",
+      xs: "h-[30px] w-[60px] !p-0 !text-xs",
     },
     color: {
       primary: "primary",
@@ -83,17 +84,17 @@ type ButtonVariation = {
   color?: ButtonColor | undefined;
   outline?: boolean;
   small?: boolean;
+  xs?: boolean;
 };
 
 export interface ButtonProps extends Omit<React.ComponentPropsWithoutRef<"button">, "color">, ButtonVariation {}
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, color, outline, small, disabled, ...props }, ref) => {
+  ({ className, color, outline, small, xs, disabled, ...props }, ref) => {
     useValidateClassName(className);
 
     const variant = outline ? "outline" : color === "danger" ? "destructive" : "default";
-    const size = small ? "sm" : "default";
-
+    const size = xs ? "xs" : small ? "sm" : "default";
     return (
       <button
         className={classNames(

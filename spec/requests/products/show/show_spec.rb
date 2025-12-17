@@ -169,9 +169,7 @@ describe("ProductShowScenario", type: :system, js: true) do
 
       within "[role='listitem']" do
         expect(page).to have_text(@membership.name)
-        within("[aria-label='Quantity']") do
-          expect(page).to have_text("3")
-        end
+        expect(page).to have_text("Qty: 3")
       end
     end
 

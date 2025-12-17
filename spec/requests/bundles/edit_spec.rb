@@ -224,9 +224,7 @@ describe("Bundle edit page", type: :system, js: true) do
           click_on "Remove"
         end
         within_cart_item "Versioned product" do
-          within("[aria-label='Quantity']") do
-            expect(page).to have_text("1")
-          end
+          expect(page).to have_text("Qty: 1")
           expect(page).to have_text("Version: Untitled 1")
 
           select_disclosure "Configure" do
@@ -238,17 +236,14 @@ describe("Bundle edit page", type: :system, js: true) do
         end
 
         within_cart_item "Product 1" do
-          within("[aria-label='Quantity']") do
-            expect(page).to have_text("1")
-          end
+          expect(page).to have_text("Qty: 1")
+
           select_disclosure "Configure" do
             fill_in "Quantity", with: 2
             click_on "Apply"
           end
 
-          within("[aria-label='Quantity']") do
-            expect(page).to have_text("2")
-          end
+          expect(page).to have_text("Qty: 2")
         end
       end
       select_tab "Product"

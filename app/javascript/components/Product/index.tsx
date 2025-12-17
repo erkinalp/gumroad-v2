@@ -404,7 +404,7 @@ export const Product = ({
                         </div>
                       ) : null}
                       <CartItemFooter>
-                        <span aria-label="Quantity">
+                        <span>
                           <strong>Qty:</strong> {bundleProduct.quantity}
                         </span>
                         {bundleProduct.variant ? (

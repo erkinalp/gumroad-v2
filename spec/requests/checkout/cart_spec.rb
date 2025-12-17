@@ -92,9 +92,7 @@ describe "Checkout cart", :js, type: :system do
       within_cart_item(@product.name) do
         expect(page).to have_link(@product.name, href: @product.long_url)
         expect(page).to have_text("US$40")
-        within("[aria-label='Quantity']") do
-          expect(page).to have_text("4")
-        end
+        expect(page).to have_text("Qty: 4")
       end
       check_out(@product)
     end

@@ -47,7 +47,7 @@ export const BundleProductItem = ({
       <CartItemMain>
         <CartItemTitle>{bundleProduct.name}</CartItemTitle>
         <CartItemFooter>
-          <span aria-label="Quantity">
+          <span>
             <strong>Qty:</strong> {bundleProduct.quantity}
           </span>
           {selectedVariant ? (

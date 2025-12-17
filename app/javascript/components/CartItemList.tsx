@@ -35,7 +35,7 @@ export const CartItem = ({
 export const CartItemMedia = ({ className, children, ...props }: BaseProps) => (
   <figure
     className={classNames(
-      "tailwind-override relative aspect-square h-[66px] flex-none overflow-hidden rounded-sm border bg-[url('~images/placeholders/product-cover.png')] bg-cover bg-center sm:h-[120px]",
+      "tailwind-override relative aspect-square h-16 flex-none overflow-hidden rounded-sm border bg-[url('~images/placeholders/product-cover.png')] bg-cover bg-center sm:h-32",
       className,
     )}
     {...props}
@@ -44,15 +44,16 @@ export const CartItemMedia = ({ className, children, ...props }: BaseProps) => (
   </figure>
 );
 
-export const CartItemQuantity = ({ className, children, ...props }: BaseProps) => (
+export const CartItemQuantity = ({ className, children, ...props }: BaseProps & { label?: string }) => (
   <div
     className={classNames(
-      "absolute top-0 right-0 flex h-5 w-5 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-primary-foreground bg-primary text-xs font-normal text-primary-foreground sm:h-6 sm:w-6",
+      "absolute top-0 right-0 flex h-5 min-w-5 translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-primary-foreground bg-primary px-1 text-xs font-normal text-primary-foreground sm:h-6 sm:min-w-6 sm:px-1.5",
       className,
     )}
     {...props}
   >
-    {children}
+    <span className="sr-only">Qty: {children}</span>
+    <span aria-hidden>{children}</span>
   </div>
 );
 
@@ -70,10 +71,7 @@ export const CartItemTitle = ({
 }: BaseProps & { asChild?: boolean }) => {
   const Comp = asChild ? Slot : "h4";
   return (
-    <Comp
-      className={classNames("line-clamp-2 text-base leading-[1.4] font-medium no-underline sm:text-lg", className)}
-      {...props}
-    >
+    <Comp className={classNames("line-clamp-2 text-base font-medium no-underline sm:text-lg", className)} {...props}>
       {children}
     </Comp>
   );
@@ -91,32 +89,8 @@ export const CartItemActions = ({ className, children, ...props }: BaseProps) =>
   </div>
 );
 
-export const CartActionButton = ({ className, children, ...props }: BaseProps) => (
-  <button
-    className={classNames(
-      "tailwind-override inline-flex items-center justify-center gap-2 rounded-sm",
-      "border border-border bg-transparent text-xs leading-[1.2]",
-      "transition-transform duration-150 ease-out",
-      "hover:-translate-x-1 hover:-translate-y-1",
-      "hover:shadow-[4px_4px_0_var(--color-foreground)]",
-      "h-[30px] w-[60px] p-0",
-      "active:translate-x-0 active:translate-y-0 active:shadow-none",
-      className,
-    )}
-    {...props}
-  >
-    {children}
-  </button>
-);
-
 export const CartItemEnd = ({ className, children, ...props }: BaseProps) => (
   <section className={classNames("ml-auto flex flex-col items-end gap-1", className)} {...props}>
     {children}
   </section>
-);
-
-export const CartItemRecurrenceLabel = ({ className, children, ...props }: BaseProps) => (
-  <span className={classNames("text-sm leading-[1.3]", className)} {...props}>
-    {children}
-  </span>
 );

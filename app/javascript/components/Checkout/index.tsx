@@ -24,8 +24,6 @@ import {
   CartItemEnd,
   CartItemQuantity,
   CartItemActions,
-  CartActionButton,
-  CartItemRecurrenceLabel,
 } from "$app/components/CartItemList";
 import { PaymentForm } from "$app/components/Checkout/PaymentForm";
 import { Icon } from "$app/components/Icons";
@@ -340,12 +338,7 @@ export const Checkout = ({
                 {total != null ? (
                   <>
                     <footer className="grid gap-4 border-t border-border p-4">
-                      <CartPriceItem
-                        title="Total"
-                        price={formatPrice(total)}
-                        titleClassName="text-base sm:text-xl font-bold"
-                        priceClassName="text-base sm:text-lg font-bold"
-                      />
+                      <CartPriceItem title="Total" price={formatPrice(total)} large />
                     </footer>
                     {commissionCompletionTotal > 0 || futureInstallmentsWithoutTipsTotal > 0 ? (
                       <div className="grid gap-4 border-t border-border p-4">
@@ -407,17 +400,22 @@ export const Checkout = ({
 const CartPriceItem = ({
   title,
   price,
-  titleClassName,
-  priceClassName,
+  large = false,
 }: {
   title: React.ReactNode;
   price: string | number | null;
-  titleClassName?: string;
-  priceClassName?: string;
+  large?: boolean;
 }) => (
   <div className={classNames("grid grid-flow-col justify-between gap-4")}>
-    <h4 className={classNames("inline-flex flex-wrap gap-2 text-sm sm:text-base", titleClassName)}>{title}</h4>
-    <div className={classNames("text-base sm:text-lg", priceClassName)}>{price}</div>
+    <h4
+      className={classNames(
+        "inline-flex flex-wrap gap-2",
+        large ? "text-base font-bold sm:text-xl" : "text-sm sm:text-base",
+      )}
+    >
+      {title}
+    </h4>
+    <div className={classNames("text-base sm:text-lg", large && "font-bold")}>{price}</div>
   </div>
 );
 
@@ -491,9 +489,7 @@ const CartItemComponent = ({
                         <Thumbnail url={item.product.thumbnail_url} nativeType={item.product.native_type} />
                       </a>
                     </CartItemMedia>
-                    <CartItemQuantity aria-label="Bundle Item Quantity">
-                      {bundleProduct.quantity || item.quantity}
-                    </CartItemQuantity>
+                    <CartItemQuantity>{bundleProduct.quantity || item.quantity}</CartItemQuantity>
                   </div>
                   <CartItemMain>
                     <CartItemTitle>{bundleProduct.name}</CartItemTitle>
@@ -518,7 +514,7 @@ const CartItemComponent = ({
             <Thumbnail url={item.product.thumbnail_url} nativeType={item.product.native_type} />
           </a>
         </CartItemMedia>
-        <CartItemQuantity aria-label="Quantity">{item.quantity}</CartItemQuantity>
+        <CartItemQuantity>{item.quantity}</CartItemQuantity>
       </div>
 
       <CartItemMain>
@@ -527,7 +523,7 @@ const CartItemComponent = ({
             {item.product.name}
           </a>
         </CartItemTitle>
-        <a href={item.product.creator.profile_url} className="line-clamp-2 text-sm leading-[1.3]">
+        <a href={item.product.creator.profile_url} className="line-clamp-2 text-sm">
           {item.product.creator.name}
         </a>
         <CartItemFooter>
@@ -548,11 +544,7 @@ const CartItemComponent = ({
             item.product.options.length > 0 ||
             item.product.installment_plan ||
             isPWYW ? (
-              <Popover
-                trigger={<CartActionButton>Edit</CartActionButton>}
-                open={editPopoverOpen}
-                onToggle={setEditPopoverOpen}
-              >
+              <Popover trigger={<Button xs>Edit</Button>} open={editPopoverOpen} onToggle={setEditPopoverOpen}>
                 <div className="flex w-96 flex-col gap-4">
                   <ConfigurationSelector
                     selection={selection}
@@ -575,7 +567,8 @@ const CartItemComponent = ({
                 </div>
               </Popover>
             ) : null}
-            <CartActionButton
+            <Button
+              xs
               onClick={() => {
                 const newItems = cart.items.filter((i) => i !== item);
                 updateCart({
@@ -593,37 +586,35 @@ const CartItemComponent = ({
               }}
             >
               Remove
-            </CartActionButton>
+            </Button>
           </CartItemActions>
         </CartItemFooter>
       </CartItemMain>
       <CartItemEnd>
-        <span className="current-price text-base leading-[1.4] font-bold sm:text-lg" aria-label="Price">
+        <span className="current-price text-base font-bold sm:text-lg" aria-label="Price">
           {formatPrice(convertToUSD(item, price))}
         </span>
         {hasFreeTrial(item, isGift) && item.product.free_trial ? (
           <>
-            <CartItemRecurrenceLabel>
+            <span className="text-sm">
               {item.product.free_trial.duration.amount === 1
                 ? `one ${item.product.free_trial.duration.unit}`
                 : `${item.product.free_trial.duration.amount} ${item.product.free_trial.duration.unit}s`}{" "}
               free
-            </CartItemRecurrenceLabel>
+            </span>
             {item.recurrence ? (
-              <CartItemRecurrenceLabel>
+              <span className="text-sm">
                 {formatAmountPerRecurrence(item.recurrence, formatPrice(convertToUSD(item, discount.price)))} after
-              </CartItemRecurrenceLabel>
+              </span>
             ) : null}
           </>
         ) : item.pay_in_installments && item.product.installment_plan ? (
-          <CartItemRecurrenceLabel>
-            in {item.product.installment_plan.number_of_installments} installments
-          </CartItemRecurrenceLabel>
+          <span className="text-sm">in {item.product.installment_plan.number_of_installments} installments</span>
         ) : item.recurrence ? (
           isGift ? (
-            <CartItemRecurrenceLabel>{recurrenceDurationLabels[item.recurrence]}</CartItemRecurrenceLabel>
+            <span className="text-sm">{recurrenceDurationLabels[item.recurrence]}</span>
           ) : (
-            <CartItemRecurrenceLabel>{recurrenceNames[item.recurrence]}</CartItemRecurrenceLabel>
+            <span className="text-sm">{recurrenceNames[item.recurrence]}</span>
           )
         ) : null}
       </CartItemEnd>
