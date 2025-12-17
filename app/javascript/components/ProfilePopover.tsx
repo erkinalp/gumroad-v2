@@ -16,7 +16,7 @@ export const DashboardNavProfilePopover = ({ children, user }: { children: React
             src={user?.avatarUrl}
             alt="Your avatar"
           />
-          {user?.name || user?.email}u
+          {user?.name || user?.email}
         </div>
         <Icon name={open ? "outline-cheveron-up" : "outline-cheveron-down"} />
       </div>
