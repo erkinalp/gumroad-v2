@@ -1,17 +1,12 @@
+import { Link, useForm } from "@inertiajs/react";
 import { DirectUpload } from "@rails/activestorage";
 import { Content, Editor, JSONContent } from "@tiptap/core";
 import cx from "classnames";
 import { addHours, format, startOfDay, startOfHour } from "date-fns";
 import React from "react";
 import { cast } from "ts-safe-cast";
-import { Link, useForm } from "@inertiajs/react";
 
-import {
-  AudienceType,
-  getRecipientCount,
-  InstallmentFormContext,
-  Installment,
-} from "$app/data/installments";
+import { AudienceType, getRecipientCount, InstallmentFormContext, Installment } from "$app/data/installments";
 import { assertDefined } from "$app/utils/assert";
 import Countdown from "$app/utils/countdown";
 import { ALLOWED_EXTENSIONS } from "$app/utils/file";
@@ -30,6 +25,7 @@ import {
   isFileUploading,
   mapEmailFilesToFileState,
 } from "$app/components/EmailAttachments";
+import { emailTabPath } from "$app/components/EmailsPage/Layout";
 import { EvaporateUploaderProvider } from "$app/components/EvaporateUploader";
 import { Icon } from "$app/components/Icons";
 import { LoadingSpinner } from "$app/components/LoadingSpinner";
@@ -39,7 +35,6 @@ import { ImageUploadSettingsContext, RichTextEditor } from "$app/components/Rich
 import { S3UploadConfigProvider } from "$app/components/S3UploadConfig";
 import { Separator } from "$app/components/Separator";
 import { showAlert } from "$app/components/server-components/Alert";
-import { emailTabPath } from "$app/components/EmailsPage/Layout";
 import { InvalidNameForEmailDeliveryWarning } from "$app/components/server-components/InvalidNameForEmailDeliveryWarning";
 import { TagInput } from "$app/components/TagInput";
 import { UpsellCard } from "$app/components/TiptapExtensions/UpsellCard";
@@ -559,7 +554,7 @@ export const EmailForm = ({ context, installment }: EmailFormProps) => {
     }
   };
 
-  const form = useForm({} as any);
+  const form = useForm({});
 
   // Keep isSaving for countdown feature (separate from form submission)
   const [isSaving, setIsSaving] = React.useState(false);
@@ -597,8 +592,11 @@ export const EmailForm = ({ context, installment }: EmailFormProps) => {
     };
 
     const formOptions = {
-      onError: (errors: any) => {
-        const errorMessage = errors.message || errors.base || "Something went wrong. Please try again.";
+      onError: (errors: Record<string, string | string[]>) => {
+        const errorMessage =
+          (typeof errors.message === "string" ? errors.message : undefined) ||
+          (typeof errors.base === "string" ? errors.base : undefined) ||
+          "Something went wrong. Please try again.";
         showAlert(errorMessage, "error", { html: true });
       },
     };

@@ -1,9 +1,9 @@
+import { Link } from "@inertiajs/react";
 import { Node as TiptapNode } from "@tiptap/core";
 import { NodeViewProps, NodeViewWrapper, ReactNodeViewRenderer } from "@tiptap/react";
 import cx from "classnames";
 import { formatDistanceToNow, parseISO } from "date-fns";
 import * as React from "react";
-import { Link } from "@inertiajs/react";
 
 import { type Post } from "$app/types/workflow";
 import { assertDefined } from "$app/utils/assert";
@@ -89,9 +89,7 @@ const PostsNodeView = ({ editor, selected }: NodeViewProps) => {
               ) : (
                 <>
                   <h4 className="text-muted">Posts (emails) sent to customers of this product will appear here</h4>
-                  <Link href={Routes.new_email_path({ product: productPermalink })}>
-                    Create an email
-                  </Link>
+                  <Link href={Routes.new_email_path({ product: productPermalink })}>Create an email</Link>
                 </>
               )}
             </div>

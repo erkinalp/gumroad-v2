@@ -7,11 +7,11 @@ import { PageHeader } from "$app/components/ui/PageHeader";
 import { Tab, Tabs } from "$app/components/ui/Tabs";
 import { WithTooltip } from "$app/components/WithTooltip";
 
-const TABS = ["published", "scheduled", "drafts", "subscribers"] as const;
-export type EmailTab = (typeof TABS)[number];
+const _TABS = ["published", "scheduled", "drafts", "subscribers"] as const;
+export type EmailTab = (typeof _TABS)[number];
 
 // Path helpers using Rails routes
-export const emailTabPath = (tab: (typeof TABS)[number]) => {
+export const emailTabPath = (tab: (typeof _TABS)[number]) => {
   switch (tab) {
     case "published":
       return Routes.published_emails_path();
@@ -105,10 +105,8 @@ export const NewEmailButton = ({ copyFrom }: { copyFrom?: string } = {}) => {
     </Link>
   );
 };
-export const EditEmailButton = ({ id }: { id: string }) => {
-  return (
-    <Link className="button" href={Routes.edit_email_path(id)}>
-      Edit
-    </Link>
-  );
-};
+export const EditEmailButton = ({ id }: { id: string }) => (
+  <Link className="button" href={Routes.edit_email_path(id)}>
+    Edit
+  </Link>
+);
