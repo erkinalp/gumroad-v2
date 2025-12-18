@@ -1,16 +1,16 @@
 import { Link, useForm, usePage } from "@inertiajs/react";
-
 import * as React from "react";
+
+import { formatPrice } from "$app/utils/price";
 
 import { Layout } from "$app/components/Authentication/Layout";
 import { SocialAuth } from "$app/components/Authentication/SocialAuth";
 import { Button } from "$app/components/Button";
+import { FlashError } from "$app/components/FlashError";
 import { PasswordInput } from "$app/components/PasswordInput";
 import { Separator } from "$app/components/Separator";
-import { FlashError } from "$app/components/FlashError";
 import { useOriginalLocation } from "$app/components/useOriginalLocation";
 import { RecaptchaCancelledError, useRecaptcha } from "$app/components/useRecaptcha";
-import { formatPrice } from "$app/utils/price";
 
 type PageProps = {
   email: string | null;
@@ -35,7 +35,16 @@ function SignupPage() {
   const recaptcha = useRecaptcha({ siteKey: recaptcha_site_key });
   const uid = React.useId();
 
-  const form = useForm({
+  const form = useForm<{
+    user: {
+      email: string;
+      password: string;
+      terms_accepted: boolean;
+    };
+    next: string | null;
+    referral: string | null;
+    "g-recaptcha-response": string | null;
+  }>({
     user: {
       email: initialEmail ?? "",
       password: "",
@@ -43,7 +52,7 @@ function SignupPage() {
     },
     next,
     referral: referrer?.id ?? null,
-    "g-recaptcha-response": null as string | null,
+    "g-recaptcha-response": null,
   });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

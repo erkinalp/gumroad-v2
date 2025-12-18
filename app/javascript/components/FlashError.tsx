@@ -10,7 +10,7 @@ type PageProps = {
 export const FlashError: React.FC = () => {
   const { flash } = usePage<PageProps>().props;
 
-  if (flash?.status === "warning" && flash?.message) {
+  if (flash?.status === "warning" && flash.message) {
     return (
       <div role="alert" className="danger">
         {flash.message}
@@ -19,4 +19,4 @@ export const FlashError: React.FC = () => {
   }
 
   return null;
-}
+};

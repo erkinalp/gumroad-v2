@@ -4,11 +4,11 @@ import React from "react";
 import { classNames } from "$app/utils/classNames";
 
 import { Nav } from "$app/components/client-components/Nav";
+import { CurrentSellerProvider, parseCurrentSeller } from "$app/components/CurrentSeller";
 import LoadingSkeleton from "$app/components/LoadingSkeleton";
 import { type LoggedInUser, LoggedInUserProvider, parseLoggedInUser } from "$app/components/LoggedInUser";
 import Alert, { showAlert, type AlertPayload } from "$app/components/server-components/Alert";
 import useRouteLoading from "$app/components/useRouteLoading";
-import { CurrentSellerProvider, parseCurrentSeller } from "$app/components/CurrentSeller";
 
 type PageProps = {
   title: string;

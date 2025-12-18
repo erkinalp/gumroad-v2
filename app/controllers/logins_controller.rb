@@ -53,10 +53,8 @@ class LoginsController < Devise::SessionsController
 
   private
     def block_json_request
-      # Allow Inertia requests - they send JSON format but include X-Inertia header
-      return if request.headers["X-Inertia"].present?
+      return if request.inertia?
 
-      # Block direct JSON requests (non-Inertia API calls)
       head :bad_request if request.format.json?
     end
 

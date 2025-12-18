@@ -5,9 +5,9 @@ import { ForgotPasswordForm } from "$app/components/Authentication/ForgotPasswor
 import { Layout } from "$app/components/Authentication/Layout";
 import { SocialAuth } from "$app/components/Authentication/SocialAuth";
 import { Button } from "$app/components/Button";
+import { FlashError } from "$app/components/FlashError";
 import { PasswordInput } from "$app/components/PasswordInput";
 import { Separator } from "$app/components/Separator";
-import { FlashError } from "$app/components/FlashError";
 import { useOriginalLocation } from "$app/components/useOriginalLocation";
 import { RecaptchaCancelledError, useRecaptcha } from "$app/components/useRecaptcha";
 
@@ -26,13 +26,20 @@ function LoginPage() {
   const uid = React.useId();
   const [showForgotPassword, setShowForgotPassword] = React.useState(false);
 
-  const form = useForm({
+  const form = useForm<{
+    user: {
+      login_identifier: string;
+      password: string;
+    };
+    next: string | null;
+    "g-recaptcha-response": string | null;
+  }>({
     user: {
       login_identifier: initialEmail ?? "",
       password: "",
     },
     next,
-    "g-recaptcha-response": null as string | null,
+    "g-recaptcha-response": null,
   });
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -64,7 +71,7 @@ function LoginPage() {
             <span>or</span>
           </Separator>
           <section>
-              <FlashError />
+            <FlashError />
             <fieldset>
               <legend>
                 <label htmlFor={`${uid}-email`}>Email</label>
