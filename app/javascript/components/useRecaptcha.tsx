@@ -7,7 +7,7 @@ const RECAPTCHA_SCRIPT_URL = "https://www.google.com/recaptcha/enterprise.js?ren
 let loadPromise: Promise<void> | null = null;
 
 const loadRecaptchaScript = (): Promise<void> => {
-  if (window.grecaptcha?.enterprise) {
+  if ("grecaptcha" in window) {
     return Promise.resolve();
   }
 
@@ -19,7 +19,9 @@ const loadRecaptchaScript = (): Promise<void> => {
     const script = document.createElement("script");
     script.src = RECAPTCHA_SCRIPT_URL;
     script.async = true;
-    script.onload = () => resolve();
+    script.onload = () => {
+      resolve();
+    };
     script.onerror = () => {
       loadPromise = null;
       reject(new Error("Failed to load reCAPTCHA script"));
@@ -82,7 +84,9 @@ export function useRecaptcha({ siteKey }: { siteKey: string | null }) {
       });
     };
 
-    loadRecaptchaScript().then(initRecaptcha).catch(console.error);
+    loadRecaptchaScript()
+      .then(initRecaptcha)
+      .catch(() => {});
   }, [siteKey]);
 
   const execute = () => {
