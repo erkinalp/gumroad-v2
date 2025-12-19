@@ -235,7 +235,41 @@ const MenubarItem = ({
     closeTimeoutRef.current = setTimeout(() => handleToggleMenu(false), 400);
   };
 
-  return menuItem.children.length > 0 ? (
+  const hasChildren = menuItem.children.length > 0;
+
+  const menuItemAnchor = (
+    <a
+      href={menuItem.href ?? "#"}
+      className={classNames(
+        "button",
+        "rounded-full! px-3! py-2! align-middle aria-[current]:bg-background aria-[current]:text-foreground",
+        showExpandableIcon ? "relative cursor-pointer" : "",
+        hasChildren ? "aria-[current=true]:hover:shadow!" : "hover:shadow!",
+        { "border-transparent! bg-transparent! text-inherit!": !isHighlighted },
+        { expandable: showExpandableIcon },
+      )}
+      role="menuitem"
+      aria-current={isHighlighted}
+      aria-haspopup={hasChildren ? "menu" : undefined}
+      aria-expanded={hasChildren ? menuOpen : undefined}
+      aria-controls={hasChildren ? uid : undefined}
+      {...extraAriaAttrs}
+      onClick={(e) => {
+        if (hasChildren) {
+          if (isOnTouchDevice) e.preventDefault();
+          else onSelectItem?.(menuItem, e);
+        } else {
+          onHighlightIn();
+          onSelectItem?.(menuItem, e);
+        }
+      }}
+    >
+      {menuItem.label}
+      {showExpandableIcon ? <Icon name="outline-cheveron-down" className="float-right" /> : null}
+    </a>
+  );
+
+  return hasChildren ? (
     <div
       className={classNames({ expanded: menuOpen })}
       ref={ref}
@@ -243,28 +277,7 @@ const MenubarItem = ({
       onMouseLeave={closeAfterDelay}
     >
       <Popover open={menuOpen}>
-        <PopoverTrigger>
-          <a
-            href={menuItem.href ?? "#"}
-            className={classNames(
-              "pill button",
-              { "border-transparent! bg-transparent! text-inherit!": !isHighlighted },
-              { expandable: showExpandableIcon },
-            )}
-            role="menuitem"
-            aria-current={isHighlighted}
-            aria-haspopup="menu"
-            aria-expanded={menuOpen}
-            aria-controls={uid}
-            {...extraAriaAttrs}
-            onClick={(e) => {
-              if (isOnTouchDevice) e.preventDefault();
-              else onSelectItem?.(menuItem, e);
-            }}
-          >
-            {menuItem.label}
-          </a>
-        </PopoverTrigger>
+        <PopoverTrigger>{menuItemAnchor}</PopoverTrigger>
         <PopoverContent className="border-0 p-0 shadow-none" arrowClassName="dark:fill-black/35" usePortal>
           <ItemsList
             key={`${uid}-${menuOpen}`}
@@ -282,23 +295,7 @@ const MenubarItem = ({
     </div>
   ) : (
     <div onMouseEnter={() => handleToggleMenu(true)} onMouseLeave={() => handleToggleMenu(false)}>
-      <a
-        href={menuItem.href ?? "#"}
-        className={classNames(
-          "pill button",
-          { "border-transparent! bg-transparent! text-inherit!": !isHighlighted },
-          { expandable: showExpandableIcon },
-        )}
-        role="menuitem"
-        aria-current={isHighlighted}
-        {...extraAriaAttrs}
-        onClick={(e) => {
-          onHighlightIn();
-          onSelectItem?.(menuItem, e);
-        }}
-      >
-        {menuItem.label}
-      </a>
+      {menuItemAnchor}
     </div>
   );
 };
