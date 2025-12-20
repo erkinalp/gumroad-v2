@@ -47,7 +47,10 @@ const Layout = ({
               Scheduled
             </Tab>
           ) : null}
-          {/* TODO: Add Drafts tab back once Drafts page is migrated to Inertia */}
+          {/* Legacy react-router page - use regular href for full page reload */}
+          <Tab href="/emails/drafts" isSelected={false}>
+            Drafts
+          </Tab>
           <Tab href={Routes.followers_path()} isSelected>
             Subscribers
           </Tab>
