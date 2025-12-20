@@ -1,6 +1,7 @@
 import { Link } from "@inertiajs/react";
 import React from "react";
 
+import { Layout } from "$app/components/Developer/Layout";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "$app/components/ui/Table";
 
 type PingParameter = {
@@ -53,13 +54,13 @@ const PING_PARAMETERS: PingParameter[] = [
 ];
 
 const PublicPing = () => (
+  <Layout currentPage="ping">
     <main className="p-4 md:p-8">
       <div className="mx-auto max-w-5xl">
         <article className="flex flex-col gap-8">
           <header>
             <h1 className="text-3xl font-bold">Gumroad Ping</h1>
           </header>
-
           <div className="flex flex-col gap-4">
             <p>Gumroad Ping is a simple alert that notifies you in real time whenever one of your products is purchased.</p>
 
@@ -96,11 +97,11 @@ const PublicPing = () => (
               <TableHeader>
                 <TableRow>
                   <TableHead>Parameter</TableHead>
-              <TableHead>Description</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {PING_PARAMETERS.map((param) => (
+                  <TableHead>Description</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {PING_PARAMETERS.map((param) => (
                   <TableRow key={param.name}>
                     <TableCell className="font-mono text-sm font-medium">
                       {param.name}
@@ -116,6 +117,7 @@ const PublicPing = () => (
         </article>
       </div>
     </main>
-  );
+  </Layout>
+);
 
 export default PublicPing;
