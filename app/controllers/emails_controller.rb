@@ -41,9 +41,9 @@ class EmailsController < Sellers::BaseController
 
     if @installment.mark_deleted
       @installment.installment_rule&.mark_deleted!
-      redirect_to emails_path: published_emails_path, notice: "Email deleted!" , status: :see_other
+      redirect_back fallback_location: published_emails_path, notice: "Email deleted!", status: :see_other
     else
-      redirect_to emails_path: published_emails_path, alert: "Sorry, something went wrong. Please try again.", status: :see_other
+      redirect_back fallback_location: published_emails_path, alert: "Sorry, something went wrong. Please try again.", status: :see_other
     end
   end
 
