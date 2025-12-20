@@ -801,7 +801,7 @@ Rails.application.routes.draw do
 
     # emails
     # TODO: Add :drafts, :new, :edit routes once those pages are migrated to Inertia
-    resources :emails, only: [:index] do
+    resources :emails, only: [:index, :destroy] do
       collection do
         get :published
         get :scheduled

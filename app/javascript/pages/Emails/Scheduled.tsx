@@ -1,4 +1,4 @@
-import { router, usePage } from "@inertiajs/react";
+import { router, useForm, usePage } from "@inertiajs/react";
 import React from "react";
 import { cast } from "ts-safe-cast";
 
@@ -75,25 +75,18 @@ export default function EmailsScheduled() {
       }),
     );
   }, [installments]);
-  const [selectedInstallmentId, setSelectedInstallmentId] = React.useState<string | null>(null);
-  const selectedInstallment = selectedInstallmentId
-    ? (installments.find((i) => i.external_id === selectedInstallmentId) ?? null)
-    : null;
-  const [deletingInstallment, setDeletingInstallment] = React.useState<{
-    id: string;
-    name: string;
-    state: "delete-confirmation" | "deleting";
-  } | null>(null);
+  const [selectedInstallment, setSelectedInstallment] = React.useState<ScheduledInstallment | null>(null);
+  const [installmentToDelete, setInstallmentToDelete] = React.useState<ScheduledInstallment | null>(null);
 
+  const deleteForm = useForm({});
   const handleDelete = () => {
-    if (!deletingInstallment) return;
-    setDeletingInstallment({ ...deletingInstallment, state: "deleting" });
-    router.delete(Routes.internal_installment_path(deletingInstallment.id), {
+    if (!installmentToDelete) return;
+    deleteForm.delete(Routes.email_path(installmentToDelete.external_id), {
       onSuccess: () => {
-        setDeletingInstallment(null);
+        setInstallmentToDelete(null);
+        setSelectedInstallment(null);
       },
       onError: () => {
-        setDeletingInstallment({ ...deletingInstallment, state: "delete-confirmation" });
         showAlert("Sorry, something went wrong. Please try again.", "error");
       },
     });
@@ -119,8 +112,8 @@ export default function EmailsScheduled() {
                   {installmentsByDate[date]?.map((installment) => (
                     <TableRow
                       key={installment.external_id}
-                      aria-selected={installment.external_id === selectedInstallmentId}
-                      onClick={() => setSelectedInstallmentId(installment.external_id)}
+                      selected={installment.external_id === selectedInstallment?.external_id}
+                      onClick={() => setSelectedInstallment(installment)}
                     >
                       <TableCell>{installment.name}</TableCell>
                       <TableCell>{installment.recipient_description}</TableCell>
@@ -153,7 +146,7 @@ export default function EmailsScheduled() {
               </Button>
             ) : null}
             {selectedInstallment ? (
-              <Sheet open onOpenChange={() => setSelectedInstallmentId(null)}>
+              <Sheet open onOpenChange={() => setSelectedInstallment(null)}>
                 <SheetHeader>{selectedInstallment.name}</SheetHeader>
                 <div className="stack">
                   <div>
@@ -188,49 +181,31 @@ export default function EmailsScheduled() {
                 <div className="grid grid-flow-col gap-4">
                   <NewEmailButton copyFrom={selectedInstallment.external_id} />
                   <EditEmailButton id={selectedInstallment.external_id} />
-                  <Button
-                    color="danger"
-                    onClick={() =>
-                      setDeletingInstallment({
-                        id: selectedInstallment.external_id,
-                        name: selectedInstallment.name,
-                        state: "delete-confirmation",
-                      })
-                    }
-                  >
+                  <Button color="danger" onClick={() => setInstallmentToDelete(selectedInstallment)}>
                     Delete
                   </Button>
                 </div>
               </Sheet>
             ) : null}
-            {deletingInstallment ? (
+            {installmentToDelete ? (
               <Modal
                 open
-                allowClose={deletingInstallment.state === "delete-confirmation"}
-                onClose={() => setDeletingInstallment(null)}
+                allowClose={!deleteForm.processing}
+                onClose={() => setInstallmentToDelete(null)}
                 title="Delete email?"
                 footer={
                   <>
-                    <Button
-                      disabled={deletingInstallment.state === "deleting"}
-                      onClick={() => setDeletingInstallment(null)}
-                    >
+                    <Button disabled={deleteForm.processing} onClick={() => setInstallmentToDelete(null)}>
                       Cancel
                     </Button>
-                    {deletingInstallment.state === "deleting" ? (
-                      <Button color="danger" disabled>
-                        Deleting...
-                      </Button>
-                    ) : (
-                      <Button color="danger" onClick={() => void handleDelete()}>
-                        Delete email
-                      </Button>
-                    )}
+                    <Button color="danger" disabled={deleteForm.processing} onClick={handleDelete}>
+                      {deleteForm.processing ? "Deleting..." : "Delete email"}
+                    </Button>
                   </>
                 }
               >
                 <h4>
-                  Are you sure you want to delete the email "{deletingInstallment.name}"? This action cannot be undone.
+                  Are you sure you want to delete the email "{installmentToDelete.name}"? This action cannot be undone.
                 </h4>
               </Modal>
             ) : null}

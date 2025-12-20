@@ -4,15 +4,16 @@ class EmailsController < Sellers::BaseController
   layout "inertia", only: [:published, :scheduled]
 
   before_action :set_body_id_as_app, only: [:index]
+  before_action :set_installment, only: [:destroy]
 
   def index
     authorize Installment
 
     if request.path == emails_path
       if current_seller.installments.alive.not_workflow_installment.scheduled.exists?
-        return redirect_to scheduled_emails_path, status: :moved_permanently
+        redirect_to scheduled_emails_path, status: :moved_permanently
       else
-        return redirect_to published_emails_path, status: :moved_permanently
+        redirect_to published_emails_path, status: :moved_permanently
       end
     end
   end
@@ -34,4 +35,21 @@ class EmailsController < Sellers::BaseController
     presenter = PaginatedInstallmentsPresenter.new(seller: current_seller, type: Installment::SCHEDULED, page: 1)
     render inertia: "Emails/Scheduled", props: presenter.props
   end
+
+  def destroy
+    authorize @installment
+
+    if @installment.mark_deleted
+      @installment.installment_rule&.mark_deleted!
+      redirect_back fallback_location: published_emails_path, notice: "Email deleted!"
+    else
+      redirect_back fallback_location: published_emails_path, alert: "Sorry, something went wrong. Please try again."
+    end
+  end
+
+  private
+    def set_installment
+      @installment = current_seller.installments.alive.find_by_external_id(params[:id])
+      e404 unless @installment
+    end
 end

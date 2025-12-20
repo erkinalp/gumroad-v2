@@ -69,4 +69,35 @@ describe EmailsController, inertia: true do
       expect(inertia.props[:installments].map { _1[:external_id] }).to eq([scheduled_installment.external_id])
     end
   end
+
+  describe "DELETE destroy" do
+    let(:installment) { create(:installment, seller:, published_at: 1.day.ago) }
+
+    it_behaves_like "authorize called for action", :delete, :destroy do
+      let(:record) { installment }
+      let(:request_params) { { id: installment.external_id } }
+    end
+
+    it "marks the installment as deleted and redirects back" do
+      delete :destroy, params: { id: installment.external_id }
+
+      expect(response).to redirect_to(published_emails_path)
+      expect(flash[:notice]).to eq("Email deleted!")
+      expect(installment.reload.deleted_at).to be_present
+    end
+
+    it "marks the associated installment rule as deleted" do
+      installment_rule = create(:installment_rule, installment:)
+
+      delete :destroy, params: { id: installment.external_id }
+
+      expect(installment_rule.reload.deleted_at).to be_present
+    end
+
+    it "returns 404 for non-existent installment" do
+      expect do
+        delete :destroy, params: { id: "non_existent" }
+      end.to raise_error(ActionController::RoutingError)
+    end
+  end
 end
