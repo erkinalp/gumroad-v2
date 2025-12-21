@@ -6,6 +6,7 @@ import { assertResponseError, request, ResponseError } from "$app/utils/request"
 import { Button } from "$app/components/Button";
 import { LoadingSpinner } from "$app/components/LoadingSpinner";
 import { showAlert } from "$app/components/server-components/Alert";
+import { Alert } from "$app/components/ui/Alert";
 
 import AdminProductPurchase, { ProductPurchase } from "./Purchase";
 
@@ -83,9 +84,9 @@ const AdminProductPurchasesContent = ({
 
   if (purchases.length === 0 && !isLoading)
     return (
-      <div className="info" role="status">
+      <Alert role="status" variant="info">
         No purchases have been made.
-      </div>
+      </Alert>
     );
 
   const selectedCount = selectedPurchaseExternalIds.length;
