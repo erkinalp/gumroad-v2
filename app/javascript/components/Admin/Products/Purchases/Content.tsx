@@ -43,16 +43,7 @@ const AdminProductPurchasesContent = ({
 
   return (
     <div className="flex flex-col gap-4">
-      <div
-        className="mass-refund-toolbar"
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          gap: "0.75rem",
-          flexWrap: "wrap",
-        }}
-      >
+      <div className="mass-refund-toolbar flex flex-wrap items-center justify-between gap-3">
         <div>
           {selectedCount > 0
             ? `${selectedCount} ${selectedCount === 1 ? "purchase selected" : "purchases selected"}`
