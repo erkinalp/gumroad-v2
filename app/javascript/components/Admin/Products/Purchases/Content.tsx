@@ -101,7 +101,7 @@ const AdminProductPurchasesContent = ({
             ? `${selectedCount} ${selectedCount === 1 ? "purchase selected" : "purchases selected"}`
             : "Select purchases to refund for fraud"}
         </div>
-        <div className="button-group">
+        <div className="flex items-center gap-2">
           {!allSelectableSelected && selectablePurchases.length > 0 ? (
             <Button small outline onClick={selectAll} disabled={isMassRefunding}>
               Select all
