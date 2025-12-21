@@ -139,14 +139,11 @@ describe "Admin::LinksController Scenario", type: :system, js: true do
       visit admin_link_path(product.unique_permalink)
 
       toggle_disclosure("Purchases")
-      wait_for_ajax
-
       expect(page).to have_text("Select purchases to refund for fraud")
       expect(page).to have_button("Refund for Fraud", disabled: true)
 
       checkboxes = all("input[type='checkbox']")
       checkboxes.first.check
-      wait_for_ajax
 
       expect(page).to have_text("1 purchase selected")
       expect(page).to have_button("Refund for Fraud", disabled: false)
@@ -157,10 +154,9 @@ describe "Admin::LinksController Scenario", type: :system, js: true do
       visit admin_link_path(product.unique_permalink)
 
       toggle_disclosure("Purchases")
-      wait_for_ajax
+      expect(page).to have_text("Select purchases to refund for fraud")
 
       click_on("Select all")
-      wait_for_ajax
 
       expect(page).to have_text("2 purchases selected")
       expect(page).to have_button("Clear selection")
@@ -171,12 +167,12 @@ describe "Admin::LinksController Scenario", type: :system, js: true do
       visit admin_link_path(product.unique_permalink)
 
       toggle_disclosure("Purchases")
-      wait_for_ajax
+      expect(page).to have_text("Select purchases to refund for fraud")
 
       click_on("Select all")
-      wait_for_ajax
+      expect(page).to have_text("2 purchases selected")
+
       click_on("Clear selection")
-      wait_for_ajax
 
       expect(page).to have_text("Select purchases to refund for fraud")
       expect(page).to have_button("Refund for Fraud", disabled: true)
@@ -186,15 +182,14 @@ describe "Admin::LinksController Scenario", type: :system, js: true do
       visit admin_link_path(product.unique_permalink)
 
       toggle_disclosure("Purchases")
-      wait_for_ajax
+      expect(page).to have_text("Select purchases to refund for fraud")
 
       click_on("Select all")
-      wait_for_ajax
+      expect(page).to have_text("2 purchases selected")
 
       accept_confirm do
         click_on("Refund for Fraud")
       end
-      wait_for_ajax
 
       expect(page).to have_alert(text: "Processing 2 fraud refunds")
       expect(MassRefundForFraudJob).to have_enqueued_sidekiq_job(

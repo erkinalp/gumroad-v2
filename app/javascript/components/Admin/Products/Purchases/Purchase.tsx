@@ -18,15 +18,7 @@ export type ProductPurchase = {
 };
 
 const AdminProductPurchase = ({
-  purchase,
-  isSelected,
-  onToggleSelection,
-}: {
-  purchase: ProductPurchase;
-  isSelected: boolean;
-  onToggleSelection: (purchaseId: string, selected: boolean) => void;
-}) => {
-  const {
+  purchase: {
     external_id,
     displayed_price,
     gumroad_responsible_for_tax,
@@ -40,8 +32,14 @@ const AdminProductPurchase = ({
     is_chargeback_reversed,
     email,
     created,
-  } = purchase;
-
+  },
+  isSelected,
+  onToggleSelection,
+}: {
+  purchase: ProductPurchase;
+  isSelected: boolean;
+  onToggleSelection: (purchaseId: string, selected: boolean) => void;
+}) => {
   const isSelectable = stripe_refunded !== true;
 
   return (

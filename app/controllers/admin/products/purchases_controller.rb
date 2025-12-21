@@ -18,7 +18,7 @@ class Admin::Products::PurchasesController < Admin::Products::BaseController
   end
 
   def mass_refund_for_fraud
-    external_ids = mass_refund_for_fraud_external_ids
+    external_ids = params[:purchase_ids].reject(&:blank?).uniq
 
     if external_ids.empty?
       render json: { success: false, message: "Select at least one purchase." }, status: :unprocessable_entity
@@ -41,9 +41,4 @@ class Admin::Products::PurchasesController < Admin::Products::BaseController
       message: "Processing #{external_ids.size} fraud refunds..."
     }
   end
-
-  private
-    def mass_refund_for_fraud_external_ids
-      Array(params[:purchase_ids]).map(&:to_s).reject(&:blank?).uniq
-    end
 end
