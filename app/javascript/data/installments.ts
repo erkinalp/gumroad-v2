@@ -64,6 +64,7 @@ export type DraftInstallment = SavedInstallment & {
 };
 
 export type Pagination = {
+  page: number;
   count: number;
   next: number | null;
 };

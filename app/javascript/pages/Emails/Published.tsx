@@ -34,10 +34,30 @@ export default function EmailsPublished() {
   const [installmentToDelete, setInstallmentToDelete] = React.useState<PublishedInstallment | null>(null);
   const [query, setQuery] = React.useState("");
 
+  // Accumulate installments across pages
+  const [allInstallments, setAllInstallments] = React.useState(installments);
+  React.useEffect(() => {
+    if (pagination.page === 1) {
+      // Reset when on first page (initial load or search)
+      setAllInstallments(installments);
+    } else {
+      // Append new installments for subsequent pages
+      setAllInstallments((prev) => {
+        const existingIds = new Set(prev.map((i) => i.external_id));
+        const newInstallments = installments.filter((i) => !existingIds.has(i.external_id));
+        return [...prev, ...newInstallments];
+      });
+    }
+  }, [installments, pagination.page]);
+
   const handleQueryChange = React.useCallback((newQuery: string) => {
     setQuery(newQuery);
     router.reload({ data: { query: newQuery || undefined } });
   }, []);
+
+  const handleLoadMore = React.useCallback(() => {
+    router.reload({ data: { page: pagination.next, query: query || undefined } });
+  }, [pagination.next, query]);
 
   const deleteForm = useForm({});
   const handleDelete = () => {
@@ -46,6 +66,8 @@ export default function EmailsPublished() {
       onSuccess: () => {
         setInstallmentToDelete(null);
         setSelectedInstallment(null);
+        // Remove deleted installment from accumulated list
+        setAllInstallments((prev) => prev.filter((i) => i.external_id !== installmentToDelete.external_id));
       },
       onError: () => {
         showAlert("Sorry, something went wrong. Please try again.", "error");
@@ -58,7 +80,7 @@ export default function EmailsPublished() {
   return (
     <EmailsLayout selectedTab="published" hasPosts={has_posts} query={query} onQueryChange={handleQueryChange}>
       <div className="space-y-4 p-4 md:p-8">
-        {installments.length > 0 ? (
+        {allInstallments.length > 0 ? (
           <>
             <Table aria-live="polite" aria-label="Published">
               <TableHeader>
@@ -81,7 +103,7 @@ export default function EmailsPublished() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {installments.map((installment) => (
+                {allInstallments.map((installment) => (
                   <TableRow
                     key={installment.external_id}
                     selected={installment.external_id === selectedInstallment?.external_id}
@@ -140,12 +162,7 @@ export default function EmailsPublished() {
               </TableBody>
             </Table>
             {pagination.next ? (
-              <Button
-                color="primary"
-                onClick={() => {
-                  router.reload({ data: { page: pagination.next } });
-                }}
-              >
+              <Button color="primary" onClick={handleLoadMore}>
                 Load more
               </Button>
             ) : null}

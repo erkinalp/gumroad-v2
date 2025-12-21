@@ -21,7 +21,7 @@ class PaginatedInstallmentsPresenter
       installments = installments.ordered_updates(seller, type).public_send(type)
       installments = installments.unscope(:order).order("installment_rules.to_be_published_at ASC") if type == Installment::SCHEDULED
       pagination, installments = pagy(installments, page:, limit: PER_PAGE, overflow: :empty_page)
-      pagiation_metadata = { count: pagination.count, next: pagination.next }
+      pagiation_metadata = { page: pagination.page, count: pagination.count, next: pagination.next }
     else
       offset = (page - 1) * PER_PAGE
       search_options = {
@@ -38,7 +38,7 @@ class PaginatedInstallmentsPresenter
       es_search = InstallmentSearchService.search(search_options)
       installments = es_search.records.load
       can_paginate_further = es_search.results.total > (offset + PER_PAGE)
-      pagiation_metadata = { count: es_search.results.total, next: can_paginate_further ? page + 1 : nil }
+      pagiation_metadata = { page:, count: es_search.results.total, next: can_paginate_further ? page + 1 : nil }
     end
 
     {

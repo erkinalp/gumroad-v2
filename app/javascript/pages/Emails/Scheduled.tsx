@@ -46,14 +46,34 @@ export default function EmailsScheduled() {
   const userAgentInfo = useUserAgentInfo();
   const [query, setQuery] = React.useState("");
 
+  // Accumulate installments across pages
+  const [allInstallments, setAllInstallments] = React.useState(installments);
+  React.useEffect(() => {
+    if (pagination.page === 1) {
+      // Reset when on first page (initial load or search)
+      setAllInstallments(installments);
+    } else {
+      // Append new installments for subsequent pages
+      setAllInstallments((prev) => {
+        const existingIds = new Set(prev.map((i) => i.external_id));
+        const newInstallments = installments.filter((i) => !existingIds.has(i.external_id));
+        return [...prev, ...newInstallments];
+      });
+    }
+  }, [installments, pagination.page]);
+
   const handleQueryChange = React.useCallback((newQuery: string) => {
     setQuery(newQuery);
     router.reload({ data: { query: newQuery || undefined } });
   }, []);
 
+  const handleLoadMore = React.useCallback(() => {
+    router.reload({ data: { page: pagination.next, query: query || undefined } });
+  }, [pagination.next, query]);
+
   const installmentsByDate = React.useMemo(
     () =>
-      installments.reduce<Record<string, ScheduledInstallment[]>>((acc, installment) => {
+      allInstallments.reduce<Record<string, ScheduledInstallment[]>>((acc, installment) => {
         const date = new Date(installment.to_be_published_at).toLocaleDateString(userAgentInfo.locale, {
           month: "short",
           day: "numeric",
@@ -64,11 +84,11 @@ export default function EmailsScheduled() {
         acc[date].push(installment);
         return acc;
       }, {}),
-    [installments, userAgentInfo.locale, currentSeller.timeZone.name],
+    [allInstallments, userAgentInfo.locale, currentSeller.timeZone.name],
   );
   const [audienceCounts, setAudienceCounts] = React.useState<AudienceCounts>(new Map());
   React.useEffect(() => {
-    installments.forEach(
+    allInstallments.forEach(
       asyncVoid(async ({ external_id }) => {
         if (audienceCounts.has(external_id)) return;
         setAudienceCounts((prev) => new Map(prev).set(external_id, "loading"));
@@ -81,7 +101,7 @@ export default function EmailsScheduled() {
         }
       }),
     );
-  }, [installments]);
+  }, [allInstallments]);
   const [selectedInstallment, setSelectedInstallment] = React.useState<ScheduledInstallment | null>(null);
   const [installmentToDelete, setInstallmentToDelete] = React.useState<ScheduledInstallment | null>(null);
 
@@ -92,6 +112,8 @@ export default function EmailsScheduled() {
       onSuccess: () => {
         setInstallmentToDelete(null);
         setSelectedInstallment(null);
+        // Remove deleted installment from accumulated list
+        setAllInstallments((prev) => prev.filter((i) => i.external_id !== installmentToDelete.external_id));
       },
       onError: () => {
         showAlert("Sorry, something went wrong. Please try again.", "error");
@@ -102,7 +124,7 @@ export default function EmailsScheduled() {
   return (
     <EmailsLayout selectedTab="scheduled" hasPosts={has_posts} query={query} onQueryChange={handleQueryChange}>
       <div className="space-y-4 p-4 md:p-8">
-        {installments.length > 0 ? (
+        {allInstallments.length > 0 ? (
           <>
             {Object.keys(installmentsByDate).map((date) => (
               <Table key={date} aria-live="polite" className="mb-16">
@@ -143,12 +165,7 @@ export default function EmailsScheduled() {
               </Table>
             ))}
             {pagination.next ? (
-              <Button
-                color="primary"
-                onClick={() => {
-                  router.reload({ data: { page: pagination.next } });
-                }}
-              >
+              <Button color="primary" onClick={handleLoadMore}>
                 Load more
               </Button>
             ) : null}
