@@ -8,6 +8,7 @@ import { Button } from "$app/components/Button";
 import { FlashError } from "$app/components/FlashError";
 import { PasswordInput } from "$app/components/PasswordInput";
 import { Separator } from "$app/components/Separator";
+import { Alert } from "$app/components/ui/Alert";
 import { useOriginalLocation } from "$app/components/useOriginalLocation";
 import { RecaptchaCancelledError, useRecaptcha } from "$app/components/useRecaptcha";
 
