@@ -41,10 +41,10 @@ export const BundleProductItem = ({
 
   return (
     <CartItem key={bundleProduct.id} isBundleItem className="group/bundle">
-      <CartItemMedia className="h-20 w-20 overflow-hidden rounded-none border-none group-first/bundle:rounded-tl group-last/bundle:rounded-bl">
+      <CartItemMedia className="h-20 w-20">
         <Thumbnail url={bundleProduct.thumbnail_url} nativeType={bundleProduct.native_type} />
       </CartItemMedia>
-      <CartItemMain className="h-20 justify-center self-stretch border-l border-border p-4">
+      <CartItemMain className="h-20">
         <CartItemTitle>{bundleProduct.name}</CartItemTitle>
         <span className="sr-only">Qty: {bundleProduct.quantity}</span>
         {selectedVariant ? (

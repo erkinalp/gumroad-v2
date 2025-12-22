@@ -3,6 +3,17 @@ import * as React from "react";
 
 import { classNames } from "$app/utils/classNames";
 
+type CartItemContextValue = {
+  isBundleItem: boolean;
+};
+
+const CartItemContext = React.createContext<CartItemContextValue | null>(null);
+
+const useCartItemContext = () => {
+  const context = React.useContext(CartItemContext);
+  return context ?? { isBundleItem: false };
+};
+
 type BaseProps = {
   children: React.ReactNode;
   className?: string;
@@ -19,34 +30,45 @@ export const CartItem = ({
   children,
   extra,
   asChild = false,
-  isBundleItem,
+  isBundleItem = false,
   ...props
 }: BaseProps & { asChild?: boolean; extra?: React.ReactNode; isBundleItem?: boolean }) => {
   const Comp = asChild ? Slot : "div";
   const paddingClasses = isBundleItem ? "p-0" : "px-3 py-4 sm:p-5";
   const rowGapClasses = isBundleItem ? "gap-0" : "gap-3 sm:gap-5";
+  const contextValue = React.useMemo(() => ({ isBundleItem }), [isBundleItem]);
 
   return (
-    <Comp role="listitem" className={classNames("border-border not-first:border-t", className)} {...props}>
-      <>
-        <section className={classNames("flex flex-row", rowGapClasses, paddingClasses)}>{children}</section>
-        {extra ? <section className="flex flex-col gap-4 border-border p-4 pt-0">{extra}</section> : null}
-      </>
-    </Comp>
+    <CartItemContext.Provider value={contextValue}>
+      <Comp role="listitem" className={classNames("border-border not-first:border-t", className)} {...props}>
+        <>
+          <section className={classNames("flex flex-row", rowGapClasses, paddingClasses)}>{children}</section>
+          {extra ? <section className="flex flex-col gap-4 border-border p-4 pt-0">{extra}</section> : null}
+        </>
+      </Comp>
+    </CartItemContext.Provider>
   );
 };
 
-export const CartItemMedia = ({ className, children, ...props }: BaseProps) => (
-  <figure
-    className={classNames(
-      "tailwind-override h-fit w-14 overflow-hidden rounded-sm border border-border bg-(image:--product-cover-placeholder) bg-cover bg-center dark:bg-(image:--product-cover-placeholder-dark)",
-      className,
-    )}
-    {...props}
-  >
-    {children}
-  </figure>
-);
+export const CartItemMedia = ({ className, children, ...props }: BaseProps) => {
+  const { isBundleItem } = useCartItemContext();
+  const bundleClasses = isBundleItem
+    ? "rounded-none border-none group-first/bundle:rounded-tl group-last/bundle:rounded-bl"
+    : "";
+
+  return (
+    <figure
+      className={classNames(
+        "tailwind-override h-fit w-14 overflow-hidden rounded-sm border border-border bg-(image:--product-cover-placeholder) bg-cover bg-center dark:bg-(image:--product-cover-placeholder-dark)",
+        bundleClasses,
+        className,
+      )}
+      {...props}
+    >
+      {children}
+    </figure>
+  );
+};
 
 export const CartItemQuantity = ({ className, children, ...props }: BaseProps & { label?: string }) => (
   <div
@@ -61,11 +83,16 @@ export const CartItemQuantity = ({ className, children, ...props }: BaseProps & 
   </div>
 );
 
-export const CartItemMain = ({ className, children, ...props }: BaseProps) => (
-  <section className={classNames("flex flex-1 flex-col gap-1", className)} {...props}>
-    {children}
-  </section>
-);
+export const CartItemMain = ({ className, children, ...props }: BaseProps) => {
+  const { isBundleItem } = useCartItemContext();
+  const bundleClasses = isBundleItem ? "justify-center self-stretch border-l border-border p-4" : "";
+
+  return (
+    <section className={classNames("flex flex-1 flex-col gap-1", bundleClasses, className)} {...props}>
+      {children}
+    </section>
+  );
+};
 
 export const CartItemTitle = ({
   className,

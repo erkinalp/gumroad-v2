@@ -401,10 +401,10 @@ export const Product = ({
                 });
                 return (
                   <CartItem key={bundleProduct.id} isBundleItem className="group/bundle">
-                    <CartItemMedia className="h-28 w-28 overflow-hidden rounded-tl-none rounded-tr-none rounded-br-none rounded-bl-none border-none group-first/bundle:rounded-tl-[3px] group-last/bundle:rounded-bl-[3px]">
+                    <CartItemMedia className="h-28 w-28">
                       <Thumbnail url={bundleProduct.thumbnail_url} nativeType={bundleProduct.native_type} />
                     </CartItemMedia>
-                    <CartItemMain className="h-28 justify-center self-stretch border-l border-border p-4">
+                    <CartItemMain className="h-28">
                       <CartItemTitle asChild>
                         <a href={bundleProduct.url}>
                           <h4 className="font-bold">{bundleProduct.name}</h4>

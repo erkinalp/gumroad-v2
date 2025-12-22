@@ -484,13 +484,13 @@ const CartItemComponent = ({
             <CartItemList className="overflow-hidden">
               {item.product.bundle_products.map((bundleProduct) => (
                 <CartItem key={bundleProduct.product_id} isBundleItem>
-                  <CartItemMedia className="h-20 w-20 rounded-none border-none">
+                  <CartItemMedia className="h-20 w-20">
                     <a href={item.product.url}>
                       <Thumbnail url={item.product.thumbnail_url} nativeType={item.product.native_type} />
                     </a>
                   </CartItemMedia>
                   <span className="sr-only">Qty: {bundleProduct.quantity || item.quantity}</span>
-                  <CartItemMain className="h-20 justify-center self-stretch border-l border-border p-4">
+                  <CartItemMain className="h-20">
                     <CartItemTitle className="line-clamp-1">{bundleProduct.name}</CartItemTitle>
                     {bundleProduct.variant ? (
                       <CartItemFooter className="line-clamp-1">
