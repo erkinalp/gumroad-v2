@@ -3,7 +3,6 @@
 class EmailsController < Sellers::BaseController
   layout "inertia", only: [:published, :scheduled]
 
-  before_action :set_body_id_as_app, only: [:index]
   before_action :set_installment, only: [:destroy]
 
   def index
@@ -16,6 +15,8 @@ class EmailsController < Sellers::BaseController
         redirect_to published_emails_path, status: :moved_permanently
       end
     end
+    @title = "Emails"
+    @body_id = "app"  # Only set for catch-all routes like /emails/drafts
   end
 
   def published
