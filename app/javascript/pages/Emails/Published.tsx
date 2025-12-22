@@ -1,4 +1,4 @@
-import { router, useForm, usePage } from "@inertiajs/react";
+import { usePage } from "@inertiajs/react";
 import React from "react";
 import { cast } from "ts-safe-cast";
 
@@ -8,77 +8,43 @@ import { formatStatNumber } from "$app/utils/formatStatNumber";
 
 import { Button, NavigationButton } from "$app/components/Button";
 import { useCurrentSeller } from "$app/components/CurrentSeller";
+import { DeleteEmailModal } from "$app/components/EmailsPage/DeleteEmailModal";
+import { EmptyStatePlaceholder } from "$app/components/EmailsPage/EmptyStatePlaceholder";
 import { EditEmailButton, EmailsLayout, NewEmailButton } from "$app/components/EmailsPage/Layout";
+import { ViewEmailButton } from "$app/components/EmailsPage/ViewEmailButton";
 import { Icon } from "$app/components/Icons";
-import { Modal } from "$app/components/Modal";
-import { showAlert } from "$app/components/server-components/Alert";
 import { Sheet, SheetHeader } from "$app/components/ui/Sheet";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "$app/components/ui/Table";
 import { useUserAgentInfo } from "$app/components/UserAgent";
 import { WithTooltip } from "$app/components/WithTooltip";
 
+import { useDebouncedSearch } from "$app/hooks/useDebouncedSearch";
+import { usePaginatedAccumulation } from "$app/hooks/usePaginatedAccumulation";
+
 import publishedPlaceholder from "$assets/images/placeholders/published_posts.png";
-import { EmptyStatePlaceholder } from "$app/components/EmailsPage/EmptyStatePlaceholder";
-import { ViewEmailButton } from "$app/components/EmailsPage/ViewEmailButton";
 
 type PageProps = {
   installments: PublishedInstallment[];
   pagination: Pagination;
-  has_posts: boolean;
 };
 
 export default function EmailsPublished() {
-  const { installments, pagination, has_posts } = cast<PageProps>(usePage().props);
+  const { installments, pagination } = cast<PageProps>(usePage().props);
   const currentSeller = assertDefined(useCurrentSeller(), "currentSeller is required");
-  const [selectedInstallment, setSelectedInstallment] = React.useState<PublishedInstallment | null>(null);
-  const [installmentToDelete, setInstallmentToDelete] = React.useState<PublishedInstallment | null>(null);
-  const [query, setQuery] = React.useState("");
-
-  // Accumulate installments across pages
-  const [allInstallments, setAllInstallments] = React.useState(installments);
-  React.useEffect(() => {
-    if (pagination.page === 1) {
-      // Reset when on first page (initial load or search)
-      setAllInstallments(installments);
-    } else {
-      // Append new installments for subsequent pages
-      setAllInstallments((prev) => {
-        const existingIds = new Set(prev.map((i) => i.external_id));
-        const newInstallments = installments.filter((i) => !existingIds.has(i.external_id));
-        return [...prev, ...newInstallments];
-      });
-    }
-  }, [installments, pagination.page]);
-
-  const handleQueryChange = React.useCallback((newQuery: string) => {
-    setQuery(newQuery);
-    router.reload({ data: { query: newQuery || undefined } });
-  }, []);
-
-  const handleLoadMore = React.useCallback(() => {
-    router.reload({ data: { page: pagination.next, query: query || undefined } });
-  }, [pagination.next, query]);
-
-  const deleteForm = useForm({});
-  const handleDelete = () => {
-    if (!installmentToDelete) return;
-    deleteForm.delete(Routes.email_path(installmentToDelete.external_id), {
-      onSuccess: () => {
-        setInstallmentToDelete(null);
-        setSelectedInstallment(null);
-        // Remove deleted installment from accumulated list
-        setAllInstallments((prev) => prev.filter((i) => i.external_id !== installmentToDelete.external_id));
-      },
-      onError: () => {
-        showAlert("Sorry, something went wrong. Please try again.", "error");
-      },
-    });
-  };
-
   const userAgentInfo = useUserAgentInfo();
 
+  const { query, setQuery } = useDebouncedSearch();
+  const {
+    allItems: allInstallments,
+    setAllItems: setAllInstallments,
+    handleLoadMore,
+  } = usePaginatedAccumulation(installments, pagination, query);
+
+  const [selectedInstallment, setSelectedInstallment] = React.useState<PublishedInstallment | null>(null);
+  const [installmentToDelete, setInstallmentToDelete] = React.useState<PublishedInstallment | null>(null);
+
   return (
-    <EmailsLayout selectedTab="published" hasPosts={has_posts} query={query} onQueryChange={handleQueryChange}>
+    <EmailsLayout selectedTab="published" hasPosts={!!allInstallments.length} query={query} onQueryChange={setQuery}>
       <div className="space-y-4 p-4 md:p-8">
         {allInstallments.length > 0 ? (
           <>
@@ -224,29 +190,19 @@ export default function EmailsPublished() {
                 </div>
               </Sheet>
             ) : null}
-            {installmentToDelete ? (
-              <Modal
-                open
-                allowClose={!deleteForm.processing}
-                onClose={() => setInstallmentToDelete(null)}
-                title="Delete email?"
-                footer={
-                  <>
-                    <Button disabled={deleteForm.processing} onClick={() => setInstallmentToDelete(null)}>
-                      Cancel
-                    </Button>
-                    <Button color="danger" disabled={deleteForm.processing} onClick={handleDelete}>
-                      {deleteForm.processing ? "Deleting..." : "Delete email"}
-                    </Button>
-                  </>
-                }
-              >
-                <h4>
-                  Are you sure you want to delete the email "{installmentToDelete.name}"? Customers who had access will
-                  no longer be able to see it. This action cannot be undone.
-                </h4>
-              </Modal>
-            ) : null}
+            <DeleteEmailModal
+              installment={installmentToDelete}
+              onClose={() => setInstallmentToDelete(null)}
+              onSuccess={(deleted) => {
+                setSelectedInstallment(null);
+                setAllInstallments((prev) => prev.filter((i) => i.external_id !== deleted.external_id));
+              }}
+              confirmationMessage={
+                installmentToDelete
+                  ? `Are you sure you want to delete the email "${installmentToDelete.name}"? Customers who had access will no longer be able to see it. This action cannot be undone.`
+                  : undefined
+              }
+            />
           </>
         ) : (
           <EmptyStatePlaceholder

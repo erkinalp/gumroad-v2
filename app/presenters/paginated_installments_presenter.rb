@@ -3,7 +3,7 @@
 class PaginatedInstallmentsPresenter
   include Pagy::Backend
 
-  PER_PAGE = 25
+  PER_PAGE = 7
   private_constant :PER_PAGE
 
   def initialize(seller:, type:, page: nil, query: nil)
@@ -17,7 +17,10 @@ class PaginatedInstallmentsPresenter
 
   def props
     if query.blank?
-      installments = Installment.includes(:installment_rule).all
+      # Always include :seller (needed for full_url -> user -> seller.presence)
+      # Only include :installment_rule for scheduled/draft (not needed for published)
+      installments = Installment.includes(:seller)
+      installments = installments.includes(:installment_rule) if type != Installment::PUBLISHED
       installments = installments.ordered_updates(seller, type).public_send(type)
       installments = installments.unscope(:order).order("installment_rules.to_be_published_at ASC") if type == Installment::SCHEDULED
       pagination, installments = pagy(installments, page:, limit: PER_PAGE, overflow: :empty_page)
@@ -36,7 +39,10 @@ class PaginatedInstallmentsPresenter
         sort: [:_score, { created_at: :desc }, { id: :desc }]
       }
       es_search = InstallmentSearchService.search(search_options)
-      installments = es_search.records.load
+      # Include associations to avoid N+1 queries
+      includes_list = [:seller]
+      includes_list << :installment_rule if type != Installment::PUBLISHED
+      installments = es_search.records.includes(*includes_list).load
       can_paginate_further = es_search.results.total > (offset + PER_PAGE)
       pagiation_metadata = { page:, count: es_search.results.total, next: can_paginate_further ? page + 1 : nil }
     end
@@ -44,7 +50,6 @@ class PaginatedInstallmentsPresenter
     {
       installments: installments.map { InstallmentPresenter.new(seller:, installment: _1).props },
       pagination: pagiation_metadata,
-      has_posts: seller.installments.alive.not_workflow_installment.published.exists?,
     }
   end
 

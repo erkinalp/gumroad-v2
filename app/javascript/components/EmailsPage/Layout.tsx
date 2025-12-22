@@ -30,12 +30,11 @@ type LayoutProps = {
   selectedTab: EmailTab;
   children: React.ReactNode;
   hasPosts?: boolean;
-  query?: string;
-  onQueryChange?: (query: string) => void;
-  hideNewButton?: boolean;
+  query: string;
+  onQueryChange: (query: string) => void;
 };
 
-export const EmailsLayout = ({ selectedTab, children, hasPosts, query, onQueryChange, hideNewButton }: LayoutProps) => {
+export const EmailsLayout = ({ selectedTab, children, hasPosts, query, onQueryChange }: LayoutProps) => {
   const searchInputRef = React.useRef<HTMLInputElement>(null);
   const [isSearchPopoverOpen, setIsSearchPopoverOpen] = React.useState(false);
 
@@ -49,7 +48,7 @@ export const EmailsLayout = ({ selectedTab, children, hasPosts, query, onQueryCh
         title="Emails"
         actions={
           <>
-            {hasPosts && onQueryChange ? (
+            {hasPosts ? (
               <Popover
                 open={isSearchPopoverOpen}
                 onToggle={setIsSearchPopoverOpen}
@@ -68,13 +67,13 @@ export const EmailsLayout = ({ selectedTab, children, hasPosts, query, onQueryCh
                     ref={searchInputRef}
                     type="text"
                     placeholder="Search emails"
-                    value={query ?? ""}
+                    value={query}
                     onChange={(evt) => onQueryChange(evt.target.value)}
                   />
                 </div>
               </Popover>
             ) : null}
-            {!hideNewButton && <NewEmailButton />}
+            <NewEmailButton />
           </>
         }
       >
