@@ -5,11 +5,11 @@ import { ForgotPasswordForm } from "$app/components/Authentication/ForgotPasswor
 import { Layout } from "$app/components/Authentication/Layout";
 import { SocialAuth } from "$app/components/Authentication/SocialAuth";
 import { Button } from "$app/components/Button";
-import { WarningFlash } from "$app/components/WarningFlashMessage";
 import { PasswordInput } from "$app/components/PasswordInput";
 import { Separator } from "$app/components/Separator";
 import { useOriginalLocation } from "$app/components/useOriginalLocation";
 import { RecaptchaCancelledError, useRecaptcha } from "$app/components/useRecaptcha";
+import { WarningFlash } from "$app/components/WarningFlashMessage";
 
 type PageProps = {
   email: string | null;
