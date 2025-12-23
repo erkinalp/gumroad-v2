@@ -59,10 +59,10 @@ export default function EmailsDrafts() {
 
   const handleLoadMore = () => {
     if (!pagination.next) return;
-    setIsLoadingMore(true);
     router.reload({
       data: { page: pagination.next, query: query || undefined },
       only: ["installments", "pagination"],
+      onStart: () => setIsLoadingMore(true),
       onFinish: () => setIsLoadingMore(false),
     });
   };

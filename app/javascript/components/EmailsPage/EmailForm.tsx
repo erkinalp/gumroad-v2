@@ -1,6 +1,6 @@
 import { Link, router, useForm } from "@inertiajs/react";
 import { DirectUpload } from "@rails/activestorage";
-import { Content, Editor, JSONContent } from "@tiptap/core";
+import { Editor, JSONContent } from "@tiptap/core";
 import cx from "classnames";
 import { addHours, format, startOfDay, startOfHour } from "date-fns";
 import React from "react";
@@ -243,14 +243,13 @@ export const EmailForm = ({ context, installment }: EmailFormProps) => {
   });
 
   const handleMessageChange = useDebouncedCallback((newMessage: string) => {
-    form.setData("installment", { ...form.data.installment, message: newMessage });
+    form.setData("installment.message", newMessage);
   }, 500);
 
-  const [initialMessage, setInitialMessage] = React.useState<Content>(form.data.installment.message);
   const [messageEditor, setMessageEditor] = React.useState<Editor | null>(null);
   React.useEffect(() => {
-    if (initialMessage !== "" && messageEditor?.isEmpty) {
-      queueMicrotask(() => messageEditor.commands.setContent(initialMessage, true));
+    if (form.data.installment.message !== "" && messageEditor?.isEmpty) {
+      queueMicrotask(() => messageEditor.commands.setContent(form.data.installment.message, true));
     }
   }, [messageEditor]);
   const [scheduleDate, setScheduleDate] = React.useState<Date | null>(startOfHour(addHours(new Date(), 1)));
@@ -341,11 +340,11 @@ export const EmailForm = ({ context, installment }: EmailFormProps) => {
 
     if (template === "content_updates" && permalink) {
       const bought = searchParams.getAll("bought[]");
-      form.setData("installment", { ...form.data.installment, name: `New content added to ${productName}` });
+      form.setData("installment.name", `New content added to ${productName}`);
       setBought(bought);
       setAudienceType("customers");
       setChannel({ profile: false, email: true });
-      setInitialMessage({
+      form.setData("installment.message", JSON.stringify({
         type: "doc",
         content: [
           {
@@ -385,7 +384,7 @@ export const EmailForm = ({ context, installment }: EmailFormProps) => {
             ],
           },
         ],
-      });
+      }));
 
       return;
     }
@@ -398,8 +397,8 @@ export const EmailForm = ({ context, installment }: EmailFormProps) => {
         setAudienceType("customers");
         setBought([permalink]);
       }
-      form.setData("installment", { ...form.data.installment, name: `${productName} - updated!` });
-      setInitialMessage({
+      form.setData("installment.name", `${productName} - updated!`);
+      form.setData("installment.message", JSON.stringify({
         type: "doc",
         content: [
           {
@@ -412,7 +411,7 @@ export const EmailForm = ({ context, installment }: EmailFormProps) => {
             ],
           },
         ],
-      });
+      }));
     } else if (isBundleMarketing) {
       if (canSendToCustomers) {
         const permalinks = searchParams
@@ -425,8 +424,8 @@ export const EmailForm = ({ context, installment }: EmailFormProps) => {
       const bundleName = searchParams.get("bundle_name");
       const bundlePermalink = searchParams.get("bundle_permalink");
       if (bundleName && bundlePermalink) {
-        form.setData("installment", { ...form.data.installment, name: `Introducing ${bundleName}` });
-        setInitialMessage({ type: "doc", content: getBundleMarketingMessage(searchParams) });
+        form.setData("installment.name", `Introducing ${bundleName}`);
+        form.setData("installment.message", JSON.stringify({ type: "doc", content: getBundleMarketingMessage(searchParams) }));
       }
     }
   });
@@ -1084,7 +1083,7 @@ export const EmailForm = ({ context, installment }: EmailFormProps) => {
                     maxLength={255}
                     value={form.data.installment.name}
                     onChange={(e) => {
-                      form.setData("installment", { ...form.data.installment, name: e.target.value });
+                      form.setData("installment.name", e.target.value);
                       markFieldAsValid("title");
                     }}
                   />
@@ -1110,7 +1109,7 @@ export const EmailForm = ({ context, installment }: EmailFormProps) => {
                     className="textarea"
                     ariaLabel="Email message"
                     placeholder="Write a personalized message..."
-                    initialValue={initialMessage}
+                    initialValue={form.data.installment.message}
                     onChange={handleMessageChange}
                     onCreate={setMessageEditor}
                     extensions={[UpsellCard]}

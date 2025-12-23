@@ -53,10 +53,10 @@ export default function EmailsScheduled() {
 
   const handleLoadMore = () => {
     if (!pagination.next) return;
-    setIsLoadingMore(true);
     router.reload({
       data: { page: pagination.next },
       only: ["installments", "pagination"],
+      onStart: () => setIsLoadingMore(true),
       onFinish: () => setIsLoadingMore(false),
     });
   };

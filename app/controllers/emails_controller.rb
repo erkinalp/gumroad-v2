@@ -96,7 +96,7 @@ class EmailsController < Sellers::BaseController
   def destroy
     authorize @installment
     @installment.destroy
-    redirect_to emails_path, notice: "Email deleted!", status: :see_other
+    redirect_back_or_to emails_path, notice: "Email deleted!", status: :see_other
   end
 
   private

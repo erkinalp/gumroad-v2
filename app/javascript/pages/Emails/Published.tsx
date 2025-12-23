@@ -39,10 +39,10 @@ export default function EmailsPublished() {
 
   const handleLoadMore = () => {
     if (!pagination.next) return;
-    setIsLoadingMore(true);
     router.reload({
       data: { page: pagination.next },
       only: ["installments", "pagination"],
+      onStart: () => setIsLoadingMore(true),
       onFinish: () => setIsLoadingMore(false),
     });
   };
