@@ -649,7 +649,6 @@ describe "Products Page Scenario", type: :system, js: true do
           click_on "Archive"
         end
       end
-      wait_for_ajax
 
       expect(page).to have_tab_button("Archived")
       expect(page).not_to have_content(membership.name)
@@ -672,7 +671,6 @@ describe "Products Page Scenario", type: :system, js: true do
           click_on "Archive"
         end
       end
-      wait_for_ajax
 
       expect(page).to have_alert(text: "Product was archived and unpublished successfully")
       expect(page).to have_tab_button("Archived")
@@ -700,7 +698,6 @@ describe "Products Page Scenario", type: :system, js: true do
           click_on "Archive"
         end
       end
-      wait_for_ajax
 
       expect(page).to have_alert(text: "Product was archived successfully")
       expect(product.reload.archived?).to be(true)
