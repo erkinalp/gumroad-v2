@@ -107,7 +107,7 @@ export const NewEmailButton = ({ copyFrom, from }: { copyFrom?: string; from?: s
   const href = `/emails/new${params.toString() ? `?${params.toString()}` : ""}`;
 
   return (
-    <a className={cx("button", { accent: !copyFrom })} href={href} data-inertia="false">
+    <a className={cx("button", { accent: !copyFrom })} href={href}>
       {copyFrom ? "Duplicate" : "New email"}
     </a>
   );
@@ -116,7 +116,7 @@ export const NewEmailButton = ({ copyFrom, from }: { copyFrom?: string; from?: s
 export const EditEmailButton = ({ id, from }: { id: string; from?: string }) => {
   const href = from ? `/emails/${id}/edit?from=${encodeURIComponent(from)}` : `/emails/${id}/edit`;
   return (
-    <a className="button" href={href} data-inertia="false">
+    <a className="button" href={href}>
       Edit
     </a>
   );
