@@ -43,7 +43,7 @@ export default function EmailsDrafts() {
   const currentSeller = assertDefined(useCurrentSeller(), "currentSeller is required");
   const userAgentInfo = useUserAgentInfo();
 
-  const { query, setQuery, debouncedQuery } = useDebouncedSearch();
+  const { query, setQuery } = useDebouncedSearch();
 
   const [audienceCounts, setAudienceCounts] = React.useState<AudienceCounts>(new Map());
   React.useEffect(() => {
@@ -70,7 +70,7 @@ export default function EmailsDrafts() {
       <div className="space-y-4 p-4 md:p-8">
         {installments.length > 0 ? (
           <>
-            <InfiniteScroll data="installments" key={debouncedQuery} preserveUrl>
+            <InfiniteScroll data="installments" preserveUrl>
               <Table aria-live="polite" aria-label="Drafts">
                 <TableHeader>
                   <TableRow>

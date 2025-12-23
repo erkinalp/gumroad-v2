@@ -42,7 +42,7 @@ export default function EmailsScheduled() {
   const currentSeller = assertDefined(useCurrentSeller(), "currentSeller is required");
   const userAgentInfo = useUserAgentInfo();
 
-  const { query, setQuery, debouncedQuery } = useDebouncedSearch();
+  const { query, setQuery } = useDebouncedSearch();
 
   const installmentsByDate = React.useMemo(
     () =>
@@ -85,7 +85,7 @@ export default function EmailsScheduled() {
       <div className="space-y-4 p-4 md:p-8">
         {installments.length > 0 ? (
           <>
-            <InfiniteScroll data="installments" key={debouncedQuery} preserveUrl>
+            <InfiniteScroll data="installments" preserveUrl>
               {Object.keys(installmentsByDate).map((date) => (
                 <Table key={date} aria-live="polite" className="mb-16">
                   <TableCaption>Scheduled for {date}</TableCaption>

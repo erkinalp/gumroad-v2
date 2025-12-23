@@ -30,7 +30,7 @@ export default function EmailsPublished() {
   const currentSeller = assertDefined(useCurrentSeller(), "currentSeller is required");
   const userAgentInfo = useUserAgentInfo();
 
-  const { query, setQuery, debouncedQuery } = useDebouncedSearch();
+  const { query, setQuery } = useDebouncedSearch();
 
   const [selectedInstallment, setSelectedInstallment] = React.useState<PublishedInstallment | null>(null);
   const [installmentToDelete, setInstallmentToDelete] = React.useState<PublishedInstallment | null>(null);
@@ -40,7 +40,7 @@ export default function EmailsPublished() {
       <div className="space-y-4 p-4 md:p-8">
         {installments.length > 0 ? (
           <>
-            <InfiniteScroll data="installments" key={debouncedQuery} preserveUrl>
+            <InfiniteScroll data="installments" preserveUrl>
               <Table aria-live="polite" aria-label="Published">
                 <TableHeader>
                   <TableRow>
