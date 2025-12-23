@@ -46,5 +46,6 @@ class RedisKey
     def seller_age_threshold_days = "seller_age_threshold_days"
     def sales_report_jobs = "sales_report_jobs"
     def acme_challenge(token) = "acme_challenge:#{token}"
+    def unreviewed_users_count = "admin:unreviewed_users_count"
   end
 end

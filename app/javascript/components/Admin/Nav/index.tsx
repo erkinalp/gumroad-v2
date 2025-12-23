@@ -6,10 +6,16 @@ import { CloseOnNavigate } from "$app/components/CloseOnNavigate";
 import { useAppDomain } from "$app/components/DomainSettings";
 import { Nav as NavFramework, NavLink, InertiaNavLink, NavSection } from "$app/components/Nav";
 
-type PageProps = { title: string };
+type PageProps = { title: string; unreviewed_users_count: number | null };
+
+const CountBadge = ({ count }: { count: number }) => (
+  <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-pink px-1.5 text-xs text-black">
+    {count.toLocaleString()}
+  </span>
+);
 
 const Nav = () => {
-  const { title } = usePage<PageProps>().props;
+  const { title, unreviewed_users_count } = usePage<PageProps>().props;
   const routeParams = { host: useAppDomain() };
 
   return (
@@ -53,6 +59,7 @@ const Nav = () => {
           icon="people-fill"
           href={Routes.admin_unreviewed_users_url(routeParams)}
           component={Link}
+          badge={unreviewed_users_count ? <CountBadge count={unreviewed_users_count} /> : undefined}
         />
       </NavSection>
     </NavFramework>

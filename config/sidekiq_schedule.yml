@@ -3,6 +3,12 @@ find_expired_subscriptions_to_set_as_deactivated_worker:
   cron: "* * * * *" # Every minute
   class: FindExpiredSubscriptionsToSetAsDeactivatedWorker
 
+# Every 30 minutes
+compute_unreviewed_users_count:
+  cron: "*/30 * * * *" # Every 30 minutes
+  class: ComputeUnreviewedUsersCountWorker
+  description: Computes and caches the count of unreviewed users with unpaid balance for admin dashboard
+
 # Hourly
 renew_custom_domain_ssl_certificates:
   cron: "0 * * * *" # Every hour
