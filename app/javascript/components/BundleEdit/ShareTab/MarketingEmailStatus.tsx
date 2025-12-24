@@ -3,7 +3,7 @@ import * as React from "react";
 import { formatPriceCentsWithCurrencySymbol } from "$app/utils/currency";
 
 import { computeStandalonePrice, useBundleEditContext } from "$app/components/BundleEdit/state";
-import { NavigationButtonInertia } from "$app/components/NavigationButton";
+import { NavigationButton } from "$app/components/Button";
 import { Alert } from "$app/components/ui/Alert";
 
 export const MarketingEmailStatus = () => {
@@ -50,9 +50,9 @@ export const MarketingEmailStatus = () => {
             All customers
           </label>
         </fieldset>
-        <NavigationButtonInertia color="primary" href={Routes.new_email_path(queryParams)}>
+        <NavigationButton color="primary" href={Routes.new_email_path(queryParams)}>
           Draft and send
-        </NavigationButtonInertia>
+        </NavigationButton>
       </div>
     </Alert>
   );

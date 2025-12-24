@@ -12,7 +12,6 @@ import { CopyToClipboard } from "$app/components/CopyToClipboard";
 import { useCurrentSeller } from "$app/components/CurrentSeller";
 import { useDomains } from "$app/components/DomainSettings";
 import { Icon } from "$app/components/Icons";
-import { NavigationButtonInertia } from "$app/components/NavigationButton";
 import { Preview } from "$app/components/Preview";
 import { PreviewSidebar, WithPreviewSidebar } from "$app/components/PreviewSidebar";
 import { useImageUploadSettings } from "$app/components/RichTextEditor";
@@ -97,7 +96,7 @@ const NotifyAboutProductUpdatesAlert = () => {
             <Button color="primary" outline onClick={() => close()}>
               Skip for now
             </Button>
-            <NavigationButtonInertia
+            <NavigationButton
               color="primary"
               href={Routes.new_email_path({
                 template: "content_updates",
@@ -110,9 +109,10 @@ const NotifyAboutProductUpdatesAlert = () => {
                 setTimeout(() => close(), 100);
               }}
               target="_blank"
+              rel="noreferrer"
             >
               Send notification
-            </NavigationButtonInertia>
+            </NavigationButton>
           </div>
         </div>
       </Alert>

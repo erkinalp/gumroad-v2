@@ -1,4 +1,3 @@
-import { Link } from "@inertiajs/react";
 import { Node as TiptapNode } from "@tiptap/core";
 import { NodeViewProps, NodeViewWrapper, ReactNodeViewRenderer } from "@tiptap/react";
 import cx from "classnames";
@@ -89,7 +88,7 @@ const PostsNodeView = ({ editor, selected }: NodeViewProps) => {
               ) : (
                 <>
                   <h4 className="text-muted">Posts (emails) sent to customers of this product will appear here</h4>
-                  <Link href={Routes.new_email_path({ product: productPermalink })}>Create an email</Link>
+                  <a href={Routes.new_email_path({ product: productPermalink })}>Create an email</a>
                 </>
               )}
             </div>
