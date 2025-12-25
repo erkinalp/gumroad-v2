@@ -87,7 +87,7 @@ Payment.find(PAYMENT_ID).mark_failed!
 Or using payment external ID:
 
 ```ruby
-Payment.find_by_external_id(PAYMENT_EXTERNAL_ID).mark_failed!
+Payment.find_by_external_id("abcdefghijklmno==").mark_failed!
 ```
 
 ### Mark unclaimed/canceled payout as returned
@@ -99,7 +99,7 @@ Payment.find(PAYMENT_ID).mark_returned!
 Or using payment external ID:
 
 ```ruby
-Payment.find_by_external_id(PAYMENT_EXTERNAL_ID).mark_returned!
+Payment.find_by_external_id("abcdefghijklmno==").mark_returned!
 ```
 
 ### Find PayPal Connect email for a user
