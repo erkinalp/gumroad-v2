@@ -15,7 +15,7 @@ type AdminProductPurchasesContentProps = {
   isLoading: boolean;
   hasMore: boolean;
   onLoadMore: () => void;
-  productId: number;
+  productExternalId: string;
 };
 
 const AdminProductPurchasesContent = ({
@@ -23,7 +23,7 @@ const AdminProductPurchasesContent = ({
   isLoading,
   hasMore,
   onLoadMore,
-  productId,
+  productExternalId,
 }: AdminProductPurchasesContentProps) => {
   const [selectedPurchaseExternalIds, setSelectedPurchaseExternalIds] = React.useState<string[]>([]);
   const [isMassRefunding, setIsMassRefunding] = React.useState(false);
@@ -58,7 +58,7 @@ const AdminProductPurchasesContent = ({
 
     try {
       const response = await request({
-        url: Routes.mass_refund_for_fraud_admin_product_purchases_path(productId, { format: "json" }),
+        url: Routes.mass_refund_for_fraud_admin_product_purchases_path(productExternalId, { format: "json" }),
         method: "POST",
         accept: "json",
         data: {

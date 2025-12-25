@@ -80,7 +80,7 @@ namespace :admin do
 
   get "links/:id", to: redirect("/admin/products/%{id}"), as: :link
 
-  resources :products, controller: "links", only: [:show, :destroy] do
+  resources :products, controller: "links", only: [:show, :destroy], param: :external_id do
     member do
       post :restore
       post :publish
