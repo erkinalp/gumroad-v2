@@ -2,8 +2,18 @@
 
 # Usage:
 #   CreatorAnalytics::Churn::DemoData.seed("creator@example.com")
+#   CreatorAnalytics::Churn::DemoData.seed("creator@example.com", dataset: :classic, intensity: 0.5)
 #   CreatorAnalytics::Churn::DemoData.purge("creator@example.com")
 #   CreatorAnalytics::Churn::DemoData.check("creator@example.com")
+#
+# Options:
+#   dataset: :realistic (default) or :classic
+#     - :realistic: Generates 24 months of data with seasonal patterns and product-specific churn rates
+#     - :classic: Fixed set of 18 scenarios spanning various time periods
+#   intensity: Float multiplier for monthly subscription counts in :realistic dataset (default: 1.0)
+#     - Scales the base monthly subscription counts (e.g., 0.5 = half subscriptions, 2.0 = double)
+#     - Only affects :realistic dataset; :classic uses a fixed set of scenarios
+#   logger: Proc for logging messages (default: ->(msg) { puts msg })
 #
 class CreatorAnalytics::Churn::DemoData
   DEMO_PRODUCT_DESCRIPTION = "Churn demo membership product"
