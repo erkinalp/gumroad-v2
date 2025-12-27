@@ -954,27 +954,101 @@ class Installment < ApplicationRecord
     def select_variant_for_subscription(subscription)
       subscription_tier = subscription.original_purchase&.variant_attributes&.first
 
-      post_variants.each do |variant|
-        rule = variant.variant_distribution_rules.find_by(base_variant: subscription_tier) if subscription_tier.present?
-        rule ||= variant.variant_distribution_rules.first
+      # Get all assignment counts in one query to avoid N+1
+      assignment_counts = VariantAssignment.joins(:post_variant)
+                                           .where(post_variants: { installment_id: id })
+                                           .group(:post_variant_id)
+                                           .count
+      total_assignments = assignment_counts.values.sum
 
-        next if rule.nil?
-
-        current_assignment_count = variant.variant_assignments.count
-
-        if rule.unlimited?
-          return variant
-        elsif rule.percentage?
-          total_assignments = VariantAssignment.joins(:post_variant)
-                                               .where(post_variants: { installment_id: id })
-                                               .count
-          target_count = (total_assignments * rule.distribution_value / 100.0).ceil
-          return variant if current_assignment_count < [target_count, 1].max
-        elsif rule.count?
-          return variant if current_assignment_count < rule.distribution_value
-        end
+      # Prefetch all distribution rules for this tier to avoid N+1
+      all_rules = VariantDistributionRule.where(post_variant_id: post_variants.pluck(:id))
+      rules_by_variant = if subscription_tier.present?
+        # Prefer tier-specific rules, fall back to any rule
+        tier_rules = all_rules.where(base_variant_id: subscription_tier.id).index_by(&:post_variant_id)
+        fallback_rules = all_rules.group_by(&:post_variant_id).transform_values(&:first)
+        fallback_rules.merge(tier_rules)
+      else
+        all_rules.group_by(&:post_variant_id).transform_values(&:first)
       end
 
-      post_variants.control.first || post_variants.first
+      # Build a list of variants with their rules
+      variants_with_rules = post_variants.map do |variant|
+        rule = rules_by_variant[variant.id]
+        current_count = assignment_counts[variant.id] || 0
+        { variant: variant, rule: rule, current_count: current_count }
+      end.reject { |v| v[:rule].nil? }
+
+      # Separate variants by type
+      limited_variants = variants_with_rules.select { |v| v[:rule].limited? }
+      unlimited_variants = variants_with_rules.select { |v| v[:rule].unlimited? || v[:rule].random? }
+      control_variant = post_variants.control.first
+
+      # If no limited variants exist, distribute randomly among ALL variants (including control)
+      if limited_variants.empty?
+        all_variants = post_variants.to_a
+        return all_variants.sample if all_variants.any?
+        return post_variants.first
+      end
+
+      # Priority 1: Limited variants with capacity, using proportional distribution
+      if limited_variants.any?
+        # Calculate effective targets with normalization for overcarriage
+        # total_assignments + 1 because we're about to add one more
+        next_total = total_assignments + 1
+
+        # Calculate raw targets for each limited variant (using fractional values)
+        targets = limited_variants.map do |v|
+          raw_target = if v[:rule].percentage?
+            next_total * v[:rule].distribution_value / 100.0
+          else # count
+            v[:rule].distribution_value.to_f
+          end
+          { **v, raw_target: raw_target }
+        end
+
+        # Calculate total raw targets to check for overcarriage
+        total_raw_targets = targets.sum { |t| t[:raw_target] }
+
+        # Normalize targets if overcarriage (sum > next_total)
+        # This ensures all variants are exposed proportionately less
+        if total_raw_targets > next_total
+          normalization_factor = next_total.to_f / total_raw_targets
+          targets.each do |t|
+            t[:effective_target] = t[:raw_target] * normalization_factor
+          end
+        else
+          targets.each { |t| t[:effective_target] = t[:raw_target] }
+        end
+
+        # Find the variant with the largest deficit (most under-target)
+        # This ensures fair proportional distribution
+        # Use fractional deficit to avoid rounding issues
+        best_candidate = nil
+        best_deficit = -Float::INFINITY
+
+        targets.each do |t|
+          deficit = t[:effective_target] - t[:current_count]
+          if deficit > 0 && deficit > best_deficit
+            best_deficit = deficit
+            best_candidate = t[:variant]
+          end
+        end
+
+        return best_candidate if best_candidate.present?
+      end
+
+      # Priority 2: Control variant (handles undercarriage - remainder goes to control)
+      # Control absorbs traffic when limited variants are at capacity
+      return control_variant if control_variant.present?
+
+      # Priority 3: Unlimited variants (distributed randomly among them)
+      if unlimited_variants.any?
+        # Pick randomly among all unlimited/random variants for fair distribution
+        return unlimited_variants.sample[:variant]
+      end
+
+      # Fallback: first variant
+      post_variants.first
     end
 end

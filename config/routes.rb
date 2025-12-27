@@ -934,6 +934,7 @@ Rails.application.routes.draw do
           collection do
             resource :recipient_count, only: [:show], controller: "installments/recipient_counts", as: :installment_recipient_count
           end
+          resources :post_variants, only: [:index, :show, :create, :update, :destroy]
         end
         resource :cart, only: [:update]
         resources :products, only: [:show] do
