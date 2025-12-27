@@ -29,6 +29,7 @@ class Comment < ApplicationRecord
   belongs_to :commentable, polymorphic: true, optional: true
   belongs_to :author, class_name: "User", optional: true
   belongs_to :purchase, optional: true
+  belongs_to :post_variant, optional: true
 
   validates_presence_of :commentable_id, :commentable_type, :comment_type, :content
   validates :content, length: { maximum: 10_000 }
@@ -46,6 +47,9 @@ class Comment < ApplicationRecord
   scope :with_type_payouts_paused, -> { where(comment_type: COMMENT_TYPE_PAYOUTS_PAUSED) }
   scope :with_type_payouts_resumed, -> { where(comment_type: COMMENT_TYPE_PAYOUTS_RESUMED) }
   scope :with_type_flagged, -> { where(comment_type: COMMENT_TYPE_FLAGGED) }
+  scope :for_variant, ->(post_variant_id) { where(post_variant_id:) }
+  scope :visible_to_variant, ->(post_variant_id) { where(post_variant_id: [nil, post_variant_id]) }
+  scope :unscoped_variant, -> { where(post_variant_id: nil) }
 
   def mark_subtree_deleted!
     transaction do
