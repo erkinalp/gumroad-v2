@@ -12,7 +12,7 @@ class Api::V2::PostCommentsController < Api::V2::BaseController
   def index
     comments = @post.comments.alive
 
-    if creator?
+    if seller?
       if params[:variant_id].present?
         post_variant = @post.post_variants.find_by_external_id(params[:variant_id])
         return error_with_object(:post_variant, nil) if post_variant.nil?
@@ -21,7 +21,11 @@ class Api::V2::PostCommentsController < Api::V2::BaseController
       end
     else
       assigned_variant = subscriber_assigned_variant
-      comments = comments.visible_to_variant(assigned_variant&.id)
+      if assigned_variant.present?
+        comments = comments.visible_to_variant_external_id(assigned_variant.external_id)
+      else
+        comments = comments.unscoped_variant
+      end
     end
 
     comments = comments.order(created_at: :desc)
@@ -53,16 +57,16 @@ class Api::V2::PostCommentsController < Api::V2::BaseController
     comment.author_name = current_resource_owner.display_name
     comment.comment_type = Comment::COMMENT_TYPE_USER_SUBMITTED
 
-    if creator?
+    if seller?
       if params[:variant_ids].present?
-        variant_ids = resolve_variant_ids(params[:variant_ids])
-        return if variant_ids.nil?
+        resolved_variants = resolve_variant_ids(params[:variant_ids])
+        return if resolved_variants.nil?
 
-        if variant_ids.size == 1
-          comment.post_variant_id = variant_ids.first
+        if resolved_variants.size == 1
+          comment.post_variant_id = resolved_variants.first.id
         else
-          comment.variant_ids = variant_ids.map { |v| v.is_a?(PostVariant) ? v.external_id : v }
-          comment.post_variant_id = variant_ids.first.is_a?(PostVariant) ? variant_ids.first.id : variant_ids.first
+          comment.variant_ids = resolved_variants.map(&:external_id)
+          comment.post_variant_id = resolved_variants.first.id
         end
       elsif params[:variant_id].present?
         post_variant = @post.post_variants.find_by_external_id(params[:variant_id])
@@ -153,7 +157,7 @@ class Api::V2::PostCommentsController < Api::V2::BaseController
       error_with_object(:comment, comment)
     end
 
-    def creator?
+    def seller?
       @product.user_id == current_resource_owner.id
     end
 
@@ -181,6 +185,6 @@ class Api::V2::PostCommentsController < Api::V2::BaseController
         resolved_variants << post_variant
       end
 
-      resolved_variants.map(&:id)
+      resolved_variants
     end
 end

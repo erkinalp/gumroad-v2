@@ -52,6 +52,11 @@ class Comment < ApplicationRecord
   scope :visible_to_variant, ->(post_variant_id) { where(post_variant_id: [nil, post_variant_id]) }
   scope :unscoped_variant, -> { where(post_variant_id: nil) }
   scope :for_variants, ->(variant_ids) { where(post_variant_id: variant_ids) }
+  scope :visible_to_variant_external_id, ->(variant_external_id) {
+    where(post_variant_id: nil)
+      .or(where(post_variant: PostVariant.where(external_id: variant_external_id)))
+      .or(where("json_data->'variant_ids' @> ?", [variant_external_id].to_json))
+  }
 
   def scoped_variant_ids
     return [] if post_variant_id.nil? && variant_ids.blank?
