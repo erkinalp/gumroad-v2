@@ -24,11 +24,43 @@ class VariantPriceService
     assigned_variant.price_cents
   end
 
+  # Returns the price override in cents and records exposure for A/B test tracking
+  # Use this method when displaying the price to a buyer (e.g., checkout page)
+  def price_override_cents_with_exposure!
+    return nil unless installment.present?
+
+    assigned_variant = find_or_assign_variant
+    return nil unless assigned_variant.present?
+
+    record_exposure!
+
+    return nil unless assigned_variant.price_cents.present?
+    assigned_variant.price_cents
+  end
+
   # Returns the assigned variant for this buyer/installment combination
   def assigned_variant
     return nil unless installment.present?
 
     find_or_assign_variant
+  end
+
+  # Returns the variant assignment record (not the variant itself)
+  # Useful for tracking exposure and conversion
+  def variant_assignment
+    return nil unless installment.present?
+
+    find_or_assign_variant
+    @variant_assignment
+  end
+
+  # Record that the variant was exposed (shown) to the buyer
+  # Only sets exposed_at if not already set (first exposure)
+  def record_exposure!
+    return unless installment.present?
+
+    find_or_assign_variant
+    @variant_assignment&.record_exposure!
   end
 
   class << self
@@ -52,10 +84,23 @@ class VariantPriceService
 
   private
     def find_or_assign_variant
-      @assigned_variant ||= VariantAssignment.find_or_assign_for_buyer(
+      return @assigned_variant if defined?(@assigned_variant)
+
+      @assigned_variant = VariantAssignment.find_or_assign_for_buyer(
         installment: installment,
         user: user,
         buyer_cookie: buyer_cookie
       )
+
+      # Also store the assignment record for tracking purposes
+      if @assigned_variant.present?
+        @variant_assignment = VariantAssignment.find_assignment_for_buyer(
+          installment: installment,
+          user: user,
+          buyer_cookie: buyer_cookie
+        )
+      end
+
+      @assigned_variant
     end
 end

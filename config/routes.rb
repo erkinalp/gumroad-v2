@@ -58,6 +58,9 @@ Rails.application.routes.draw do
           resources :post_variants, only: [:index, :create, :show, :update, :destroy] do
             resources :distribution_rules, only: [:index, :create, :show, :update, :destroy]
             resources :variant_assignments, only: [:index], path: "assignments"
+            collection do
+              get :metrics
+            end
           end
           resources :comments, only: [:index, :create, :show, :update, :destroy], controller: "post_comments"
         end

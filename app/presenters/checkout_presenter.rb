@@ -315,6 +315,7 @@ class CheckoutPresenter
 
     # Returns the variant price override in cents if a variant with price_cents is assigned
     # for A/B test pricing, otherwise returns nil (use default product price)
+    # Also records exposure for A/B test tracking since this is when the buyer sees the price
     def variant_price_override_cents(product)
       return nil unless buyer_cookie.present? || logged_in_user.present?
 
@@ -333,7 +334,9 @@ class CheckoutPresenter
         user: logged_in_user,
         buyer_cookie: buyer_cookie
       )
-      service.price_override_cents
+      # Use price_override_cents_with_exposure! to record that the buyer saw this variant
+      # This is the canonical "exposure" point for A/B test tracking
+      service.price_override_cents_with_exposure!
     end
 
     def supports_paypal(product)

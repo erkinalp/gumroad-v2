@@ -250,6 +250,7 @@ class Purchase < ApplicationRecord
     after_transition any => [:successful, :not_charged, :gift_receiver_purchase_successful], :do => :trigger_iffy_moderation, if: lambda { |purchase|
       purchase.price_cents > 0 && !purchase.link.moderated_by_iffy
     }
+    after_transition any => [:successful, :not_charged, :gift_receiver_purchase_successful], :do => :record_ab_test_conversion!
 
     # normal purchase transitions:
 
@@ -2685,6 +2686,36 @@ class Purchase < ApplicationRecord
         buyer_cookie: buyer_cookie
       )
       service.price_override_cents
+    end
+
+    # Record A/B test conversion when a purchase is successful
+    # Links the variant assignment to this purchase for conversion tracking
+    def record_ab_test_conversion!
+      return unless link.present?
+      return if is_recurring_subscription_charge
+      return if is_preorder_charge?
+
+      buyer_user = purchaser
+      return unless buyer_user.present? || buyer_cookie.present?
+
+      # Find first installment with A/B test variants for this product
+      installment = link.installments.alive.published
+        .joins(:post_variants)
+        .group("installments.id")
+        .having("COUNT(post_variants.id) > 1")
+        .first
+      return unless installment.present?
+
+      # Find the variant assignment for this buyer
+      assignment = VariantAssignment.find_assignment_for_buyer(
+        installment: installment,
+        user: buyer_user,
+        buyer_cookie: buyer_cookie
+      )
+      return unless assignment.present?
+
+      # Record the conversion (only if not already converted)
+      assignment.record_conversion!(self)
     end
 
     def offer_amount_off(purchase_min_price)
