@@ -1,18 +1,6 @@
-<p align="center">
-  <picture>
-    <source srcset="https://public-files.gumroad.com/logo/gumroad-dark.svg" media="(prefers-color-scheme: dark)">
-    <source srcset="https://public-files.gumroad.com/logo/gumroad.svg" media="(prefers-color-scheme: light)">
-    <img src="https://public-files.gumroad.com/logo/gumroad.svg" height="100" alt="Gumroad logo">
-  </picture>
-</p>
+# CrowdChurn
 
-<p align="center">
-  <strong>Sell your stuff. See what sticks.</strong>
-</p>
-
-<p align="center">
-  <a href="https://gumroad.com">Gumroad</a> is an e-commerce platform that enables creators to sell products directly to consumers. This repository contains the source code for the Gumroad web application.
-</p>
+CrowdChurn is a self-hostable e-commerce platform that enables creators to sell products directly to consumers. It is a fork of [Gumroad](https://github.com/antiwork/gumroad), designed for self-hosted deployments.
 
 ## Table of Contents
 
@@ -109,7 +97,7 @@ We use `ffprobe` that comes with `FFmpeg` package to fetch metadata from video f
 
 #### PDFtk
 
-We use [pdftk](https://www.pdflabs.com/tools/pdftk-server/) to stamp PDF files with the Gumroad logo and the buyers' emails.
+We use [pdftk](https://www.pdflabs.com/tools/pdftk-server/) to stamp PDF files with the buyers' emails.
 
 - For MacOS: Download from [here](https://www.pdflabs.com/tools/pdftk-the-pdf-toolkit/pdftk_server-2.02-mac_osx-10.11-setup.pkg)
   - **Note:** pdftk may be blocked by Apple's firewall. If this happens, go to Settings > Privacy & Security and click "Open Anyways" to allow the installation.
@@ -212,13 +200,13 @@ bin/dev
 
 This starts the Rails server, the JavaScript build system, and a Sidekiq worker.
 
-You can now access the application at `https://gumroad.dev`.
+You can now access the application at `https://app.localhost`.
 
 ## Development
 
 ### Logging in
 
-You can log in with the username `seller@gumroad.com` and the password `password`. The two-factor authentication code is `000000`.
+You can log in with the username `seller@example.com` and the password `password`. The two-factor authentication code is `000000`.
 
 Read more about logging in as a user with a different team role at [Users & authentication](docs/users.md).
 
