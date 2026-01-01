@@ -20,6 +20,15 @@ class KillbillChargeProcessor
   TRANSACTION_TYPE_REFUND = "REFUND"
   TRANSACTION_TYPE_CREDIT = "CREDIT"
 
+  # Default Kill Bill instance configuration
+  # These are used when no merchant-specific instance is configured
+  # IMPORTANT: Set these environment variables in production - do not use defaults
+  DEFAULT_KILLBILL_URL = ENV.fetch("KILLBILL_URL", nil)
+  DEFAULT_KILLBILL_USER = ENV.fetch("KILLBILL_USER", nil)
+  DEFAULT_KILLBILL_PASSWORD = ENV.fetch("KILLBILL_PASSWORD", nil)
+  DEFAULT_KILLBILL_API_KEY = ENV.fetch("KILLBILL_API_KEY", nil)
+  DEFAULT_KILLBILL_API_SECRET = ENV.fetch("KILLBILL_API_SECRET", nil)
+
   def self.charge_processor_id
     "killbill"
   end
@@ -255,10 +264,16 @@ class KillbillChargeProcessor
     end
   end
 
-  def transaction_url(charge_id)
+  def transaction_url(charge_id, merchant_account: nil)
     # Kill Bill admin UI (Kaui) URL for viewing transactions
-    killbill_base_url = ENV.fetch("KILLBILL_URL", "http://localhost:8080")
+    # Uses the merchant-specific instance URL if configured
+    killbill_base_url = killbill_instance_url(merchant_account) || "http://localhost:8080"
     "#{killbill_base_url}/kaui/payments/#{charge_id}"
+  end
+
+  # Get the Kill Bill instance URL for the merchant account (public for transaction_url)
+  def killbill_instance_url(merchant_account)
+    merchant_account&.killbill_instance_url.presence || DEFAULT_KILLBILL_URL
   end
 
   # Handle Kill Bill webhook events
@@ -276,15 +291,60 @@ class KillbillChargeProcessor
   end
 
   private
+    # Build Kill Bill API options for the given merchant account
+    # Supports multiple simultaneous Kill Bill instances:
+    # - Each merchant can have their own self-hosted Kill Bill instance
+    # - Merchant accounts store instance URL, credentials, and tenant info
+    # - Falls back to default instance from environment variables
     def killbill_options(merchant_account = nil)
+      # Get instance-specific configuration from merchant account or defaults
+      instance_url = killbill_instance_url(merchant_account)
+
+      # Validate that we have a Kill Bill instance configured
+      unless instance_url.present?
+        raise ChargeProcessorInvalidRequestError.new(
+          "Kill Bill instance URL not configured. Set KILLBILL_URL environment variable " \
+          "or configure a Kill Bill instance URL on the merchant account."
+        )
+      end
+
+      # Configure the Kill Bill client to use the correct instance
+      configure_killbill_client(instance_url)
+
       {
-        username: ENV.fetch("KILLBILL_USER", "admin"),
-        password: ENV.fetch("KILLBILL_PASSWORD", "password"),
-        api_key: merchant_account&.killbill_api_key || ENV.fetch("KILLBILL_API_KEY", "bob"),
-        api_secret: merchant_account&.killbill_api_secret || ENV.fetch("KILLBILL_API_SECRET", "lazar"),
+        username: killbill_username(merchant_account),
+        password: killbill_password(merchant_account),
+        api_key: killbill_api_key(merchant_account),
+        api_secret: killbill_api_secret(merchant_account),
         reason: "CrowdChurn payment processing",
         comment: "Automated payment via CrowdChurn"
       }
+    end
+
+    def killbill_username(merchant_account)
+      merchant_account&.killbill_username.presence || DEFAULT_KILLBILL_USER
+    end
+
+    def killbill_password(merchant_account)
+      merchant_account&.killbill_password.presence || DEFAULT_KILLBILL_PASSWORD
+    end
+
+    def killbill_api_key(merchant_account)
+      # API key identifies the tenant in Kill Bill
+      # Each whitelabel instance can have multiple tenants
+      merchant_account&.killbill_api_key.presence || DEFAULT_KILLBILL_API_KEY
+    end
+
+    def killbill_api_secret(merchant_account)
+      merchant_account&.killbill_api_secret.presence || DEFAULT_KILLBILL_API_SECRET
+    end
+
+    # Configure the Kill Bill client to connect to the specified instance
+    # This is called before each API request to ensure we're using the correct instance
+    def configure_killbill_client(instance_url)
+      # The killbill-client gem uses a global configuration
+      # We need to set it per-request to support multiple instances
+      KillBill::Client.url = instance_url
     end
 
     def build_transaction_properties(reference:, description:, metadata:, statement_description:, amount_for_gumroad_cents:, is_crypto:)
