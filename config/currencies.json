@@ -105,5 +105,63 @@
       "display_format": "Kč (Czech koruna)",
       "min_price": 2149
     }
+  },
+  "cryptocurrencies": {
+    "btc": {
+      "symbol": "₿",
+      "display_format": "₿ (Bitcoin)",
+      "min_price": 1,
+      "decimals": 8,
+      "subunit": "satoshi",
+      "subunit_to_unit": 100000000
+    },
+    "eth": {
+      "symbol": "Ξ",
+      "display_format": "Ξ (Ethereum)",
+      "min_price": 1,
+      "decimals": 18,
+      "subunit": "wei",
+      "subunit_to_unit": 1000000000000000000
+    },
+    "ltc": {
+      "symbol": "Ł",
+      "display_format": "Ł (Litecoin)",
+      "min_price": 1,
+      "decimals": 8,
+      "subunit": "litoshi",
+      "subunit_to_unit": 100000000
+    },
+    "xmr": {
+      "symbol": "ɱ",
+      "display_format": "ɱ (Monero)",
+      "min_price": 1,
+      "decimals": 12,
+      "subunit": "piconero",
+      "subunit_to_unit": 1000000000000
+    },
+    "usdt": {
+      "symbol": "₮",
+      "display_format": "₮ (Tether USDT)",
+      "min_price": 99,
+      "decimals": 6,
+      "subunit": "cent",
+      "subunit_to_unit": 1000000
+    },
+    "usdc": {
+      "symbol": "USDC",
+      "display_format": "USDC (USD Coin)",
+      "min_price": 99,
+      "decimals": 6,
+      "subunit": "cent",
+      "subunit_to_unit": 1000000
+    },
+    "dai": {
+      "symbol": "DAI",
+      "display_format": "DAI (Dai Stablecoin)",
+      "min_price": 99,
+      "decimals": 18,
+      "subunit": "wei",
+      "subunit_to_unit": 1000000000000000000
+    }
   }
 }

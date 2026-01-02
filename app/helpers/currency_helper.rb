@@ -2,23 +2,45 @@
 
 module CurrencyHelper
   include BasePrice::Recurrence
-  # Note: To reference a currency in code, use Currency::[3-char-ref].
-  # e.g. Currency::USD, Currency::CAD
+
+  def instance_base_currency
+    INSTANCE_BASE_CURRENCY
+  end
+
+  def is_crypto_currency?(currency_type)
+    CRYPTO_CURRENCIES.key?(currency_type.to_s.downcase)
+  end
+
+  def get_crypto_currency_config(currency_type)
+    CRYPTO_CURRENCIES[currency_type.to_s.downcase]
+  end
 
   def currency_namespace
     Redis::Namespace.new(:currencies, redis: $redis)
   end
 
-  def symbol_for(type = :usd)
-    CURRENCY_CHOICES[type.to_sym][:symbol]
+  def symbol_for(type = nil)
+    type ||= instance_base_currency.to_sym
+    currency_config = CURRENCY_CHOICES[type.to_sym] || CRYPTO_CURRENCIES[type.to_s.downcase]
+    currency_config&.dig(:symbol) || currency_config&.dig("symbol")
   end
 
-  def min_price_for(type = :usd)
-    CURRENCY_CHOICES[type.to_sym][:min_price]
+  def min_price_for(type = nil)
+    type ||= instance_base_currency.to_sym
+    currency_config = CURRENCY_CHOICES[type.to_sym] || CRYPTO_CURRENCIES[type.to_s.downcase]
+    currency_config&.dig(:min_price) || currency_config&.dig("min_price")
   end
 
   def currency_choices
     CURRENCY_CHOICES.map { |k, v| [v[:display_format], k, v[:symbol]] }
+  end
+
+  def crypto_currency_choices
+    CRYPTO_CURRENCIES.map { |k, v| [v[:display_format] || v["display_format"], k, v[:symbol] || v["symbol"]] }
+  end
+
+  def all_currency_choices
+    currency_choices + crypto_currency_choices
   end
 
   def string_to_price_cents(currency_type, price_string)
@@ -32,7 +54,7 @@ module CurrencyHelper
   end
 
   def get_rate(currency_type)
-    return "1.0" if currency_type.to_s == "usd" # Getting around an open exchange jankiness
+    return "1.0" if currency_type.to_s.downcase == instance_base_currency
     formatted_currency = currency_type.to_s.upcase
     rate = currency_namespace.get(formatted_currency.to_s)
     if rate && rate.to_f > 0
@@ -44,8 +66,8 @@ module CurrencyHelper
     end
   end
 
-  def get_usd_cents(currency_type, quantity, rate: nil)
-    return quantity if currency_type.to_s == "usd" # Getting around an open exchange jankiness
+  def get_base_currency_units(currency_type, quantity, rate: nil)
+    return quantity if currency_type.to_s.downcase == instance_base_currency
     rate = get_rate(currency_type) if rate.nil?
     converted = BigDecimal(quantity) / rate.to_f
     if is_currency_type_single_unit?(currency_type)
@@ -55,13 +77,11 @@ module CurrencyHelper
     end
   end
 
-  # Converts USD cents to desired currency. Providing an optional explicit rate overrides the rate lookup by currency type
-  #
-  # currency_type - currency type denoted by abbreviated string
-  # quantity - amount in USD cents
-  # rate - optional. Uses this as the conversion rate instead of looking up by currency_type if present.
-  def usd_cents_to_currency(currency_type, quantity, rate = nil)
-    return quantity if currency_type.to_s == "usd" # Getting around an open exchange jankiness
+  alias_method :get_base_currency_cents, :get_base_currency_units
+  alias_method :get_usd_cents, :get_base_currency_units
+
+  def base_currency_to_display_currency(currency_type, quantity, rate = nil)
+    return quantity if currency_type.to_s.downcase == instance_base_currency
     conversion_rate = rate.present? ? rate.to_f : get_rate(currency_type).to_f
     converted = BigDecimal(quantity) * conversion_rate
     if is_currency_type_single_unit?(currency_type)
@@ -71,9 +91,13 @@ module CurrencyHelper
     end
   end
 
-  def formatted_dollar_amount(amount_cents, with_currency: false, no_cents_if_whole: true)
-    Money.new(amount_cents, "USD").format(with_currency:, no_cents_if_whole:)
+  alias_method :usd_cents_to_currency, :base_currency_to_display_currency
+
+  def formatted_base_currency_amount(amount_cents, with_currency: false, no_cents_if_whole: true)
+    Money.new(amount_cents, instance_base_currency.upcase).format(with_currency:, no_cents_if_whole:)
   end
+
+  alias_method :formatted_dollar_amount, :formatted_base_currency_amount
 
   def formatted_amount_in_currency(amount_cents, currency, no_cents_if_whole: true)
     Money.new(amount_cents, currency).format(symbol: false, no_cents_if_whole:, with_currency: true)
@@ -103,15 +127,21 @@ module CurrencyHelper
   end
 
   def get_currency_by_type(currency_type)
-    CURRENCY_CHOICES[currency_type.to_s.downcase] || CURRENCY_CHOICES["usd"]
+    CURRENCY_CHOICES[currency_type.to_s.downcase] ||
+      CRYPTO_CURRENCIES[currency_type.to_s.downcase] ||
+      CURRENCY_CHOICES[instance_base_currency]
   end
 
   def unit_scaling_factor(currency_type)
     is_currency_type_single_unit?(currency_type) ? 1 : 100
   end
 
-  def is_currency_type_single_unit?(currency_type = "usd")
-    get_currency_by_type(currency_type).key?("single_unit")
+  def is_currency_type_single_unit?(currency_type = nil)
+    currency_type ||= instance_base_currency
+    currency_config = get_currency_by_type(currency_type)
+    return false if currency_config.nil?
+
+    currency_config.key?("single_unit") || currency_config.key?(:single_unit)
   end
 
   def formatted_price(currency_type, price)

@@ -7,6 +7,22 @@ module Currency
     const_set(currency_type.upcase, currency_type.downcase)
   end
 
+  # Cryptocurrencies that can be used as base currency for crypto-native instances.
+  # These support different decimal precision and subunit naming conventions.
+  CRYPTO_CURRENCIES.each do |currency_type, _currency_hash|
+    const_set(currency_type.upcase, currency_type.downcase)
+  end
+
+  # Returns the configured instance base currency (defaults to USD for backward compatibility)
+  def self.base
+    INSTANCE_BASE_CURRENCY
+  end
+
+  # Returns true if the instance is configured to use a cryptocurrency as base currency
+  def self.crypto_base?
+    CRYPTO_CURRENCIES.key?(INSTANCE_BASE_CURRENCY)
+  end
+
   # These currencies are only used for creating Stripe Connect accounts and making payouts.
   # These cannot be used as account's default currency or to set product prices.
   # Currency conversion helpers do not support for these currencies.

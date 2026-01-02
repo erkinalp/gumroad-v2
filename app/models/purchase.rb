@@ -1687,7 +1687,7 @@ class Purchase < ApplicationRecord
 
     self.displayed_price_cents = determine_customized_price_cents || calculate_price_range_cents || minimum_paid_price_cents
     self.displayed_price_currency_type = link.price_currency_type
-    self.price_cents = displayed_price_usd_cents
+    self.price_cents = displayed_price_base_units
     self.rate_converted_to_usd = get_rate(displayed_price_currency_type)
     self.total_transaction_cents = self.price_cents
     self.affiliate_credit_cents = determine_affiliate_balance_cents
@@ -2725,9 +2725,11 @@ class Purchase < ApplicationRecord
         &.amount_off(purchase_min_price) || 0
     end
 
-    def displayed_price_usd_cents
-      get_usd_cents(displayed_price_currency_type, displayed_price_cents)
+    def displayed_price_base_units
+      get_base_currency_units(displayed_price_currency_type, displayed_price_cents)
     end
+
+    alias_method :displayed_price_usd_cents, :displayed_price_base_units
 
     def transcode_product_videos
       # Transcode videos immediately after successful purchase
