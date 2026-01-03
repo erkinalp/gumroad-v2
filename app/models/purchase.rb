@@ -82,7 +82,8 @@ class Purchase < ApplicationRecord
   # backward compatibility with the existing _cents column names.
   alias_attribute :price_base_units, :price_cents
   alias_attribute :tax_base_units, :tax_cents
-  alias_attribute :gumroad_tax_base_units, :gumroad_tax_cents
+  alias_attribute :platform_tax_base_units, :gumroad_tax_cents # Platform-responsible tax (renamed from gumroad)
+  alias_attribute :gumroad_tax_base_units, :gumroad_tax_cents # Legacy alias for backward compatibility
   alias_attribute :shipping_base_units, :shipping_cents
   alias_attribute :total_transaction_base_units, :total_transaction_cents
   alias_attribute :fee_base_units, :fee_cents
@@ -2788,7 +2789,7 @@ class Purchase < ApplicationRecord
       return if errors.present?
 
       self.price_base_units += tax_base_units if was_tax_excluded_from_price
-      self.total_transaction_base_units = self.price_base_units + gumroad_tax_base_units
+      self.total_transaction_base_units = self.price_base_units + platform_tax_base_units
 
       # Actually add the shipping amount to price and update total transaction amount
       self.price_base_units += shipping_base_units
@@ -3422,11 +3423,11 @@ class Purchase < ApplicationRecord
       pre_tax_base_units = (gross_price_base_units / (1 + effective_tax_rate)).round
       calculated_tax_base_units = gross_price_base_units - pre_tax_base_units
 
-      # For gumroad-responsible tax, we need to adjust price_cents to be the pre-tax amount
-      # so that total_transaction_cents = price_cents + gumroad_tax_cents = gross_price
-      if gumroad_tax_cents > 0
+      # For platform-responsible tax, we need to adjust price_cents to be the pre-tax amount
+      # so that total_transaction_cents = price_cents + platform_tax_cents = gross_price
+      if platform_tax_base_units > 0
         self.price_cents = pre_tax_base_units
-        self.gumroad_tax_cents = calculated_tax_base_units
+        self.platform_tax_base_units = calculated_tax_base_units
       else
         # For seller-responsible tax, price_cents stays as gross (includes tax)
         # and tax_cents is set to the calculated tax amount

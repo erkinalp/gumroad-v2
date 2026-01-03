@@ -673,7 +673,8 @@ describe "PurchaseTaxation", :vcr do
       it "provides multi-currency aliases" do
         expect(purchase.price_base_units).to eq(purchase.price_cents)
         expect(purchase.tax_base_units).to eq(purchase.tax_cents)
-        expect(purchase.gumroad_tax_base_units).to eq(purchase.gumroad_tax_cents)
+        expect(purchase.platform_tax_base_units).to eq(purchase.gumroad_tax_cents) # Platform-responsible tax
+        expect(purchase.gumroad_tax_base_units).to eq(purchase.gumroad_tax_cents) # Legacy alias
         expect(purchase.total_transaction_base_units).to eq(purchase.total_transaction_cents)
       end
     end
