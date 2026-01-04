@@ -255,7 +255,7 @@ class ProductPresenter
           code: code.to_s,
           symbol: info["symbol"],
           display_format: info["display_format"],
-          min_price_cents: info["min_price"],
+          min_price: info["min_price"],
         }
       end,
       available_cryptocurrencies: CRYPTO_CURRENCIES.map do |code, info|
@@ -263,7 +263,7 @@ class ProductPresenter
           code: code.to_s,
           symbol: info["symbol"],
           display_format: info["display_format"],
-          min_price_cents: info["min_price"],
+          min_price: info["min_price"],
           decimals: info["decimals"],
         }
       end,
