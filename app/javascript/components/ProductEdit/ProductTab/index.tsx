@@ -273,11 +273,11 @@ export const ProductTab = () => {
                       <MultiCurrencyPriceEditor />
                     ) : product.pricing_mode === "gross" ? (
                       <GrossPriceEditor
-                        priceCents={product.price_cents}
-                        setPriceCents={(priceCents) =>
+                        price={product.price_cents}
+                        setPrice={(price) =>
                           updateProduct({
-                            price_cents: priceCents,
-                            ...(priceCents === 0 && { customizable_price: true }),
+                            price_cents: price,
+                            ...(price === 0 && { customizable_price: true }),
                           })
                         }
                         currencyType={currencyType}

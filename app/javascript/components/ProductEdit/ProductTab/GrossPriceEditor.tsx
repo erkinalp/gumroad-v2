@@ -6,20 +6,20 @@ import { PriceInput } from "$app/components/PriceInput";
 import { useProductEditContext, AvailableCurrency } from "$app/components/ProductEdit/state";
 
 export const GrossPriceEditor = ({
-  priceCents,
-  setPriceCents,
+  price,
+  setPrice,
   currencyType,
   currencyCodeSelector,
 }: {
-  priceCents: number;
-  setPriceCents: (priceCents: number) => void;
+  price: number;
+  setPrice: (price: number) => void;
   currencyType: CurrencyCode;
   currencyCodeSelector?: { options: CurrencyCode[]; onChange: (currencyCode: CurrencyCode) => void };
 }) => {
   const { availableCurrencies } = useProductEditContext();
 
   const getEquivalentPrices = (): { currency: string; symbol: string; amount: string }[] => {
-    if (priceCents === 0) return [];
+    if (price === 0) return [];
 
     const baseCurrency = availableCurrencies.find(
       (c: AvailableCurrency) => c.code.toLowerCase() === currencyType.toLowerCase(),
@@ -32,7 +32,7 @@ export const GrossPriceEditor = ({
       .map((c: AvailableCurrency) => ({
         currency: c.code.toUpperCase(),
         symbol: c.symbol,
-        amount: (priceCents / 100).toFixed(2),
+        amount: (price / 100).toFixed(2),
       }));
   };
 
@@ -46,8 +46,8 @@ export const GrossPriceEditor = ({
       <PriceInput
         currencyCode={currencyType}
         currencyCodeSelector={currencyCodeSelector}
-        cents={priceCents}
-        onChange={(cents) => setPriceCents(cents ?? 0)}
+        cents={price}
+        onChange={(cents) => setPrice(cents ?? 0)}
         ariaLabel="Tax-inclusive price"
       />
       <p className="mt-2 text-sm text-muted">This price will be charged as the same gross amount in all currencies.</p>
