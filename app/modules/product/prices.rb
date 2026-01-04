@@ -468,7 +468,7 @@ module Product::Prices
         # If not, fall back to product's default currency
         has_price_for_currency?(target) ? target : price_currency_type.to_s.downcase
       when :gross
-        # In gross mode, always use buyer's currency (same numeric value)
+        # In gross mode, always use buyer's currency (FX converted to maintain purchasing power)
         target
       else # :legacy or nil
         # In legacy mode, always use product's currency (conversion at checkout)
