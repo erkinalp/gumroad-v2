@@ -964,10 +964,39 @@ class Installment < ApplicationRecord
 
     def select_variant_for_subscription(subscription)
       subscription_tier = subscription.original_purchase&.variant_attributes&.first
+      subscription_plan = subscription.product_installment_plan
 
       post_variants.each do |variant|
-        rule = variant.variant_distribution_rules.find_by(base_variant: subscription_tier) if subscription_tier.present?
-        rule ||= variant.variant_distribution_rules.first
+        # Priority 1: Match Plan AND Tier (if both exist)
+        rule = nil
+        if subscription_plan.present? && subscription_tier.present?
+          rule = variant.variant_distribution_rules.find_by(
+            product_installment_plan: subscription_plan,
+            base_variant: subscription_tier
+          )
+        end
+
+        # Priority 2: Match Plan Only
+        if rule.nil? && subscription_plan.present?
+          rule = variant.variant_distribution_rules.find_by(
+            product_installment_plan: subscription_plan,
+            base_variant: nil
+          )
+        end
+
+        # Priority 3: Match Tier Only
+        if rule.nil? && subscription_tier.present?
+          rule = variant.variant_distribution_rules.find_by(
+            product_installment_plan: nil,
+            base_variant: subscription_tier
+          )
+        end
+
+        # Priority 4: Default/Fallback Rule
+        rule ||= variant.variant_distribution_rules.find_by(
+          product_installment_plan: nil,
+          base_variant: nil
+        )
 
         next if rule.nil?
 

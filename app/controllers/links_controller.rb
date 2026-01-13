@@ -163,6 +163,14 @@ class LinksController < ApplicationController
     ActiveRecord::Base.connection.stick_to_primary!
     # Force a preload of all association data used in rendering
     preload_product
+
+    # A/B Testing: Override product attributes if user is in an active experiment
+    @product = ProductExperimentService.new(
+      @product,
+      user: logged_in_user,
+      buyer_cookie: ensure_experiment_cookie
+    ).call
+
     @show_user_favicon = true
 
     if params[:wanted] == "true"
@@ -540,6 +548,18 @@ class LinksController < ApplicationController
   private
     def fetch_product_for_show
       fetch_product_by_custom_domain || fetch_product_by_general_permalink
+    end
+
+    def ensure_experiment_cookie
+      return cookies.signed[:ab_test_buyer_id] if cookies.signed[:ab_test_buyer_id].present?
+
+      cookies.signed[:ab_test_buyer_id] = {
+        value: SecureRandom.uuid,
+        expires: 1.year.from_now,
+        httponly: true,
+        secure: Rails.env.production?
+      }
+      cookies.signed[:ab_test_buyer_id]
     end
 
     def fetch_product_by_custom_domain
