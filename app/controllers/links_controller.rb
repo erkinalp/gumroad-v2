@@ -163,6 +163,14 @@ class LinksController < ApplicationController
     ActiveRecord::Base.connection.stick_to_primary!
     # Force a preload of all association data used in rendering
     preload_product
+
+    # A/B Testing: Override product attributes if user is in an active experiment
+    @product = ProductExperimentService.new(
+      @product,
+      user: logged_in_user,
+      buyer_cookie: ensure_experiment_cookie
+    ).call
+
     @show_user_favicon = true
 
     if params[:wanted] == "true"
@@ -360,7 +368,8 @@ class LinksController < ApplicationController
           :shipping_destinations,
           :call_limitation_info,
           :installment_plan,
-          :community_chat_enabled
+          :community_chat_enabled,
+          :currency_prices
         ))
         @product.description = SaveContentUpsellsService.new(seller: @product.user, content: product_permitted_params[:description], old_content: @product.description_was).from_html
         @product.skus_enabled = false
@@ -413,6 +422,7 @@ class LinksController < ApplicationController
         update_availabilities
         update_call_limitation_info
         update_installment_plan
+        update_currency_prices
 
         Product::SavePostPurchaseCustomFieldsService.new(@product).perform
 
@@ -540,6 +550,18 @@ class LinksController < ApplicationController
   private
     def fetch_product_for_show
       fetch_product_by_custom_domain || fetch_product_by_general_permalink
+    end
+
+    def ensure_experiment_cookie
+      return cookies.signed[:ab_test_buyer_id] if cookies.signed[:ab_test_buyer_id].present?
+
+      cookies.signed[:ab_test_buyer_id] = {
+        value: SecureRandom.uuid,
+        expires: 1.year.from_now,
+        httponly: true,
+        secure: Rails.env.production?
+      }
+      cookies.signed[:ab_test_buyer_id]
     end
 
     def fetch_product_by_custom_domain
@@ -728,6 +750,31 @@ class LinksController < ApplicationController
       return if [Link::NATIVE_TYPE_COFFEE, Link::NATIVE_TYPE_BUNDLE].include?(@product.native_type)
 
       @product.toggle_community_chat!(enabled)
+    end
+
+    def update_currency_prices
+      return unless product_permitted_params[:currency_prices].present?
+
+      existing_prices = @product.alive_prices.to_a
+      prices_to_keep = []
+
+      product_permitted_params[:currency_prices].each do |price_params|
+        price = if price_params[:id].present?
+          existing_prices.find { _1.external_id == price_params[:id] }
+        end
+
+        price ||= @product.prices.build
+
+        price.assign_attributes(
+          currency: price_params[:currency],
+          price_cents: price_params[:price_cents],
+          recurrence: price_params[:recurrence]
+        )
+        price.save!
+        prices_to_keep << price
+      end
+
+      (existing_prices - prices_to_keep).each(&:mark_deleted!)
     end
 
     def generate_product_details_using_ai

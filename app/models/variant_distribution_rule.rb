@@ -11,6 +11,8 @@ class VariantDistributionRule < ApplicationRecord
   validates :distribution_value, numericality: { greater_than: 0, less_than_or_equal_to: 100 }, if: :percentage?
   validates :distribution_value, numericality: { greater_than: 0 }, if: :count?
 
+  belongs_to :product_installment_plan, optional: true
+
   def slots_available?(current_assignment_count)
     return true if unlimited?
     return true if percentage?
