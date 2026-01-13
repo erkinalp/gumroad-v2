@@ -1,6 +1,47 @@
 # frozen_string_literal: true
+require "delegate"
+
 
 class ProductExperimentService
+  class ExperimentPrices < SimpleDelegator
+    def initialize(prices, overrides)
+      @overrides = overrides
+      modified_prices = prices.map do |p|
+        if p.recurrence.present? && (override = overrides[p.recurrence])
+          p_clone = p.dup
+          p_clone.price_cents = override
+          # Ensure readonly to prevent accidental saves of ghost records
+          p_clone.readonly!
+          p_clone
+        else
+          p
+        end
+      end
+      super(modified_prices)
+    end
+
+    def is_buy
+      ExperimentPrices.new(select(&:is_buy?), @overrides)
+    end
+
+    def alive
+      ExperimentPrices.new(select { |p| !p.deleted_at }, @overrides)
+    end
+
+    def where(opts)
+      # Simple support for hash conditions used by Product::Prices
+      filtered = select do |p|
+        opts.all? do |k, v|
+          # Handle simple equality or nil checks
+          p.public_send(k) == v
+        end
+      end
+      ExperimentPrices.new(filtered, @overrides)
+    end
+
+    # Support finding by non-standard means if necessary, but Array#find works for Enumerables
+  end
+
   def initialize(product, user: nil, buyer_cookie: nil)
     @product = product
     @user = user
@@ -45,12 +86,30 @@ class ProductExperimentService
       override_price = variant.price_cents_override
 
       # Override low-level accessors
-      product_clone.define_singleton_method(:price_cents) { override_price }
-      product_clone.define_singleton_method(:buy_price_cents) { override_price }
-      product_clone.define_singleton_method(:default_price_cents) { override_price }
+      # We accept *args and **kwargs to match signatures like default_price_cents(buyer_currency: nil) in Product::Prices
+      product_clone.define_singleton_method(:price_cents) { |*args, **kwargs| override_price }
+      product_clone.define_singleton_method(:buy_price_cents) { |*args, **kwargs| override_price }
+      product_clone.define_singleton_method(:default_price_cents) { |*args, **kwargs| override_price }
 
       # Ensure displayed_price_cents (often used in views) matches
       product_clone.displayed_price_cents = override_price
+    end
+
+    # Override Recurrence Prices
+    if variant.respond_to?(:recurrence_prices) && variant.recurrence_prices.present?
+      # Capture current prices from original to avoid N+1 or reloading issues later
+      # We assume @product.prices is accessible.
+      current_prices = @product.prices.to_a
+
+      # Define override for 'prices' association
+      product_clone.define_singleton_method(:prices) do
+        ExperimentPrices.new(current_prices, variant.recurrence_prices)
+      end
+
+      # Define override for 'alive_prices' association (often used in Product::Prices)
+      product_clone.define_singleton_method(:alive_prices) do
+        ExperimentPrices.new(current_prices.select { |p| !p.deleted_at }, variant.recurrence_prices)
+      end
     end
 
     # Tag the clone
